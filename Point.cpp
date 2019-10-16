@@ -11,6 +11,15 @@ Point::~Point(){
     printf("Point was destroyed\n");
 }
 
+void Point::addCoordinate(double x){
+    listOfCoordinates.push_back(x);
+}
+
+void Point::printCoordinates(){
+    for (int i=0; i< listOfCoordinates.size(); i++)
+        cout << listOfCoordinates.at(i) << ' ';
+    cout << endl;
+}
 
 void Point::setX(double X){
     listOfCoordinates.push_back(X);

@@ -1,7 +1,8 @@
-#include <iostream>
-#include <string>
+#include <bits/stdc++.h>
 #include <cstring>
 #include <fstream>
+#include <iostream>
+#include <string>
 #include "../Point.hpp"
 
 using namespace std;
@@ -30,11 +31,17 @@ int main(int argc,char *argv[]){
     cout << inputFile << endl;
     Point p[2];
 
-    string str;
+    // Diavazw 2 grammes gia testing 
+    string str,token;
     for (int i=0; i<2; i++){
         getline(in,str);
-        
+        istringstream ss(str);
+        size_t sz;
+        while( ss >> token )
+            p[i].addCoordinate(stod(token));
     }
+
+
     
     return 0;
 }
