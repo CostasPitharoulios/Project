@@ -4,10 +4,13 @@
 using namespace std;
 
 class Point{
-    int id;
-    vector<double> coords;
-
+    private:
+    vector<double> listOfCoordinates;
     public:
-    Point();
-    ~Point();
+        Point();
+        ~Point();
+        void setX(double x);
+        void setY(double y);
+        double getX();
+        double getY();
 };
