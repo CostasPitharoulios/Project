@@ -68,7 +68,7 @@ int main(){
     //=======================================================================================================
     vector<Curve*>* listOfInputCurves;           // this is a pointer to list of curves
     listOfInputCurves = makeVectorFromData(dataSetPath);     // returns the pointer to list of curves
-    // JUST PRINTING ALL CURVES AND THEIR Cordinates to check if everything is  fine
+    // JUST PRINTING ALL CURVES AND THEIR Coordinates to check if everything is  fine
     cout << "Printing all vector curve ids\n";
     for(vector<Curve*>::iterator i = listOfInputCurves->begin(); i != listOfInputCurves->end(); i++)
     {
@@ -84,7 +84,7 @@ int main(){
     
     vector<Curve*>* listOfQueryCurves;           // this is a pointer to list of curves
     listOfQueryCurves = makeVectorFromData(queryFilePath);     // returns the pointer to list of curves
-    // JUST PRINTING ALL CURVES AND THEIR Cordinates to check if everything is  fine
+    // JUST PRINTING ALL CURVES AND THEIR Coordinates to check if everything is  fine
     cout << "Printing all vector  QUERY curve ids\n";
     for(vector<Curve*>::iterator i = listOfQueryCurves->begin(); i != listOfQueryCurves->end(); i++)
     {

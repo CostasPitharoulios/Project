@@ -61,7 +61,7 @@ vector<Curve*>* makeVectorFromData(string path){
         for (int i=0; i< numberOfCords; i++){   // reading each coordinate
             
             dataSet >> word;
-            sscanf(word.c_str(), "(%f, %f)", &x, &y);       // storing x and y cordinates in separete variables
+            sscanf(word.c_str(), "(%f, %f)", &x, &y);       // storing x and y Coordinates in separete variables
             
             aPoint = new Point();                 // creating new Point for curve
             aPoint->setX(x);                       // storing x in new Point

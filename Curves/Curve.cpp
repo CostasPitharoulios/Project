@@ -6,7 +6,7 @@ using namespace std;
 
 Curve::Curve(){
     //id = "0";
-   // vector<Point> get_listOfCordinates;
+   // vector<Point> get_listOfCoordinates;
     printf("Curve was created\n");
 }
 
@@ -23,19 +23,19 @@ string Curve::getId(void){
     return id;
 }
 
-/*vector<Point> Curve::get_listOfCordinates(void){
-    return listOfCordinates;
+/*vector<Point> Curve::get_listOfCoordinates(void){
+    return listOfCoordinates;
 }*/
 
 void Curve::DisplayVectorContents(void){
-    for( vector<Point*>::iterator i = listOfCordinates.begin(); i != listOfCordinates.end(); i++ )
+    for( vector<Point*>::iterator i = listOfCoordinates.begin(); i != listOfCoordinates.end(); i++ )
     {
         cout << (*i)->getX() << "-" << (*i)->getY() << "\n";
     }
 }
 
 void Curve::PushToVector(Point* aPoint){
-    listOfCordinates.push_back(aPoint);
+    listOfCoordinates.push_back(aPoint);
 }
 
 
