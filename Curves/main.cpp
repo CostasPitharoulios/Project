@@ -6,6 +6,7 @@
 #include "../Point.hpp"
 #include "readingFunctions.hpp"
 #include "DTW.hpp"
+#include "curveHashing.hpp"
 
 using namespace std;
 
@@ -55,6 +56,7 @@ int main(){
     cout << "The path you gave for output file is:  " << outputFile << "\n" ;
 #endif
     
+
     string dataSetPath = "mydataset1.txt";
     string queryFilePath = "myquery1.txt";
     
@@ -62,7 +64,7 @@ int main(){
     //      *** END OF INFO FROM USER ***
     //=======================================================================================================
     
-    
+
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES FOR DATASET***
     // Info: We are going to make a vector of Curve classes. So its item of the vector will include a curve
@@ -77,7 +79,8 @@ int main(){
         cout << "COORDINTES OF THIS CURVE\n";
         (*i)->DisplayVectorContents();
     }
-    
+
+
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES FOR QUERY CURVES ***
     // Info: We are going to make a vector of Curve classes. So its item of the vector will include a curve
@@ -93,20 +96,29 @@ int main(){
         cout << "COORDINTES OF THIS CURVE\n";
         (*i)->DisplayVectorContents();
     }
-    
+
     //=======================================================================================================
     //      *** DYNAMIC PRGRAMMING: CREATING ARRAY TO FIND DTW FOR EACH QUERY CURVE***
     // Info:
     //=======================================================================================================
     
-    for(vector<Curve*>::iterator queryCurve = listOfQueryCurves->begin(); queryCurve != listOfQueryCurves->end(); queryCurve++) // for each query curve
-    {
-        for(vector<Curve*>::iterator inputCurve = listOfInputCurves->begin(); inputCurve != listOfInputCurves->end(); inputCurve++) // for each input curve
-        {
+    for(vector<Curve*>::iterator queryCurve = listOfQueryCurves->begin(); queryCurve != listOfQueryCurves->end(); queryCurve++){ // for each query curve
+        
+        for(vector<Curve*>::iterator inputCurve = listOfInputCurves->begin(); inputCurve != listOfInputCurves->end(); inputCurve++){ // for each input curve
             double  valueDTW = getValueDTW(queryCurve, inputCurve);
             
             cout << "\n\nDTW= " << valueDTW << "\n";
         }
+        
+    }
+
+    //=======================================================================================================
+    //      *** HASHING: Going to take all curves and calculate a vector which express them ***
+    // Info:
+    //=======================================================================================================
+    
+    for(vector<Curve*>::iterator queryCurve = listOfQueryCurves->begin(); queryCurve != listOfQueryCurves->end(); queryCurve++){
+        curveHashing(queryCurve);
         
     }
     

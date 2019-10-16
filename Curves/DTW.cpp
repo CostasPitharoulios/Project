@@ -63,6 +63,6 @@ double getValueDTW(vector<Curve *>::iterator queryCurve,vector<Curve *>::iterato
 
 
 // returns the distance between two points
-double distance(int x1, int x2, int y1, int y2){
+double distance(float x1, float x2, float y1, float y2){
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
 }

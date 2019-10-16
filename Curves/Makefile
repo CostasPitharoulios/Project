@@ -1,5 +1,5 @@
-demo : main.o ../Point.o Curve.o readingFunctions.o DTW.o
-	g++ main.o  ../Point.o Curve.o readingFunctions.o DTW.o -o demo 
+demo : main.o ../Point.o Curve.o readingFunctions.o DTW.o curveHashing.o
+	g++ main.o  ../Point.o Curve.o readingFunctions.o DTW.o curveHashing.o -o demo 
 
 main.o : main.cpp
 	g++ -c main.cpp
@@ -16,5 +16,8 @@ DTW.o:	DTW.cpp DTW.o
 readingFunctions.o:	readingFunctions.cpp readingFunctions.hpp	
 	g++ -c readingFunctions.cpp -o readingFunctions.o
 
+curveHashing.o:	curveHashing.cpp curveHashing.hpp
+	g++ -c curveHashing.cpp -o curveHashing.o
+
 clean:
-	rm demo main.o ../Point.o Curve.o readingFunctions.o DTW.o
+	rm demo main.o ../Point.o Curve.o readingFunctions.o DTW.o curveHashing.o

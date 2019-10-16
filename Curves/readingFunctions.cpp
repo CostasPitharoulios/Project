@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <sstream>
+
 
 #include "Curve.hpp"
 #include "../Point.hpp"
@@ -37,32 +39,28 @@ vector<Curve*>* makeVectorFromData(string path){
     }
     
     // reading dataSet file line by line
-    
-    while (true){
-        string word;                             // stores every single word of file
-        string id;                               // stores the id of curve
+    string line;
+    while (getline(dataSet,line)){
         
-        dataSet >> word;                         // reading first word of line (maybe id or eof)
-        if ( dataSet.eof()) break;               // if this this the end of file
+        stringstream linestream(line);
+        string id;
+        string word;
         
-        id = word;                               // storing id
-        cout << "Id= " << id << "\n";
-        
+        getline(linestream, id, '\t');
         aCurve = new Curve();                        //!!! creating a new object class
         aCurve->setId(id);                        //!!! storing id in new object
         listOfCurves->push_back(aCurve);    //!!! pushing new object at the end of the list
+        //cout << "Id= " << id << "\n";
         
-        
-        dataSet >> word;                        // reading second word -> number of coordinates
+        getline(linestream, word, '\t');                    // reading second word -> number of coordinates
         int numberOfCords = std::stoi(word);    // storing number of cords
         aCurve->setNumberOfCoordinates(numberOfCords);
-        cout << "number of coordinates is: " << aCurve->getNumberOfCoordinates() << "\n";
-        
+        //cout << "number of coordinates is: " << aCurve->getNumberOfCoordinates() << "\n";
         
         float x,y;
         for (int i=0; i< numberOfCords; i++){   // reading each coordinate
             
-            dataSet >> word;
+            getline(linestream, word, '\t');
             sscanf(word.c_str(), "(%f, %f)", &x, &y);       // storing x and y Coordinates in separete variables
             
             aPoint = new Point();                 // creating new Point for curve
@@ -72,10 +70,10 @@ vector<Curve*>* makeVectorFromData(string path){
             aCurve->PushToVector(aPoint);          // pushes newPoint to vector of points of curve object
             
         }
-        
-        
     }
     
+    dataSet.close(); //closing opened file
+
     return listOfCurves;
     
 }
