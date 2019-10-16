@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-#include "Point.hpp"
+#include <fstream>
+#include "../Point.hpp"
 
 using namespace std;
 
