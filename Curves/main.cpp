@@ -5,6 +5,7 @@
 #include "Curve.hpp"
 #include "../Point.hpp"
 #include "readingFunctions.hpp"
+#include "DTW.hpp"
 
 using namespace std;
 
@@ -54,8 +55,8 @@ int main(){
     cout << "The path you gave for output file is:  " << outputFile << "\n" ;
 #endif
     
-    string dataSetPath = "mydataset.txt";
-    string queryFilePath = "myquery.txt";
+    string dataSetPath = "mydataset1.txt";
+    string queryFilePath = "myquery1.txt";
     
     //=======================================================================================================
     //      *** END OF INFO FROM USER ***
@@ -102,7 +103,9 @@ int main(){
     {
         for(vector<Curve*>::iterator inputCurve = listOfInputCurves->begin(); inputCurve != listOfInputCurves->end(); inputCurve++) // for each input curve
         {
+            double  valueDTW = getValueDTW(queryCurve, inputCurve);
             
+            cout << "\n\nDTW= " << valueDTW << "\n";
         }
         
     }

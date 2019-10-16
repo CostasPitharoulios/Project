@@ -38,8 +38,20 @@ void Curve::PushToVector(Point* aPoint){
     listOfCoordinates.push_back(aPoint);
 }
 
+void Curve::setNumberOfCoordinates(int number){
+    numberOfCoordinates = number;
+}
 
+int Curve::getNumberOfCoordinates(void){
+    return numberOfCoordinates;
+}
 
+double Curve::getSpecificXCoord(int position){
+    return listOfCoordinates.at(position)->getX();
+}
 
+double Curve::getSpecificYCoord(int position){
+    return listOfCoordinates.at(position)->getY();
+}
 
 

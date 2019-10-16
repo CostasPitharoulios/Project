@@ -9,6 +9,7 @@ using namespace std;
 class Curve{
     private:
         string id;
+        int numberOfCoordinates;
         vector<Point*> listOfCoordinates;
 
     public:
@@ -16,7 +17,11 @@ class Curve{
         ~Curve();
         void setId(string Id);
         string getId(void);
+        void setNumberOfCoordinates(int number);
+        int getNumberOfCoordinates(void);
         //vector<Point*> get_listOfCoordinates();
         void DisplayVectorContents();
         void PushToVector(Point* aPoint);
+    double getSpecificXCoord(int position);
+    double getSpecificYCoord(int position);
 };
