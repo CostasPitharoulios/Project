@@ -5,8 +5,8 @@
 using namespace std;
 
 Curve::Curve(){
-    id = "0";
-    vector<Point> get_listOfCordinates;
+    //id = "0";
+   // vector<Point> get_listOfCordinates;
     printf("Curve was created\n");
 }
 

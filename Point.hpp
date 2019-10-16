@@ -5,7 +5,6 @@ using namespace std;
 
 class Point{
     private:
-        string id;
         double x;
         double y;
     public:

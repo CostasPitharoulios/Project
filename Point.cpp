@@ -4,7 +4,6 @@
 using namespace std;
 
 Point::Point(){
-    id = "0";
     printf("Point was created\n");
 }
 

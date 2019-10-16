@@ -4,6 +4,7 @@
 
 #include "Curve.hpp"
 #include "../Point.hpp"
+#include "readingFunctions.hpp"
 
 using namespace std;
 
@@ -54,6 +55,7 @@ int main(){
 #endif
     
     string dataSetPath = "mydataset.txt";
+    string queryFilePath = "myquery.txt";
     
     //=======================================================================================================
     //      *** END OF INFO FROM USER ***
@@ -61,81 +63,35 @@ int main(){
     
     
     //=======================================================================================================
-    //      *** CREATING A VECTOR OF CLASS CURVES ***
+    //      *** CREATING A VECTOR OF CLASS CURVES FOR DATASET***
     // Info: We are going to make a vector of Curve classes. So its item of the vector will include a curve
     //=======================================================================================================
-    
-    vector<Curve*> listOfInputCurves;
-    Curve *aCurve;
-    Point *aPoint;
-
-    
-    //=======================================================================================================
-    //      *** OPEN DATASET FILE AND CREATE A LIST OF CURVE CLASSES ***
-    //  Info: We are going to create a list of curve classes. Each class is going to have  the id of the curve
-    // and a vector with all the points of the curved stored inside and
-    //=======================================================================================================
-    
-    
-    // Opening dataSet file
-    ifstream dataSet;
-    dataSet.open(dataSetPath);
-    if (!dataSet){
-        cerr << "ERROR: Unable to open file with path:" << dataSetPath << "\n";
-        exit(1);
-    }
-
-    // reading dataSet file line by line
-   
-    while (true){
-        string word;                             // stores every single word of file
-        string id;                               // stores the id of curve
-        
-        dataSet >> word;                         // reading first word of line (maybe id or eof)
-        if ( dataSet.eof()) break;               // if this this the end of file
-        
-        id = word;                               // storing id
-        cout << "Id= " << id << "\n";
-        
-        aCurve = new Curve();                        //!!! creating a new object class
-        aCurve->setId(id);                        //!!! storing id in new object
-        listOfInputCurves.push_back(aCurve);    //!!! pushing new object at the end of the list
-        
-        
-        dataSet >> word;                        // reading second word -> number of coordinates
-        int numberOfCords = std::stoi(word);    // storing number of cords
-        cout << "number of coordinates is: " << numberOfCords << "\n";
-        
-        float x,y;
-        for (int i=0; i< numberOfCords; i++){   // reading each coordinate
-            
-            dataSet >> word;
-            sscanf(word.c_str(), "(%f, %f)", &x, &y);       // storing x and y cordinates in separete variables
-            
-            aPoint = new Point();                 // creating new Point for curve
-            aPoint->setX(x);                       // storing x in new Point
-            aPoint->setY(y);                        //storing y in new Point
-            
-            aCurve->PushToVector(aPoint);          // pushes newPoint to vector of points of curve object
-           
-        
-        }
-       
-        
-    }
+    vector<Curve*>* listOfInputCurves;           // this is a pointer to list of curves
+    listOfInputCurves = makeVectorFromData(dataSetPath);     // returns the pointer to list of curves
     // JUST PRINTING ALL CURVES AND THEIR Cordinates to check if everything is  fine
     cout << "Printing all vector curve ids\n";
-    for(vector<Curve*>::iterator i = listOfInputCurves.begin(); i != listOfInputCurves.end(); i++)
+    for(vector<Curve*>::iterator i = listOfInputCurves->begin(); i != listOfInputCurves->end(); i++)
     {
         cout << (*i)->getId() << endl;
         cout << "COORDINTES OF THIS CURVE\n";
         (*i)->DisplayVectorContents();
     }
-        
-       
     
+    //=======================================================================================================
+    //      *** CREATING A VECTOR OF CLASS CURVES FOR QUERY CURVES ***
+    // Info: We are going to make a vector of Curve classes. So its item of the vector will include a curve
+    //=======================================================================================================
     
-    
+    vector<Curve*>* listOfQueryCurves;           // this is a pointer to list of curves
+    listOfQueryCurves = makeVectorFromData(queryFilePath);     // returns the pointer to list of curves
+    // JUST PRINTING ALL CURVES AND THEIR Cordinates to check if everything is  fine
+    cout << "Printing all vector  QUERY curve ids\n";
+    for(vector<Curve*>::iterator i = listOfQueryCurves->begin(); i != listOfQueryCurves->end(); i++)
+    {
+        cout << (*i)->getId() << endl;
+        cout << "COORDINTES OF THIS CURVE\n";
+        (*i)->DisplayVectorContents();
+    }
     
     
     
