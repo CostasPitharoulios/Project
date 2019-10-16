@@ -23,19 +23,19 @@ string Curve::getId(void){
     return id;
 }
 
-vector<Point> Curve::get_listOfCordinates(void){
+/*vector<Point> Curve::get_listOfCordinates(void){
     return listOfCordinates;
-}
+}*/
 
 void Curve::DisplayVectorContents(void){
-    for( unsigned int i = 0; i < listOfCordinates.size(); i++ )
+    for( vector<Point*>::iterator i = listOfCordinates.begin(); i != listOfCordinates.end(); i++ )
     {
-        cout << listOfCordinates[i].getX() << "-" << listOfCordinates[i].getY() << "\n";
+        cout << (*i)->getX() << "-" << (*i)->getY() << "\n";
     }
 }
 
 void Curve::PushToVector(Point* aPoint){
-    listOfCordinates.push_back(*aPoint);
+    listOfCordinates.push_back(aPoint);
 }
 
 

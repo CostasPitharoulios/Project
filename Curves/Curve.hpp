@@ -8,14 +8,14 @@ using namespace std;
 class Curve{
     private:
         string id;
-        vector<Point> listOfCordinates;
+        vector<Point*> listOfCordinates;
 
     public:
         Curve();
         ~Curve();
         void setId(string Id);
         string getId(void);
-        vector<Point> get_listOfCordinates();
+        //vector<Point*> get_listOfCordinates();
         void DisplayVectorContents();
-    void PushToVector(Point* aPoint);
+        void PushToVector(Point* aPoint);
 };

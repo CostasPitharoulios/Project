@@ -65,8 +65,9 @@ int main(){
     // Info: We are going to make a vector of Curve classes. So its item of the vector will include a curve
     //=======================================================================================================
     
-    vector<Curve> listOfInputCurves;
+    vector<Curve*> listOfInputCurves;
     Curve *aCurve;
+    Point *aPoint;
 
     
     //=======================================================================================================
@@ -85,7 +86,7 @@ int main(){
     }
 
     // reading dataSet file line by line
-    Point *aPoint;
+   
     while (true){
         string word;                             // stores every single word of file
         string id;                               // stores the id of curve
@@ -96,9 +97,9 @@ int main(){
         id = word;                               // storing id
         cout << "Id= " << id << "\n";
         
-        aCurve = new Curve;                        //!!! creating a new object class
+        aCurve = new Curve();                        //!!! creating a new object class
         aCurve->setId(id);                        //!!! storing id in new object
-        listOfInputCurves.push_back(*aCurve);    //!!! pushing new object at the end of the list
+        listOfInputCurves.push_back(aCurve);    //!!! pushing new object at the end of the list
         
         
         dataSet >> word;                        // reading second word -> number of coordinates
@@ -106,38 +107,33 @@ int main(){
         cout << "number of coordinates is: " << numberOfCords << "\n";
         
         float x,y;
-       
         for (int i=0; i< numberOfCords; i++){   // reading each coordinate
             
             dataSet >> word;
-            sscanf(word.c_str(), "(%f, %f)", &x, &y);
+            sscanf(word.c_str(), "(%f, %f)", &x, &y);       // storing x and y cordinates in separete variables
             
-            aPoint = new Point;
-            aPoint->setX(x);
-            aPoint->setY(y);
+            aPoint = new Point();                 // creating new Point for curve
+            aPoint->setX(x);                       // storing x in new Point
+            aPoint->setY(y);                        //storing y in new Point
             
-            aCurve->PushToVector(aPoint);
-            //aCurve->get_listOfCordinates().push_back(*aPoint);
-            cout << "PLEAAAASEEEEE\n";
-            aCurve->DisplayVectorContents();
-            
-            cout << "Coord number: " << i << " is: " << word << "\n";
-            cout << "x=" << x << " y =" << y << "\n";
+            aCurve->PushToVector(aPoint);          // pushes newPoint to vector of points of curve object
+           
         
         }
        
         
-        cout << "Printing all vector curve ids\n";
-        for(auto i = listOfInputCurves.begin(); i != listOfInputCurves.end(); i++)
-        {
-            cout << i->getId() << endl;
-            cout << "COORDINTES OF THIS CURVE\n";
-            i->DisplayVectorContents();
-            //std::cout<< *l<<"\n";
-        }
-        
-       
     }
+    // JUST PRINTING ALL CURVES AND THEIR Cordinates to check if everything is  fine
+    cout << "Printing all vector curve ids\n";
+    for(vector<Curve*>::iterator i = listOfInputCurves.begin(); i != listOfInputCurves.end(); i++)
+    {
+        cout << (*i)->getId() << endl;
+        cout << "COORDINTES OF THIS CURVE\n";
+        (*i)->DisplayVectorContents();
+    }
+        
+       
+    
     
     
     
