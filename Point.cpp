@@ -21,6 +21,10 @@ void Point::printCoordinates(){
     cout << endl;
 }
 
+vector<double> Point::getCoordinates(){
+    return listOfCoordinates;
+}
+
 void Point::setX(double X){
     listOfCoordinates.push_back(X);
     //x = X;

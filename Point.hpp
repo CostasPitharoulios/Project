@@ -11,6 +11,7 @@ class Point{
         ~Point();
         void addCoordinate(double x);
         void printCoordinates();
+        vector<double> getCoordinates();
         void setX(double x);
         void setY(double y);
         double getX();
