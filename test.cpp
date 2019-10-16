@@ -28,6 +28,12 @@ int main(int argc,char *argv[]){
 
     cout << inputFile << endl;
     Point p[2];
+
+    string str;
+    for (int i=0; i<2; i++){
+        getline(in,str);
+        
+    }
     
     return 0;
 }
