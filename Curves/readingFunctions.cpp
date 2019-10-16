@@ -55,7 +55,9 @@ vector<Curve*>* makeVectorFromData(string path){
         
         dataSet >> word;                        // reading second word -> number of coordinates
         int numberOfCords = std::stoi(word);    // storing number of cords
-        cout << "number of coordinates is: " << numberOfCords << "\n";
+        aCurve->setNumberOfCoordinates(numberOfCords);
+        cout << "number of coordinates is: " << aCurve->getNumberOfCoordinates() << "\n";
+        
         
         float x,y;
         for (int i=0; i< numberOfCords; i++){   // reading each coordinate
