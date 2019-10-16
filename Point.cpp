@@ -13,19 +13,20 @@ Point::~Point(){
 
 
 void Point::setX(double X){
-    x = X;
+    listOfCordinates.push_back(X);
+    //x = X;
 }
 
 void Point::setY(double Y){
-    y = Y;
+    listOfCordinates.push_back(Y);
 }
 
 
 double Point::getX(void){
-    return x;
+    return listOfCordinates[0];
 }
 
 
 double Point::getY(void){
-    return y;
+    return listOfCordinates[1];
 }

@@ -93,7 +93,19 @@ int main(){
         (*i)->DisplayVectorContents();
     }
     
+    //=======================================================================================================
+    //      *** DYNAMIC PRGRAMMING: CREATING ARRAY TO FIND DTW FOR EACH QUERY CURVE***
+    // Info:
+    //=======================================================================================================
     
+    for(vector<Curve*>::iterator queryCurve = listOfQueryCurves->begin(); queryCurve != listOfQueryCurves->end(); queryCurve++) // for each query curve
+    {
+        for(vector<Curve*>::iterator inputCurve = listOfInputCurves->begin(); inputCurve != listOfInputCurves->end(); inputCurve++) // for each input curve
+        {
+            
+        }
+        
+    }
     
     
     return 0;
