@@ -76,7 +76,8 @@ int main(){
     for(vector<Curve*>::iterator i = listOfInputCurves->begin(); i != listOfInputCurves->end(); i++)
     {
         cout << (*i)->getId() << endl;
-        cout << "COORDINTES OF THIS CURVE\n";
+        cout << "COORDINA
+        TES OF THIS CURVE\n";
         (*i)->DisplayVectorContents();
     }
 
@@ -118,7 +119,10 @@ int main(){
     //=======================================================================================================
     
     for(vector<Curve*>::iterator queryCurve = listOfQueryCurves->begin(); queryCurve != listOfQueryCurves->end(); queryCurve++){
-        curveHashing(queryCurve);
+        Curve* aCurve;
+        aCurve = curveHashing(queryCurve);
+        //cout << "Displaying vector contents: \n";
+        //aCurve->DisplayVectorContents();
         
     }
     

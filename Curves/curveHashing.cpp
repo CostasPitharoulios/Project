@@ -2,6 +2,7 @@
 #include <iostream>
 #include <math.h>
 #include "DTW.hpp"
+#include "../Point.hpp"
 
 using namespace std;
 
@@ -9,7 +10,7 @@ using namespace std;
 
 
 
-void curveHashing(vector<Curve *>::iterator queryCurve){
+Curve* curveHashing(vector<Curve *>::iterator queryCurve){
     
     // first of all we need to caldulate delta
     int m1,m2;
@@ -29,6 +30,8 @@ void curveHashing(vector<Curve *>::iterator queryCurve){
     float x,y; //coordinates of a point of curve
     int previousMinX = -1;   // stores minX of the previous point of curve
     int previousMinY = -1;   // stores minY of the precious point of curve
+    Point *aPoint;
+    Curve* hashedCurve = new Curve();   // creating a vector to store all hashed points
     for (int i=0; i< m1; i++){
         x = (*queryCurve)->getSpecificXCoord(i);
         y = (*queryCurve)->getSpecificYCoord(i);
@@ -67,22 +70,27 @@ void curveHashing(vector<Curve *>::iterator queryCurve){
         
         if (minX == previousMinX && minY == previousMinY){
             cout << "Previous had the same point\n";
-            cout << previousMinX << " " << minX << " " << previousMinY << " " << minY <<"\n";
-             cout << "Point of vector is: " << minX << "-" << minY << "\n";
+            //cout << previousMinX << " " << minX << " " << previousMinY << " " << minY <<"\n";
+            // cout << "Point of vector is: " << minX << "-" << minY << "\n";
         }
         else{
             
-           cout << "Point of vector is: " << minX << "-" << minY << "\n";
+            aPoint = new Point();
+            aPoint->setX(minX);
+            aPoint->setY(minY);
+            
+            hashedCurve->PushToVector(aPoint);
+            
+           // cout << "Point of vector is: " << minX << "-" << minY << "\n";
         }
         previousMinX = minX;
         previousMinY = minY;
         
-        
-       /* cout << "Point of vector is: " << minX << "-" << minY << "\n";
-        cout << distance(x,x1, y,y1) << " " << distance(x,x1, y,y2)<< " " << distance(x,x2, y,y1)<< " " << distance(x,x2, y,y2) << "\n";
-        cout << x1 << " " << x2 << " AND " << y1 << " " << y2 << "\n";
-        cout << x << " " << y << "\n";*/
-        
+     
     }
+    
+    return hashedCurve;
+    
+    
     
 }
