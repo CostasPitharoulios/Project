@@ -11,16 +11,23 @@ using namespace std;
 
 int main(int argc,char *argv[]){
     string inputFile, outputFile;
+    int r;
 
     // Handling arguments TODO safety checks
-    if (argc>1){
+    if (argc == 5 || argc == 7){
         int i;
         for(i=1 ; i<argc ; i++){
-            if(!strcmp(argv[i],"-i"))
+            if(!strcmp(argv[i],"-d"))
                 inputFile = argv[i+1];
             if(!strcmp(argv[i],"-o"))
                 outputFile = argv[i+1];
+            if(!strcmp(argv[i],"-r"))
+                r = stoi(argv[i+1]);
         }
+    }
+    else{
+        cerr << "Wrong number of arguments" << endl;
+        return 1;
     }
 
     // Open file
@@ -29,27 +36,46 @@ int main(int argc,char *argv[]){
         cerr << "Cannot open the input file : " << inputFile << endl;
         return 1;
     }
-
-    cout << inputFile << endl;
-    Point p[2];
-
-    // Diavazw 2 grammes gia testing
-    string str,token;
-    for (int i=0; i<2; i++){
-        getline(in,str);
-        istringstream ss(str);
-        size_t sz;
-        while( ss >> token )
-            p[i].addCoordinate(stod(token));
+    if (r < 0){
+        cerr << "r must be positive." << endl;
+        return 1;
     }
 
-    vector<double> v = p[1].getCoordinates();
-    for (int i=0 ; i<v.size(); i++)
-        cout << v.at(i) << " ";
-    cout << endl;
+    vector<Point> listOfPoints;
 
-    cout << "Distance: "<< manhattanDistance(v,v)/*p[1].getCoordinates(), p[2].getCoordinates())*/ << endl;
+    // Read input file
+    /*
+    string str,token;
+    while(getline(in,str)){
+        istringstream ss(str);
+        size_t sz;
+        Point p;
+
+        ss >> token;
+        p.setId(stoi(token));
+
+        while( ss >> token )
+            p.addCoordinate(stod(token));
+
+        listOfPoints.push_back(p);
+    }
+    */
+    // Read only one GIA TESTINGS
+    string str,token;
+    getline(in,str);
+    istringstream ss(str);
+    size_t sz;
+    Point p;
+    ss >> token;
+    p.setId(stoi(token));
+    while( ss >> token )
+        p.addCoordinate(stod(token));
+
+    cout << "Arxiko: ";
+    p.printCoordinates();
 
     
+
+    in.close();
     return 0;
 }

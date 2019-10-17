@@ -4,15 +4,23 @@
 using namespace std;
 
 Point::Point(){
-    printf("Point was created\n");
+    //printf("Point was created\n");
 }
 
 Point::~Point(){
-    printf("Point was destroyed\n");
+    //printf("Point was destroyed\n");
 }
 
 void Point::addCoordinate(double x){
     listOfCoordinates.push_back(x);
+}
+
+void Point::setId(int x){
+    id = x;
+}
+
+int Point::getId(){
+    return id;
 }
 
 void Point::printCoordinates(){

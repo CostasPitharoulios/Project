@@ -9,7 +9,7 @@ using namespace std;
 class Curve{
     private:
         string id;
-        int numberOfCoordinates;
+        int numberOfCoordinates; /* TODO number and listOfPoints? */
         vector<Point*> listOfCoordinates;
 
     public:
