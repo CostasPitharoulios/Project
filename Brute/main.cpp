@@ -16,7 +16,7 @@ int main(int argc,char *argv[]){
     if (argc>1){
         int i;
         for(i=1 ; i<argc ; i++){
-            if(!strcmp(argv[i],"-i"))
+            if(!strcmp(argv[i],"-d"))
                 inputFile = argv[i+1];
             if(!strcmp(argv[i],"-o"))
                 outputFile = argv[i+1];

@@ -5,8 +5,8 @@ using namespace std;
 
 class Point{
     private:
-    int id;
-    vector<double> listOfCoordinates;
+        int id;
+        vector<double> listOfCoordinates;
     public:
         Point();
         ~Point();
