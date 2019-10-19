@@ -1,4 +1,4 @@
-//#include <bits/stdc++.h>
+#include <cmath>
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -6,6 +6,7 @@
 #include <sstream>
 #include "../Point.hpp"
 #include "../dist.hpp"
+#include "H.hpp"
 
 using namespace std;
 
@@ -41,25 +42,6 @@ int main(int argc,char *argv[]){
         return 1;
     }
 
-    vector<Point> listOfPoints;
-
-    // Read input file
-    /*
-    string str,token;
-    while(getline(in,str)){
-        istringstream ss(str);
-        size_t sz;
-        Point p;
-
-        ss >> token;
-        p.setId(stoi(token));
-
-        while( ss >> token )
-            p.addCoordinate(stod(token));
-
-        listOfPoints.push_back(p);
-    }
-    */
     // Read only one GIA TESTINGS
     string str,token;
     getline(in,str);
@@ -73,6 +55,10 @@ int main(int argc,char *argv[]){
 
     cout << "Arxiko: ";
     p.printCoordinates();
+
+    int k = 4;
+    H h(4*r, p.getD(),pow(2,32/k));
+    h.hash(p);
 
     
 

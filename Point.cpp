@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Point::Point(){
+Point::Point():d(0){
     //printf("Point was created\n");
 }
 
@@ -13,6 +13,11 @@ Point::~Point(){
 
 void Point::addCoordinate(double x){
     listOfCoordinates.push_back(x);
+    d++;
+}
+
+double Point::getCoordinate(int i){
+    return listOfCoordinates.at(i);
 }
 
 void Point::setId(int x){
@@ -23,11 +28,16 @@ int Point::getId(){
     return id;
 }
 
+int Point::getD(){
+    return d;
+}
+
 void Point::printCoordinates(){
     for (int i=0; i< listOfCoordinates.size(); i++)
         cout << listOfCoordinates.at(i) << ' ';
     cout << endl;
 }
+
 
 vector<double> Point::getCoordinates(){
     return listOfCoordinates;

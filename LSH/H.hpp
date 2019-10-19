@@ -1,10 +1,18 @@
+#include "../Point.hpp"
+
 using namespace std;
 
+// H is the class of the sub hash functions of LSH
 class H{
     private:
+        int d; // Dimension of points
         int w; // Grid cell size
         double *s; // Array that saves how much each dimension is shifted
+        int *m;
+        int M;
     public:
-        H();
+        H(int w, int d, int k);
         ~H();
-}
+
+        int hash(Point p);
+};
