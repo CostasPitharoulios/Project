@@ -7,6 +7,7 @@
 using namespace std;
 
 H::H(int w, int d, int M):w(w), d(d), M(M){
+    cout << "New H" << endl;
     s = new double[d];
     m = new int[d];
 
@@ -29,7 +30,6 @@ H::H(int w, int d, int M):w(w), d(d), M(M){
         m[i] = (m[i-1]*m[1])%M;
         //cout << "m[" << i << "]=" << m[i] << endl;
     }
-    cout << "M=" << M << endl;
 }
 
 H::~H(){

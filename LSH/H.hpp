@@ -11,7 +11,7 @@ class H{
         int *m;
         int M;
     public:
-        H(int w, int d, int k);
+        H(int w, int d, int M);
         ~H();
 
         int hash(Point p);

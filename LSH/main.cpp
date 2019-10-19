@@ -8,6 +8,7 @@
 #include "../Point.hpp"
 #include "../dist.hpp"
 #include "H.hpp"
+#include "G.hpp"
 
 using namespace std;
 
@@ -66,11 +67,11 @@ int main(int argc,char *argv[]){
     p.printCoordinates();
 
     int k = 4;
-    H h(4*r, p.getD(), pow(2,32/k));
+    G g(4*r, p.getD(), k);
 
-    int hp = h.hash(p);
-    bitset<8> bs(hp);
-    cout << "h(p)=" << bs << " = " << hp << endl;
+    //int hp = h.hash(p);
+    //bitset<8> bs(hp);
+    //cout << "h(p)=" << bs << " = " << hp << endl;
 
     
 
