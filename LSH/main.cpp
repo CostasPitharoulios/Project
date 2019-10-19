@@ -1,3 +1,4 @@
+#include <bitset>
 #include <cmath>
 #include <cstring>
 #include <fstream>
@@ -43,7 +44,7 @@ int main(int argc,char *argv[]){
     }
 
     // Read only one GIA TESTINGS
-    string str,token;
+    /*string str,token;
     getline(in,str);
     istringstream ss(str);
     size_t sz;
@@ -53,12 +54,23 @@ int main(int argc,char *argv[]){
     while( ss >> token )
         p.addCoordinate(stod(token));
 
+    */
+
+    Point p;
+    p.addCoordinate(0);
+    p.addCoordinate(55);
+    p.addCoordinate(10);
+    p.addCoordinate(0);
+
     cout << "Arxiko: ";
     p.printCoordinates();
 
     int k = 4;
-    H h(4*r, p.getD(),pow(2,32/k));
-    h.hash(p);
+    H h(4*r, p.getD(), pow(2,32/k));
+
+    int hp = h.hash(p);
+    bitset<8> bs(hp);
+    cout << "h(p)=" << bs << " = " << hp << endl;
 
     
 

@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iostream>
 #include <random>
+#include "../util.hpp"
 #include "H.hpp"
 
 using namespace std;
@@ -16,18 +17,17 @@ H::H(int w, int d, int M):w(w), d(d), M(M){
 
     for (int i=0; i<d; i++){
         s[i] = dis(gen);
-        cout << "s[" << i << "]=" << s[i] << endl;
+        //cout << "s[" << i << "]=" << s[i] << endl;
     }
 
     // Compute m[i]'s so that m[i] = m[1]^i
-    // We do %M on every step, instead of once, to prevent overflow
+    // We do modM on every step, instead of once, to prevent overflow
     // The result will be correct because of the multiplicaiton property of mod
     m[0]=1;
     m[1]= (int) (((long)pow(2,32)-5)%M);
-    cout << "m[1]=" << m[1] << endl;
     for (int i=2; i<d; i++){
         m[i] = (m[i-1]*m[1])%M;
-        cout << "m[" << i << "]=" << m[i] << endl;
+        //cout << "m[" << i << "]=" << m[i] << endl;
     }
     cout << "M=" << M << endl;
 }
@@ -42,13 +42,16 @@ int H::hash(Point p){
     // Formula: a_i = floor( (x_i - s_i)/w )
     for (int i=0; i<d; i++){
         a.push_back(floor((p.getCoordinate(i)-s[i])/(double)w)); 
+        //cout << "a_" << i << "=" << a.at(i) << endl;
     }
 
-    // h(p) = a_(d-1) + m a_(d-2) + ... + m^(d-1) a_0
+    // h(p) = [ a_(d-1) + m a_(d-2) + ... + m^(d-1) a_0 ] mod M
+    // We do modM on every step, instead of once, to prevent overflow
+    // The result will be correct because of the multiplicaiton property of mod
     int hp;
     for (int i=0; i<d; i++){
-        hp += ((a.at(d-i-1)%M)*m[i])%M;
-        hp = hp%M;
+        hp += mod(mod(a.at(d-i-1),M)*m[i],M);
+        hp = mod(hp,M);
     }
     return hp;
 }
