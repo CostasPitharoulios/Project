@@ -34,6 +34,7 @@ H::H(int w, int d, int M):w(w), d(d), M(M){
 
 H::~H(){
     delete[] s;
+    delete[] m;
 }
 
 int H::hash(Point p){

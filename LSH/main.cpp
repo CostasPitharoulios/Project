@@ -69,12 +69,10 @@ int main(int argc,char *argv[]){
     int k = 4;
     G g(4*r, p.getD(), k);
 
-    //int hp = h.hash(p);
-    //bitset<8> bs(hp);
-    //cout << "h(p)=" << bs << " = " << hp << endl;
-
+    int hp = g.hash(p);
+    bitset<8> bs(hp);
+    cout << "h(p)=" << bs << " = " << hp << endl;
     
-
     in.close();
     return 0;
 }

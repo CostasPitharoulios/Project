@@ -1,3 +1,4 @@
+#pragma once
 #include "../Point.hpp"
 
 using namespace std;

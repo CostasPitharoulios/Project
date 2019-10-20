@@ -11,7 +11,7 @@ class G{
         vector<H> h; // h_1(), h_2(), ..., h_k()
         int d; // Dimension of points
         int w; // Grid cell size
-        int k;
+        int k; // Number of sub-hashfunctions
     public:
         G(int w, int d, int k);
         ~G();
