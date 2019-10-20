@@ -17,8 +17,9 @@ H::H(int w, int d, int M):w(w), d(d), M(M){
 
     for (int i=0; i<d; i++){
         s[i] = dis(gen);
-        //cout << "s[" << i << "]=" << s[i] << endl;
+        //cout << "s[" << i << "]=" << s[i] << " ";
     }
+    //cout << endl;
 
     // Compute m[i]'s so that m[i] = m[1]^i
     // We do modM on every step, instead of once, to prevent overflow
