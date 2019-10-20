@@ -15,7 +15,7 @@ class Point{
         void setId(int x);
         int getId();
         int getD();
-        void printCoordinates();
+        void printPoint();
         double getCoordinate(int i);
         vector<double> getCoordinates();
         void setX(double x);

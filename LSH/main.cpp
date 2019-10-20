@@ -7,8 +7,7 @@
 #include <sstream>
 #include "../Point.hpp"
 #include "../dist.hpp"
-#include "H.hpp"
-#include "G.hpp"
+#include "LSH.hpp"
 
 using namespace std;
 
@@ -44,33 +43,45 @@ int main(int argc,char *argv[]){
         return 1;
     }
 
-    // Read only one GIA TESTINGS
-    /*string str,token;
-    getline(in,str);
-    istringstream ss(str);
-    size_t sz;
-    Point p;
-    ss >> token;
-    p.setId(stoi(token));
-    while( ss >> token )
-        p.addCoordinate(stod(token));
+    // Read the first point
+    string str,token;
+    Point p1;
+    if(getline(in,str)){
+        istringstream ss(str);
+        ss >> token;
+        p1.setId(stoi(token));
+        while( ss >> token )
+            p1.addCoordinate(stod(token));
+    }else{
+        cerr << "Input file " << inputFile << " is empty." << endl;
+        return 1;
+    }
 
+    int k = 4, L=5;
+    LSH lsh(4*r, p1.getD(), k, L);
+
+    lsh.insert(p1);
+
+    // Read input file
+    /*while(getline(in,str)){
+        istringstream ss(str);
+        Point p;
+
+        ss >> token;
+        p.setId(stoi(token));
+
+        while( ss >> token )
+            p.addCoordinate(stod(token));
+
+        // Insert it to the dataset and hash it
+        lsh.insert(p);
+    }
     */
 
-    Point p;
-    p.addCoordinate(0);
-    p.addCoordinate(55);
-    p.addCoordinate(10);
-    p.addCoordinate(0);
+    //lsh.printG(1);
 
-    cout << "Arxiko: ";
-    p.printCoordinates();
-
-    int k = 4;
-    G g(4*r, p.getD(), k);
-
-    uint32_t gp = g.hash(p);
-    cout << "g(p) = " << bitset<32>(gp) << " = " << gp << endl;
+    //uint32_t gp = g.hash(p);
+    //cout << "g(p) = " << bitset<32>(gp) << " = " << gp << endl;
 
     in.close();
     return 0;

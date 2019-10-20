@@ -32,10 +32,11 @@ int Point::getD(){
     return d;
 }
 
-void Point::printCoordinates(){
+void Point::printPoint(){
+    cout << "id:" << (this->id) << "<";
     for (int i=0; i< listOfCoordinates.size(); i++)
-        cout << listOfCoordinates.at(i) << ' ';
-    cout << endl;
+        cout << listOfCoordinates.at(i) << ',';
+    cout << ">";
 }
 
 
