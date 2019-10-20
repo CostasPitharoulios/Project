@@ -16,5 +16,5 @@ class G{
         G(int w, int d, int k);
         ~G();
 
-        int hash(Point p);
+        uint32_t hash(Point p);
 };

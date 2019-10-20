@@ -14,6 +14,7 @@ class H{
     public:
         H(int w, int d, int M);
         ~H();
+        H(const H &h2);
 
-        int hash(Point p);
+        uint32_t hash(Point p);
 };

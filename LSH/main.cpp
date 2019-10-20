@@ -16,7 +16,7 @@ int main(int argc,char *argv[]){
     string inputFile, outputFile;
     int r;
 
-    // Handling arguments TODO safety checks
+    // Handling arguments
     if (argc == 5 || argc == 7){
         int i;
         for(i=1 ; i<argc ; i++){
@@ -69,10 +69,9 @@ int main(int argc,char *argv[]){
     int k = 4;
     G g(4*r, p.getD(), k);
 
-    int hp = g.hash(p);
-    bitset<8> bs(hp);
-    cout << "h(p)=" << bs << " = " << hp << endl;
-    
+    uint32_t gp = g.hash(p);
+    cout << "g(p) = " << bitset<32>(gp) << " = " << gp << endl;
+
     in.close();
     return 0;
 }

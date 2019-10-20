@@ -7,7 +7,6 @@
 using namespace std;
 
 H::H(int w, int d, int M):w(w), d(d), M(M){
-    cout << "New H" << endl;
     s = new double[d];
     m = new int[d];
 
@@ -37,7 +36,21 @@ H::~H(){
     delete[] m;
 }
 
-int H::hash(Point p){
+H::H(const H &h2){
+    w = h2.w;
+    d = h2.d;
+    M = h2.M;
+
+    s = new double[d];
+    m = new int[d];
+
+    for (int i=0; i<d; i++){
+        s[i] = h2.s[i];
+        m[i] = h2.m[i];
+    }
+}
+
+uint32_t H::hash(Point p){
     vector<int> a;
     // Compute the a_i's
     // Formula: a_i = floor( (x_i - s_i)/w )
@@ -49,7 +62,7 @@ int H::hash(Point p){
     // h(p) = [ a_(d-1) + m a_(d-2) + ... + m^(d-1) a_0 ] mod M
     // We do modM on every step, instead of once, to prevent overflow
     // The result will be correct because of the multiplicaiton property of mod
-    int hp;
+    uint32_t hp;
     for (int i=0; i<d; i++){
         hp += mod(mod(a.at(d-i-1),M)*m[i],M);
         hp = mod(hp,M);
