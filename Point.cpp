@@ -20,9 +20,9 @@ double Point::getCoordinate(int i){
     return listOfCoordinates.at(i);
 }
 
-/*void Point::setId(int x){
+void Point::setId(int x){
     this->id = x;
-}*/
+}
 
 int Point::getId(){
     return id;

@@ -47,7 +47,6 @@ int main(int argc,char *argv[]){
     string str,token;
     while(getline(in,str)){
         istringstream ss(str);
-        size_t sz;
         Point p;
 
         ss >> token;
@@ -62,7 +61,6 @@ int main(int argc,char *argv[]){
     // Read query file
     while(getline(qin,str)){
         istringstream ss(str);
-        size_t sz;
         Point p;
 
         ss >> token;

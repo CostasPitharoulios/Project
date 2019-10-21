@@ -12,7 +12,7 @@
 using namespace std;
 
 int main(int argc,char *argv[]){
-    string inputFile, outputFile;
+    string inputFile, outputFile, queryFile;
     int r;
 
     // Handling arguments
@@ -21,6 +21,8 @@ int main(int argc,char *argv[]){
         for(i=1 ; i<argc ; i++){
             if(!strcmp(argv[i],"-d"))
                 inputFile = argv[i+1];
+            if(!strcmp(argv[i],"-q"))
+                queryFile = argv[i+1];
             if(!strcmp(argv[i],"-o"))
                 outputFile = argv[i+1];
             if(!strcmp(argv[i],"-r"))
@@ -44,7 +46,7 @@ int main(int argc,char *argv[]){
     }
 
     // Read the first point
-    /*string str,token;
+    string str,token;
     Point p1;
     if(getline(in,str)){
         istringstream ss(str);
@@ -55,9 +57,10 @@ int main(int argc,char *argv[]){
     }else{
         cerr << "Input file " << inputFile << " is empty." << endl;
         return 1;
-    }*/
-
-    Point p1(1);
+    }
+    
+ 
+    /*Point p1(1);
     p1.addCoordinate(0);
     p1.addCoordinate(50);
     p1.addCoordinate(22);
@@ -68,23 +71,20 @@ int main(int argc,char *argv[]){
     p2.addCoordinate(3);
     p2.addCoordinate(41);
     p2.addCoordinate(5);
-
-
+    */
 
     int k = 4, L=5;
     LSH lsh(4*r, p1.getD(), k, L);
 
     lsh.insert(p1);
 
-    lsh.insert(p2);
+    //lsh.insert(p2);
 
     // Read input file
-    /*while(getline(in,str)){
+    while(getline(in,str)){
         istringstream ss(str);
-        Point p;
-
         ss >> token;
-        p.setId(stoi(token));
+        Point p(stoi(token));
 
         while( ss >> token )
             p.addCoordinate(stod(token));
@@ -92,10 +92,28 @@ int main(int argc,char *argv[]){
         // Insert it to the dataset and hash it
         lsh.insert(p);
     }
-    */
 
-    //cout << "G: \n";
-    //lsh.printG(0);
+    cout << "G: \n";
+    lsh.printG(0);
+
+    ifstream qin(queryFile.c_str());
+    if (!qin){
+        cerr << "Cannot open the query file : " << queryFile << endl;
+        return 1;
+    }
+
+    // Read query file
+    while(getline(qin,str)){
+        istringstream ss(str);
+        ss >> token;
+        Point p(stoi(token));
+
+        while( ss >> token )
+            p.addCoordinate(stod(token));
+
+        // Find its A-NN
+        lsh.nearestNeighbour(p);
+    }
 
     //uint32_t gp = g.hash(p);
     //cout << "g(p) = " << bitset<32>(gp) << " = " << gp << endl;

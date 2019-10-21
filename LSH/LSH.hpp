@@ -19,5 +19,6 @@ class LSH{
 
         void insert(Point p);
         void printG(int i);
-        //nearestNeighbor(Point p);
+        
+        void nearestNeighbour(Point p); // Prints info about the A-NN
 };
