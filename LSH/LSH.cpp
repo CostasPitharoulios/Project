@@ -1,6 +1,8 @@
 #include <bitset>
 #include <iostream>
+#include <limits>
 #include "LSH.hpp"
+#include "../dist.hpp"
 
 using namespace std;
 
@@ -35,7 +37,7 @@ void LSH::insert(Point p){
         uint32_t hashkey = g.at(i).hash(p);
         hashTables.at(i).insert(make_pair(hashkey, ptr));
     }
-    cout << "Point " << ptr->getId() << " was inserted!" << endl;
+    //cout << "Point " << ptr->getId() << " was inserted!" << endl;
 
     /*cout << "Dataset: ";
     for (int i=0; i<dataset.size(); i++){
@@ -61,16 +63,32 @@ void LSH::nearestNeighbour(Point p){
     
     // Loop over the points that have this hash key, and find the nearest
     // TODO : stop after 3L points
+    double min = numeric_limits<double>::max();
+    int min_id=-1;
     for (int i=0; i<L; i++){
         //cout << "g(" << i << ") = " << (bitset<32>(g.at(i).hash(p))) << endl;
         uint32_t hashkey = g.at(i).hash(p);
 
-        pair<mapIt, mapIt> it = g.at(i).equal_range(hashkey);
+        pair<mapIt, mapIt> it = hashTables.at(i).equal_range(hashkey);
         mapIt it1 = it.first;
-   
-        cout << " Points in the same bucket: \n"; 
+
+        int count = 0; 
         while (it1 != it.second){
-            it.second->printPoint();
+            count++;
+
+            // Compute the distance between the two points
+            double dist = manhattanDistance(p.getCoordinates(), it1->second->getCoordinates());
+            if (dist < min){
+                min = dist;
+                min_id = it1->second->getId();
+            }
+            it1++;
         }
+        cout << "Points in the same bucket on g(" << i << "): " << count << endl;; 
     }
+
+    if (min_id!=-1)
+        cout << "NN of " << p.getId() << " is " << min_id << " with distance " << min << endl;
+    else
+        cout << "NN of " << p.getId() << " is was not found " << endl;
 }

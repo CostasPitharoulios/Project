@@ -73,14 +73,15 @@ int main(int argc,char *argv[]){
     p2.addCoordinate(5);
     */
 
-    int k = 4, L=5;
-    LSH lsh(4*r, p1.getD(), k, L);
+    int k = 4, L=5, w=4000;
+    LSH lsh(w, p1.getD(), k, L);
 
     lsh.insert(p1);
 
     //lsh.insert(p2);
 
     // Read input file
+    cout << "Reading input dataset..." << endl;
     while(getline(in,str)){
         istringstream ss(str);
         ss >> token;
@@ -92,9 +93,10 @@ int main(int argc,char *argv[]){
         // Insert it to the dataset and hash it
         lsh.insert(p);
     }
+    cout << "Reading complete." << endl;
 
-    cout << "G: \n";
-    lsh.printG(0);
+    //cout << "G: \n";
+    //lsh.printG(0);
 
     ifstream qin(queryFile.c_str());
     if (!qin){
@@ -113,6 +115,10 @@ int main(int argc,char *argv[]){
 
         // Find its A-NN
         lsh.nearestNeighbour(p);
+
+        //////////////
+        break;
+        /////////////
     }
 
     //uint32_t gp = g.hash(p);

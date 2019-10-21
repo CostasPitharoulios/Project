@@ -70,6 +70,10 @@ int main(int argc,char *argv[]){
             p.addCoordinate(stod(token));
 
         listOfQueryPoints.push_back(p);
+
+        ///////////
+        break;
+        ///////////
     }
 
     // Find the nearest point for every query point
