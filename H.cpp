@@ -1,7 +1,7 @@
 #include <cmath>
 #include <iostream>
 #include <random>
-#include "../util.hpp"
+#include "util.hpp"
 #include "H.hpp"
 
 using namespace std;

@@ -1,6 +1,6 @@
 #include <unordered_map>
 #include "../Point.hpp"
-#include "G.hpp"
+#include "../G.hpp"
 
 using namespace std;
 

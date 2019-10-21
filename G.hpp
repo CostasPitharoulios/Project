@@ -1,4 +1,4 @@
-#include "../Point.hpp"
+#include "Point.hpp"
 #include "H.hpp"
 
 using namespace std;

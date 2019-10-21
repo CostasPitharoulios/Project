@@ -1,5 +1,5 @@
 #pragma once
-#include "../Point.hpp"
+#include "Point.hpp"
 
 using namespace std;
 
