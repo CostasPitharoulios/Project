@@ -44,7 +44,7 @@ int main(int argc,char *argv[]){
     }
 
     // Read the first point
-    string str,token;
+    /*string str,token;
     Point p1;
     if(getline(in,str)){
         istringstream ss(str);
@@ -55,12 +55,28 @@ int main(int argc,char *argv[]){
     }else{
         cerr << "Input file " << inputFile << " is empty." << endl;
         return 1;
-    }
+    }*/
+
+    Point p1(1);
+    p1.addCoordinate(0);
+    p1.addCoordinate(50);
+    p1.addCoordinate(22);
+    p1.addCoordinate(0);
+
+    Point p2(2);
+    p2.addCoordinate(19);
+    p2.addCoordinate(3);
+    p2.addCoordinate(41);
+    p2.addCoordinate(5);
+
+
 
     int k = 4, L=5;
-    LSH lsh(4*r, p1.getD(), k, L);
+    LSH lsh(4*r, p1.getD(), maxN, k, L);
 
     lsh.insert(p1);
+
+    lsh.insert(p2);
 
     // Read input file
     /*while(getline(in,str)){
@@ -78,7 +94,8 @@ int main(int argc,char *argv[]){
     }
     */
 
-    //lsh.printG(1);
+    //cout << "G: \n";
+    //lsh.printG(0);
 
     //uint32_t gp = g.hash(p);
     //cout << "g(p) = " << bitset<32>(gp) << " = " << gp << endl;

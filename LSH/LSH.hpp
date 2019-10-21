@@ -13,8 +13,9 @@ class LSH{
         int w; // Grid cell size
         int L; // Number of hashfunctions
         int k; // Number of sub-hashfunctions
+        int maxN; // Max number of points
     public:
-        LSH(int w, int d, int k,int L);
+        LSH(int w, int d, int maxN, int k,int L);
         ~LSH();
 
         void insert(Point p);

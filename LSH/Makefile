@@ -13,7 +13,7 @@ H.o : H.cpp
 G.o : G.cpp
 	g++ -c G.cpp -g
 
-LSH.o : LSH.cpp
+LSH.o : LSH.cpp LSH.hpp
 	g++ -c LSH.cpp -g
 
 ../util.o : ../util.cpp

@@ -63,7 +63,7 @@ uint32_t H::hash(Point p){
     // h(p) = [ a_(d-1) + m a_(d-2) + ... + m^(d-1) a_0 ] mod M
     // We do modM on every step, instead of once, to prevent overflow
     // The result will be correct because of the multiplicaiton property of mod
-    uint32_t hp;
+    uint32_t hp = 0;
     for (int i=0; i<d; i++){
         hp += mod(mod(a.at(d-i-1),M)*m[i],M);
         hp = mod(hp,M);

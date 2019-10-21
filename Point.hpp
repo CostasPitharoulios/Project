@@ -9,10 +9,9 @@ class Point{
         int d; // Dimensions
         vector<double> listOfCoordinates;
     public:
-        Point();
+        Point(int id);
         ~Point();
         void addCoordinate(double x);
-        void setId(int x);
         int getId();
         int getD();
         void printPoint();
