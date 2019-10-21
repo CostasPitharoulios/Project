@@ -72,7 +72,7 @@ int main(int argc,char *argv[]){
 
 
     int k = 4, L=5;
-    LSH lsh(4*r, p1.getD(), maxN, k, L);
+    LSH lsh(4*r, p1.getD(), k, L);
 
     lsh.insert(p1);
 
