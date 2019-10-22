@@ -95,6 +95,7 @@ int main(int argc,char *argv[]){
     }
     cout << "Reading complete." << endl;
 
+
     //cout << "G: \n";
     //lsh.printG(0);
 

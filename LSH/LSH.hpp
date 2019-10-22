@@ -4,6 +4,7 @@
 
 using namespace std;
 
+// Class for the implementation of LSH hashing algorithm
 class LSH{
     private:
         vector<Point*> dataset;
@@ -22,3 +23,5 @@ class LSH{
         
         void nearestNeighbour(Point p); // Prints info about the A-NN
 };
+
+typedef unordered_multimap<uint32_t,Point *>::iterator mapIt;

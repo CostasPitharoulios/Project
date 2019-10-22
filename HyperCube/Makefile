@@ -1,5 +1,5 @@
-demo : main.o ../Point.o ../dist.o ../H.o ../G.o LSH.o ../util.o
-	g++ main.o  ../Point.o ../dist.o ../H.o ../G.o LSH.o ../util.o -o demo
+demo : main.o ../Point.o ../dist.o ../H.o ../G.o HC.o ../util.o
+	g++ main.o  ../Point.o ../dist.o ../H.o ../G.o HC.o ../util.o -o demo
 
 main.o : main.cpp
 	g++ -c main.cpp -g
@@ -13,8 +13,8 @@ main.o : main.cpp
 ../G.o : ../G.cpp
 	g++ -c ../G.cpp -o ../G.o -g
 
-LSH.o : LSH.cpp LSH.hpp
-	g++ -c LSH.cpp -g
+HC.o : HC.cpp
+	g++ -c HC.cpp -o HC.o -g
 
 ../util.o : ../util.cpp
 	g++ -c ../util.cpp -o ../util.o -g
@@ -23,4 +23,4 @@ LSH.o : LSH.cpp LSH.hpp
 	g++ -c ../dist.cpp -o ../dist.o -g
 
 clean:
-	rm demo main.o ../Point.o ../dist.o ../H.o ../G.o LSH.o ../util.o
+	rm demo main.o ../Point.o ../dist.o ../H.o HC.o ../G.o ../util.o

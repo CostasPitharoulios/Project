@@ -6,25 +6,25 @@
 
 using namespace std;
 
-typedef unordered_multimap<uint32_t,Point *>::iterator mapIt;
-
 LSH::LSH(int w, int d, int k, int L):w(w), d(d), k(k), L(L){
     cout << "Whatap LSH\n";
     for (int i=0; i<L; i++){
+        // Create the i-th g() and save it to the vector G
         G g_i(w, d, k);
         g.push_back(g_i);
 
+        // Create the i-th hashaTable and save it to the vector hashTables
         unordered_multimap<uint32_t,Point *> ht;
         hashTables.push_back(ht);
     }
+}
 
-    // This is important because we dont want the addresses
-    // of the points in the dataset to change, since the
-    // hashtable entries are pointers to Points.
-    //dataset.reserve(maxN);
-} 
-
-LSH::~LSH(){}
+LSH::~LSH(){ //TODO solve leaks
+     
+    for (vector<Point *>::iterator it=dataset.begin(); it != dataset.end(); it++){
+        delete *it;
+    }
+}
 
 void LSH::insert(Point p){
     Point *ptr = new Point(p);
@@ -60,6 +60,7 @@ void LSH::printG(int i){
 }
 
 void LSH::nearestNeighbour(Point p){
+    cout << "Finding Nearest Neighbour...\n";
     
     // Loop over the points that have this hash key, and find the nearest
     // TODO : stop after 3L points
