@@ -131,10 +131,10 @@ void HC::nearestNeighbour(Point p){
     }
     cout << "Examined " << verticescount << " vertices. (" << pointscount << " Points in total)." << endl;
 
-    if (min_id!=-1)
+    if (min_id!=-1) //TODO return them instead of printing them 
         cout << "NN of " << p.getId() << " is " << min_id << " with distance " << min << endl;
     else
-        cout << "NN of " << p.getId() << " is was not found " << endl;
+        cout << "NN of " << p.getId() << " was not found. " << endl;
 }
 
 void HC::printCube(){

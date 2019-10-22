@@ -22,6 +22,7 @@ class LSH{
         void printG(int i);
         
         void nearestNeighbour(Point p); // Prints info about the A-NN
+        //TODO radius nn
 };
 
 typedef unordered_multimap<uint32_t,Point *>::iterator mapIt;
