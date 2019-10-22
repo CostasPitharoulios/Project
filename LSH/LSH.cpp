@@ -59,13 +59,16 @@ void LSH::printG(int i){
     }
 }
 
-void LSH::nearestNeighbour(Point p){
+// TODO mhpws na epestrefe sketo Point? wste o ap e3w na mhn exei prosvash 
+// sto dataset. Alla etsi den 3erw ti prepei na epistrepsei otan den vre8ei nn
+// (isws ena Point me id = -1)
+Point *LSH::nearestNeighbour(Point p){
     cout << "Finding Nearest Neighbour...\n";
     
     // Loop over the points that have this hash key, and find the nearest
     // TODO : stop after 3L points
     double min = numeric_limits<double>::max();
-    int min_id=-1;
+    Point *min_ptr = nullptr;
     for (int i=0; i<L; i++){
         //cout << "g(" << i << ") = " << (bitset<32>(g.at(i).hash(p))) << endl;
         uint32_t hashkey = g.at(i).hash(p);
@@ -81,15 +84,12 @@ void LSH::nearestNeighbour(Point p){
             double dist = manhattanDistance(p.getCoordinates(), it1->second->getCoordinates());
             if (dist < min){
                 min = dist;
-                min_id = it1->second->getId();
+                min_ptr = it1->second;
             }
             it1++;
         }
         cout << "Points in the same bucket on g(" << i << "): " << count << endl;; 
     }
 
-    if (min_id!=-1)
-        cout << "NN of " << p.getId() << " is " << min_id << " with distance " << min << endl;
-    else
-        cout << "NN of " << p.getId() << " is was not found " << endl;
+    return min_ptr;
 }

@@ -27,7 +27,7 @@ class HC{
 
         void insert(Point p);
         uint32_t hash(Point p); // returns a key < 2^dd
-        void nearestNeighbour(Point p);
+        Point *nearestNeighbour(Point p);
         void printCube();
         //TODO radius nn
 };

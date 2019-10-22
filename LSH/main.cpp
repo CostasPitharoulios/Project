@@ -115,7 +115,13 @@ int main(int argc,char *argv[]){
             p.addCoordinate(stod(token));
 
         // Find its A-NN
-        lsh.nearestNeighbour(p);
+        Point *nn = lsh.nearestNeighbour(p);
+
+        if (nn!=nullptr)
+            cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << manhattanDistance(p.getCoordinates(),nn->getCoordinates()) << endl;
+        else
+            cout << "NN of " << p.getId() << " is was not found " << endl;
+
 
         //////////////
         break;

@@ -95,13 +95,13 @@ set<uint32_t> nearVertices(uint32_t num, int length, int probes){
     return s;
 }
 
-void HC::nearestNeighbour(Point p){
+Point *HC::nearestNeighbour(Point p){
     cout << "Finding Nearest Neighbour...\n";
     
     uint32_t hashkey = hash(p);
     cout << "hashkey=" << (bitset<32>(hashkey)) << endl;
     double min = numeric_limits<double>::max();
-    int min_id=-1;
+    Point *min_ptr=nullptr;
 
     // Compute a set of vertices with hamming distance < hd
     set<uint32_t> s = nearVertices(hashkey, dd, hd);
@@ -122,19 +122,16 @@ void HC::nearestNeighbour(Point p){
             double dist = manhattanDistance(p.getCoordinates(), it1->second->getCoordinates());
             if (dist < min){
                 min = dist;
-                min_id = it1->second->getId();
+                min_ptr = it1->second;
             }
             pointscount++;
             it1++;
         }
         verticescount++;
     }
-    cout << "Examined " << verticescount << " vertices. (" << pointscount << " Points in total)." << endl;
-
-    if (min_id!=-1) //TODO return them instead of printing them 
-        cout << "NN of " << p.getId() << " is " << min_id << " with distance " << min << endl;
-    else
-        cout << "NN of " << p.getId() << " was not found. " << endl;
+    cout << "Examined " << verticescount << " vertices. (";
+    cout << pointscount << " Points in total)." << endl;
+    return min_ptr;
 }
 
 void HC::printCube(){
