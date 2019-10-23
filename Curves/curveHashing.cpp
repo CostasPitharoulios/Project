@@ -9,14 +9,14 @@ using namespace std;
 
 
 
-
+// returns a pointer to hashed curve
 Curve* curveHashing(vector<Curve *>::iterator queryCurve){
     
     // first of all we need to caldulate delta
     int m1,m2;
     m1 = (*queryCurve)->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
     //m2 = (*inputCurve)->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
-    double delta = 2;
+    double delta = 0.5;
     
     //===============================================================================================
     //          *** SOME INFO FOR WHAT WE ARE GOING TO DO ***
