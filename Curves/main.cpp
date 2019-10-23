@@ -40,6 +40,7 @@ int main(int argc,char *argv[]){
     LSHC lshc(0.5,2);
     lshc.readData(inputFile);
     lshc.lshInsertAll();
+    lshc.readQueries(queryFile);
 
     return 0;
 }
