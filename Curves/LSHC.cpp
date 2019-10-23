@@ -80,9 +80,10 @@ Point* LSHC::vectorCurveToPoint(Curve* hashedCurve){
     newPoint= new Point();  // creating a new point to represent vector of curve
     
     int numberOfCords = hashedCurve->getNumberOfCoordinates(); //in order to know how many points there are in the vector of hashed Curve
-    
+    cout << "numerofcoors:" << numberOfCords << "\n";
+
     int coordinatesCounter=0;
-    for(int i=0; i< numberOfCords; i+=2){ // adding x,y to the list of coordinates of pointer
+    for(int i=0; i< numberOfCords; i++){ // adding x,y to the list of coordinates of pointer
         newPoint->addCoordinate(hashedCurve->getSpecificXCoord(i));
         newPoint->addCoordinate(hashedCurve->getSpecificYCoord(i));
         coordinatesCounter+=2;
