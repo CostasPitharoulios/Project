@@ -8,6 +8,7 @@
 #include "DTW.hpp"
 /*#include "curveHashing.hpp"*/
 #include "Grid.hpp"
+#include "LSHC.hpp"
 
 using namespace std;
 
@@ -118,13 +119,26 @@ int main(){
     // Info:
     //=======================================================================================================
     
-    for(vector<Curve*>::iterator queryCurve = listOfQueryCurves->begin(); queryCurve != listOfQueryCurves->end(); queryCurve++){
+   /* for(vector<Curve*>::iterator queryCurve = listOfQueryCurves->begin(); queryCurve != listOfQueryCurves->end(); queryCurve++){
         Curve* aCurve;
         aCurve = curveHashing(queryCurve);
         //cout << "Displaying vector contents: \n";
         //aCurve->DisplayVectorContents();
         
-    }
+    }*/
+    
+    LSHC* newLSHC;
+    newLSHC = new LSHC(0.5,2);
+    newLSHC->readData(queryFilePath);
+    
+    Curve* testCurve;
+    testCurve = new Curve;
+    
+    
+    
+    
+    
+    
     
     
     return 0;
