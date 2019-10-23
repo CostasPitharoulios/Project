@@ -212,16 +212,8 @@ void LSHC::nearestNeighbourCurve(Curve *querie){
     cout << endl;
 
     // Find its nearestNeighbour point using lsh
-    lsh->nearestNeighbour(*ptr);
+    lsh->nearestNeighbour(*ptr, "dtw");
     free(ptr);
 }
 
-double LSHC::getDTWfromPoints(Point* pointA, Point* pointB){
-    Curve *originA;     // stores the pointer to origin curve of point a
-    Curve *originB;     // stores the pointer to origin curve of point b
-    
-    originA = pointA->getOrigin();
-    originB = pointB->getOrigin();
-    
-    return getValueDTW(originA, originB);
-}
+

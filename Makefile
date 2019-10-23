@@ -1,7 +1,7 @@
 all: Curves/demo LSH/demo #HC/demo
 
-Curves/demo : Curves/main.o Point.o Curves/Curve.o Curves/readingFunctions.o Curves/DTW.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o dist.o H.o G.o LSH/LSH.o util.o
-	g++ Curves/main.o  Point.o Curves/Curve.o Curves/readingFunctions.o Curves/DTW.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o dist.o H.o G.o LSH/LSH.o util.o -o Curves/demo -g
+Curves/demo : Curves/main.o Point.o Curves/Curve.o Curves/readingFunctions.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o dist.o H.o G.o LSH/LSH.o util.o
+	g++ Curves/main.o  Point.o Curves/Curve.o Curves/readingFunctions.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o dist.o H.o G.o LSH/LSH.o util.o -o Curves/demo -g
 
 LSH/demo : LSH/main.o Point.o dist.o H.o G.o LSH/LSH.o util.o
 	g++ LSH/main.o Point.o dist.o H.o G.o LSH/LSH.o util.o -o LSH/demo
@@ -14,9 +14,6 @@ Point.o : Point.cpp Point.hpp
 
 Curves/Curve.o	: Curves/Curve.cpp Curves/Curve.hpp
 	g++ -c Curves/Curve.cpp -o Curves/Curve.o -g
-
-Curves/DTW.o:	Curves/DTW.cpp
-	g++ -c Curves/DTW.cpp -o Curves/DTW.o -g
 
 Curves/LSHC.o: Curves/LSHC.cpp Curves/LSHC.hpp
 	g++ -c Curves/LSHC.cpp -o Curves/LSHC.o -g
@@ -49,4 +46,4 @@ dist.o : dist.cpp
 	g++ -c dist.cpp -o dist.o -g
 
 clean:
-	rm Curves/demo Curves/main.o Point.o Curves/Curve.o Curves/readingFunctions.o Curves/DTW.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o LSH/demo LSH/main.o dist.o H.o G.o LSH/LSH.o util.o
+	rm Curves/demo Curves/main.o Point.o Curves/Curve.o Curves/readingFunctions.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o LSH/demo LSH/main.o dist.o H.o G.o LSH/LSH.o util.o

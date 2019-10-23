@@ -21,7 +21,7 @@ class LSH{
         void insert(Point p);
         void printG(int i);
         
-        Point *nearestNeighbour(Point p); // A-NN
+        Point *nearestNeighbour(Point p, string distFunc); // A-NN
         //TODO radius nn
 };
 
