@@ -10,7 +10,6 @@ using namespace std;
 
 LSHC::LSHC(double delta, int d){
     cout << "New LSH for curves bitch" << endl;
-
 }
 
 void LSHC::readData(string path){
@@ -92,4 +91,27 @@ Point* LSHC::vectorCurveToPoint(Curve* hashedCurve){
     newPoint->setD(numberOfCords);
     
     return newPoint;
+}
+
+int LSHC::maxCurveLength(){
+    int max = -1;
+    for(vector<Curve*>::iterator it = allCurves->begin(); it != allCurves.end(); it++){
+        if ( (*it)->numberOfCoordinates > max )
+            max = (*it)->numberOfCoordinates;
+    }
+    return max;
+}
+
+void LSHC::lshInsertAll(){
+    int maxD = maxCurveLength();
+    // For every Curve
+    for(vector<Curve*>::iterator it = allCurves->begin(); it != allCurves.end(); it++){
+        Point *ptr = vectorCurveToPoint(*it);
+        cout << "Point of curve: ";
+        ptr->printPoint();
+
+        ptr->addPadding(maxD);
+        cout << "Point after padding: ";
+        ptr->printPoint();
+    }
 }

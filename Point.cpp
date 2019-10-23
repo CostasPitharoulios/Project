@@ -77,3 +77,8 @@ double Point::getY(void){
 void Point::setD(int dim){
     this->d = dim;
 }
+
+void Point::addPadding(int new_d){
+    for (int i=0; i < new_d-d ; i++)
+        addCoordinate(0);
+}

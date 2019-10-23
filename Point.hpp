@@ -17,12 +17,8 @@ class Point{
         int getId();
         void setId(int x);
         int getD();
-<<<<<<< HEAD
    //     void setOrigin(Curve *ptr);
   //      Curve *getOrigin();
-=======
-        void setD(int dim);
->>>>>>> 683de815df77d5bade396c465f6055a1290bbb38
         void printPoint();
         double getCoordinate(int i);
         vector<double> getCoordinates();
@@ -30,5 +26,5 @@ class Point{
         void setY(double y);
         double getX();
         double getY();
-        
+        void addPading(int new_d); // Add 0's to reach new_d dimensions
 };
