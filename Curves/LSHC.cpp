@@ -95,17 +95,20 @@ Point* LSHC::vectorCurveToPoint(Curve* hashedCurve){
 
 int LSHC::maxCurveLength(){
     int max = -1;
-    for(vector<Curve*>::iterator it = allCurves->begin(); it != allCurves.end(); it++){
-        if ( (*it)->numberOfCoordinates > max )
-            max = (*it)->numberOfCoordinates;
+    for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
+        if ( (*it)->getNumberOfCoordinates() > max )
+            max = (*it)->getNumberOfCoordinates();
     }
     return max;
 }
 
 void LSHC::lshInsertAll(){
     int maxD = maxCurveLength();
+    int w = 4000, k=4; //TODO arguments?
+    //lsh = new LSH(w, maxD, k, 1);
+
     // For every Curve
-    for(vector<Curve*>::iterator it = allCurves->begin(); it != allCurves.end(); it++){
+    for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
         Point *ptr = vectorCurveToPoint(*it);
         cout << "Point of curve: ";
         ptr->printPoint();
@@ -113,5 +116,7 @@ void LSHC::lshInsertAll(){
         ptr->addPadding(maxD);
         cout << "Point after padding: ";
         ptr->printPoint();
+
+        //lsh->insert( *ptr?);
     }
 }

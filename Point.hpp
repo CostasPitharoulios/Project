@@ -12,7 +12,7 @@ class Point{
  //       Curve *origin; // Curve from which this point is originated(in case of LSHC)
     public:
         Point(int id=-1);
-        ~Point();
+        ~Point(); //TODO copy constructor for origin
         void addCoordinate(double x);
         int getId();
         void setId(int x);
@@ -27,5 +27,5 @@ class Point{
         void setY(double y);
         double getX();
         double getY();
-        void addPading(int new_d); // Add 0's to reach new_d dimensions
+        void addPadding(int new_d); // Add 0's to reach new_d dimensions
 };

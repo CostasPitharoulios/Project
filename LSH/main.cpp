@@ -73,7 +73,7 @@ int main(int argc,char *argv[]){
     p2.addCoordinate(5);
     */
 
-    int k = 4, L=5, w=4000;
+    int k = 4, L=5, w=4000; //TODO arguments?
     LSH lsh(w, p1.getD(), k, L);
 
     lsh.insert(p1);
