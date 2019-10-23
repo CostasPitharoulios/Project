@@ -2,6 +2,9 @@
 #include <fstream>
 #include <sstream>
 #include "LSHC.hpp"
+#include "Curve.hpp"
+#include "Grid.hpp"
+#include "../Point.hpp"
 
 using namespace std;
 
@@ -70,4 +73,23 @@ void LSHC::readData(string path){
     }
     
     dataSet.close(); //closing opened file
+}
+
+
+Point* LSHC::vectorCurveToPoint(Curve* hashedCurve){
+    Point* newPoint;
+    newPoint= new Point();  // creating a new point to represent vector of curve
+    
+    int numberOfCords = hashedCurve->getNumberOfCoordinates(); //in order to know how many points there are in the vector of hashed Curve
+    
+    int coordinatesCounter=0;
+    for(int i=0; i< numberOfCords; i+=2){ // adding x,y to the list of coordinates of pointer
+        newPoint->addCoordinate(hashedCurve->getSpecificXCoord(i));
+        newPoint->addCoordinate(hashedCurve->getSpecificYCoord(i));
+        coordinatesCounter+=2;
+    }
+    
+    newPoint->setD(numberOfCords);
+    
+    return newPoint;
 }

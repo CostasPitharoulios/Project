@@ -1,6 +1,9 @@
+#pragma once
+
 #include <string>
 #include "Grid.hpp"
 #include "Curve.hpp"
+#include "../Point.hpp"
 
 using namespace std;
 
@@ -18,5 +21,5 @@ class LSHC{
 
         void readData(string path); // Read curves from file path
         //void insert
-        Point curveToPoint(Curve c);
+        Point* vectorCurveToPoint(Curve* hashedCurve); // We have already created a grid vector of curve, so with this function we convert the vector to a single point ang we finally get a pointer to this.
 };

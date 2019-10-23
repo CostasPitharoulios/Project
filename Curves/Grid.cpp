@@ -19,6 +19,7 @@ Curve* Grid::curveHashing(vector<Curve *>::iterator queryCurve){
     
     // first of all we need to caldulate delta
     int m1,m2;
+    int coordinatesCounter = 0;
     m1 = (*queryCurve)->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
     //m2 = (*inputCurve)->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
     double delta = 0.5;
@@ -86,6 +87,8 @@ Curve* Grid::curveHashing(vector<Curve *>::iterator queryCurve){
             
             hashedCurve->PushToVector(aPoint);
             
+            coordinatesCounter++;
+            
             // cout << "Point of vector is: " << minX << "-" << minY << "\n";
         }
         previousMinX = minX;
@@ -93,6 +96,8 @@ Curve* Grid::curveHashing(vector<Curve *>::iterator queryCurve){
         
         
     }
+    
+    hashedCurve->setNumberOfCoordinates(coordinatesCounter);
     
     return hashedCurve;
     
