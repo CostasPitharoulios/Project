@@ -9,7 +9,7 @@ class LSH{
     private:
         vector<Point*> dataset;
         vector<G> g; // g_1(), g_2(), ..., g_L()
-        vector<unordered_multimap<uint32_t,Point *>> hashTables;// L hashtables
+        vector<unordered_multimap<uint32_t,Point *> > hashTables;// L hashtables
         int d; // Dimension of points
         int w; // Grid cell size
         int L; // Number of hashfunctions

@@ -10,7 +10,7 @@ using namespace std;
 // LSH for Curves
 class LSHC{
     private:
-        vector<Curve *> allCurves;
+        vector<Curve*> allCurves;
         LSH *lsh;
         double delta;
         vector<Grid> grids; // L grids

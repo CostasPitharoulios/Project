@@ -12,7 +12,7 @@
 
 using namespace std;
 
-
+/*
 Point* vectorCurveToPoint(Curve* hashedCurve){
     Point* newPoint;
     newPoint= new Point();  // creating a new point to represent vector of curve
@@ -35,7 +35,7 @@ Point* vectorCurveToPoint(Curve* hashedCurve){
     newPoint->setD(numberOfCords);
 
     return newPoint;
-}
+}*/
 
 int main(){
     
@@ -180,8 +180,10 @@ int main(){
     testCurve->PushToVector(testPoint2);
 
     testCurve->setNumberOfCoordinates(2);
+    
+    newLSHC->vectorCurveToPoint(testCurve);
 
-    vectorCurveToPoint(testCurve);
+    //vectorCurveToPoint(testCurve);
 
     
     
