@@ -27,5 +27,5 @@ class Point{
         void setY(double y);
         double getX();
         double getY();
-        
+        void addPading(int new_d); // Add 0's to reach new_d dimensions
 };
