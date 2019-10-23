@@ -12,6 +12,7 @@ class LSHC{
     private:
         vector<Curve*> allCurves;
         LSH *lsh;
+        int d; //Dimension of the points of the curves
         double delta;
         vector<Grid> grids; // L grids
         //vector<unordered_multiman< >> hashTables; // L hashTables

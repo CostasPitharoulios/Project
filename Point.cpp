@@ -79,6 +79,8 @@ void Point::setD(int dim){
 }
 
 void Point::addPadding(int new_d){
-    for (int i=0; i < new_d-d ; i++)
+    int space = new_d-d;
+    for (int i=0; i < space ; i++){
         addCoordinate(0);
+    }
 }

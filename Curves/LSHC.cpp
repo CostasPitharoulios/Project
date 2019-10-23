@@ -8,7 +8,7 @@
 
 using namespace std;
 
-LSHC::LSHC(double delta, int d){
+LSHC::LSHC(double delta, int d):d(d){
     cout << "New LSH for curves bitch" << endl;
 }
 
@@ -51,10 +51,10 @@ void LSHC::readData(string path){
         //cout << "Id= " << id << "\n";
         
         getline(linestream, word, '\t');                    // reading second word -> number of coordinates
-        cout << "word: " << word << endl;
+        //cout << "word: " << word << endl;
         int numberOfCords = std::stoi(word);    // storing number of cords
         aCurve->setNumberOfCoordinates(numberOfCords);
-        cout << "number of coordinates is: " << aCurve->getNumberOfCoordinates() << "\n";
+        //cout << "number of coordinates is: " << aCurve->getNumberOfCoordinates() << "\n";
         
         float x,y;
         for (int i=0; i< numberOfCords; i++){   // reading each coordinate
@@ -89,8 +89,6 @@ Point* LSHC::vectorCurveToPoint(Curve* hashedCurve){
         coordinatesCounter+=2;
     }
     
-    newPoint->setD(numberOfCords);
-    
     return newPoint;
 }
 
@@ -105,18 +103,22 @@ int LSHC::maxCurveLength(){
 
 void LSHC::lshInsertAll(){
     int maxD = maxCurveLength();
+    cout << "MaxD:" << maxD << endl;
     int w = 4000, k=4; //TODO arguments?
     //lsh = new LSH(w, maxD, k, 1);
 
     // For every Curve
     for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
+        (*it)->printCoordinates();
         Point *ptr = vectorCurveToPoint(*it);
         cout << "Point of curve: ";
         ptr->printPoint();
+        cout << endl;
 
-        ptr->addPadding(maxD);
+        ptr->addPadding(d*maxD);
         cout << "Point after padding: ";
         ptr->printPoint();
+        cout << endl;
 
         //lsh->insert( *ptr?);
     }
