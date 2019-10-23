@@ -3,23 +3,42 @@
 
 using namespace std;
 
-Point::Point(){
-    printf("Point was created\n");
+Point::Point(int id):d(0),id(id){
+    //printf("Point was created\n");
 }
 
 Point::~Point(){
-    printf("Point was destroyed\n");
+    //printf("Point was destroyed\n");
 }
 
 void Point::addCoordinate(double x){
     listOfCoordinates.push_back(x);
+    d++;
 }
 
-void Point::printCoordinates(){
-    for (int i=0; i< listOfCoordinates.size(); i++)
-        cout << listOfCoordinates.at(i) << ' ';
-    cout << endl;
+double Point::getCoordinate(int i){
+    return listOfCoordinates.at(i);
 }
+
+void Point::setId(int x){
+    this->id = x;
+}
+
+int Point::getId(){
+    return id;
+}
+
+int Point::getD(){
+    return d;
+}
+
+void Point::printPoint(){
+    cout << "id:" << (this->id) << "<";
+    for (int i=0; i< listOfCoordinates.size(); i++)
+        cout << listOfCoordinates.at(i) << ',';
+    cout << ">";
+}
+
 
 vector<double> Point::getCoordinates(){
     return listOfCoordinates;

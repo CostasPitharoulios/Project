@@ -5,12 +5,18 @@ using namespace std;
 
 class Point{
     private:
-    vector<double> listOfCoordinates;
+        int id;
+        int d; // Dimensions
+        vector<double> listOfCoordinates;
     public:
-        Point();
+        Point(int id=-1);
         ~Point();
         void addCoordinate(double x);
-        void printCoordinates();
+        int getId();
+        void setId(int x);
+        int getD();
+        void printPoint();
+        double getCoordinate(int i);
         vector<double> getCoordinates();
         void setX(double x);
         void setY(double y);
