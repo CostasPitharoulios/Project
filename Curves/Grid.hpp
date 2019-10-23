@@ -1,4 +1,5 @@
 #include <vector>
+#include "Curve.hpp"
 
 using namespace std;
 
@@ -8,5 +9,5 @@ class Grid {
         vector<double> t; // Shift each dimension by t.at(i)
     public:
         Grid(double delta, int d);
-        //Curve curveHash(Curve in);
+        Curve* curveHashing(vector<Curve *>::iterator queryCurve);
 };
