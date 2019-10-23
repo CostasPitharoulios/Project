@@ -73,3 +73,7 @@ double Point::getX(void){
 double Point::getY(void){
     return listOfCoordinates[1];
 }
+
+void Point::setD(int dim){
+    this->d = dim;
+}
