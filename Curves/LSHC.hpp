@@ -24,4 +24,6 @@ class LSHC{
         void lshInsertAll();
         int maxCurveLength();
         Point* vectorCurveToPoint(Curve* hashedCurve); // We have already created a grid vector of curve, so with this function we convert the vector to a single point and we finally get a pointer to this.
+    
+        double getDTWfromPoints(Point* pointA, Point* pointB);
 };

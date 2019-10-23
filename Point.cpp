@@ -34,7 +34,7 @@ int Point::getD(){
     return d;
 }
 
-#if 0
+
 void Point::setOrigin(Curve *ptr){
     this->origin=ptr;
 }
@@ -42,7 +42,7 @@ void Point::setOrigin(Curve *ptr){
 Curve *Point::getOrigin(){
     return origin;
 }
-#endif
+
 
 void Point::printPoint(){
     cout << "id:" << (this->id) << "<";

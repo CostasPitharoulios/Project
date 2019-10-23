@@ -1,5 +1,5 @@
-demo : main.o Curve.o ../Point.o readingFunctions.o DTW.o curveHashing.o LSHC.o Grid.o
-	g++ main.o  ../Point.o Curve.o readingFunctions.o DTW.o curveHashing.o LSHC.o Grid.o -o demo -g
+demo : main.o Curve.o ../Point.o readingFunctions.o curveHashing.o LSHC.o Grid.o ../dist.o
+	g++ main.o  ../Point.o Curve.o readingFunctions.o curveHashing.o LSHC.o Grid.o ../dist.o -o demo -g
 
 main.o : main.cpp
 	g++ -c main.cpp -g
@@ -9,9 +9,6 @@ main.o : main.cpp
 
 Curve.o	: Curve.cpp Curve.hpp
 	g++ -c Curve.cpp -o Curve.o -g
-
-DTW.o:	DTW.cpp
-	g++ -c DTW.cpp -o DTW.o -g
 
 LSHC.o: LSHC.cpp LSHC.hpp
 	g++ -c LSHC.cpp -o LSHC.o -g
@@ -25,5 +22,8 @@ curveHashing.o:	curveHashing.cpp curveHashing.hpp
 Grid.o:	Grid.cpp Grid.hpp
 	g++ -c Grid.cpp -o Grid.o -g 
 
+../dist.o:	../dist.cpp ../dist.hpp
+	g++ -c ../dist.cpp -o ../dist.o -g
+
 clean:
-	rm demo main.o ../Point.o Curve.o readingFunctions.o DTW.o curveHashing.o LSHC.o Grid.o
+	rm demo main.o ../Point.o Curve.o readingFunctions.o curveHashing.o LSHC.o Grid.o ../dist.o

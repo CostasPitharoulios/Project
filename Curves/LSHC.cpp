@@ -5,6 +5,7 @@
 #include "Curve.hpp"
 #include "Grid.hpp"
 #include "../Point.hpp"
+#include "../dist.hpp"
 
 using namespace std;
 
@@ -123,3 +124,15 @@ void LSHC::lshInsertAll(){
         //lsh->insert( *ptr?);
     }
 }
+
+double LSHC::getDTWfromPoints(Point* pointA, Point* pointB){
+    Curve *originA;     // stores the pointer to origin curve of point a
+    Curve *originB;     // stores the pointer to origin curve of point b
+    
+    originA = pointA->getOrigin();
+    originB = pointB->getOrigin();
+    
+    return getValueDTW(originA, originB);
+}
+    
+    
