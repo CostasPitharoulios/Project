@@ -155,24 +155,20 @@ int main(){
     LSHC* newLSHC;
     newLSHC = new LSHC(0.5,2);
     newLSHC->readData(queryFilePath);
-      cout << "HEEYYYYY1" ;
     
     Curve* testCurve;
     testCurve = new Curve();
-    cout << "HEEYYYYY2" ;
    
 
     Point* testPoint1;
     testPoint1 = new Point;
     testPoint1->setX(1);
     testPoint1->setY(2);
-      cout << "HEEYYYYY3" ;
 
     Point* testPoint2;
     testPoint2 = new Point;
-    testPoint1->setX(3);
-    testPoint1->setY(4);
-    cout << "HEEYYYYY4" ;
+    testPoint2->setX(3);
+    testPoint2->setY(4);
 
   
     testCurve->PushToVector(testPoint1);
@@ -180,6 +176,7 @@ int main(){
     testCurve->PushToVector(testPoint2);
 
     testCurve->setNumberOfCoordinates(2);
+    testCurve->printCoordinates();
     
     newLSHC->vectorCurveToPoint(testCurve);
 

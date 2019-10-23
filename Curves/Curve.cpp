@@ -53,4 +53,10 @@ double Curve::getSpecificYCoord(int position){
     return listOfCoordinates.at(position)->getY();
 }
 
-
+void Curve::printCoordinates(){
+    cout << "Curve Points: ";
+    for(int i=0; i<listOfCoordinates.size(); i++){
+        cout << "     (" << listOfCoordinates.at(i)->getX() << "," <<  listOfCoordinates.at(i)->getY() << ")";
+    }    
+    cout << endl;
+}

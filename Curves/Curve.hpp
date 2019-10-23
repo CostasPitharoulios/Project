@@ -17,6 +17,7 @@ class Curve{
         ~Curve();
         void setId(string Id);
         string getId(void);
+        void printCoordinates();
         void setNumberOfCoordinates(int number);
         int getNumberOfCoordinates(void);
         //vector<Point*> get_listOfCoordinates();
