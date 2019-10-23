@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Point.hpp"
+#include "Curves/Curve.hpp"
 
 using namespace std;
 

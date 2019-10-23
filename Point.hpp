@@ -2,6 +2,8 @@
 #include <vector>
 //#include "Curves/Curve.hpp"
 
+class Curve;
+
 using namespace std;
 
 class Point{
@@ -9,7 +11,7 @@ class Point{
         int id;
         int d; // Dimensions
         vector<double> listOfCoordinates;
- //       Curve *origin; // Curve from which this point is originated(in case of LSHC)
+        Curve *origin; // Curve from which this point is originated(in case of LSHC)
     public:
         Point(int id=-1);
         ~Point(); //TODO copy constructor for origin
@@ -17,8 +19,8 @@ class Point{
         int getId();
         void setId(int x);
         int getD();
-//        void setOrigin(Curve *ptr);
-//        Curve *getOrigin();
+        void setOrigin(Curve *ptr);
+        Curve *getOrigin();
         void setD(int dim);
         void printPoint();
         double getCoordinate(int i);
