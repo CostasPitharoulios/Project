@@ -15,7 +15,6 @@ Point.o : Point.cpp Point.hpp
 Curves/Curve.o	: Curves/Curve.cpp Curves/Curve.hpp
 	g++ -c Curves/Curve.cpp -o Curves/Curve.o -g
 
-
 Curves/LSHC.o: Curves/LSHC.cpp Curves/LSHC.hpp
 	g++ -c Curves/LSHC.cpp -o Curves/LSHC.o -g
 

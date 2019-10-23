@@ -62,7 +62,7 @@ void LSH::printG(int i){
 // TODO mhpws na epestrefe sketo Point? wste o ap e3w na mhn exei prosvash 
 // sto dataset. Alla etsi den 3erw ti prepei na epistrepsei otan den vre8ei nn
 // (isws ena Point me id = -1)
-Point *LSH::nearestNeighbour(Point p){
+Point *LSH::nearestNeighbour(Point p, string distFunc){
     cout << "Finding Nearest Neighbour...\n";
     
     // Loop over the points that have this hash key, and find the nearest
@@ -81,7 +81,16 @@ Point *LSH::nearestNeighbour(Point p){
             count++;
 
             // Compute the distance between the two points
-            double dist = manhattanDistance(p.getCoordinates(), it1->second->getCoordinates());
+            double dist;
+            if(!distFunc.compare("manh"))
+               dist = manhattanDistance(p.getCoordinates(), it1->second->getCoordinates());
+            else if(!distFunc.compare("dtw"))
+               dist = getDTWfromPoints(&p, it1->second);
+            else{
+                cout << "Wrong distFunc argument" << endl;
+                return nullptr;
+            }
+
             
             if (dist < min){
                 min = dist;
