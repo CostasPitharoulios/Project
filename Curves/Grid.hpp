@@ -1,5 +1,7 @@
 #include <vector>
 
+using namespace std;
+
 class Grid {
     private: 
         double delta;
@@ -7,4 +9,4 @@ class Grid {
     public:
         Grid(double delta, int d);
         //Curve curveHash(Curve in);
-}
+};
