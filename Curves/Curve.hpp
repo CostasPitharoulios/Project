@@ -25,3 +25,4 @@ class Curve{
     double getSpecificXCoord(int position);
     double getSpecificYCoord(int position);
 };
+

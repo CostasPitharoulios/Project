@@ -1,12 +1,9 @@
-Grid#include "Grid.hpp"
+#include "Grid.hpp"
 #include <iostream>
 #include <limits>
 #include <math.h>
 #include "DTW.hpp"
 #include "../Point.hpp"
-
-using namespace std;
-
 
 using namespace std;
 
@@ -18,7 +15,7 @@ Grid::Grid(double delta, int d):delta(delta){
 }
 
 
-Curve* Grid::curveHashing(vector<Curve *>::iterator queryCurve, double t){
+Curve* Grid::curveHashing(vector<Curve *>::iterator queryCurve){
     
     // first of all we need to caldulate delta
     int m1,m2;
@@ -43,8 +40,8 @@ Curve* Grid::curveHashing(vector<Curve *>::iterator queryCurve, double t){
     for (int i=0; i< m1; i++){
         x = (*queryCurve)->getSpecificXCoord(i);
         y = (*queryCurve)->getSpecificYCoord(i);
-        int xStartOfBucket = (x-t)/delta;
-        int yStartOfBucket = (y-t)/delta;
+        int xStartOfBucket = (x-t.at(0))/delta;
+        int yStartOfBucket = (y-t.at(1))/delta;
         
         int x1  = xStartOfBucket * delta; // x start of bucket
         int x2  = (xStartOfBucket+1) * delta; // x end of bucket
