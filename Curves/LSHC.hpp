@@ -14,4 +14,6 @@ class LSHC{
 
     public:
         LSHC(double delta, int d);
+
+        void readData(string path); // Read curves from file path
 };
