@@ -12,6 +12,31 @@
 
 using namespace std;
 
+
+Point* vectorCurveToPoint(Curve* hashedCurve){
+    Point* newPoint;
+    newPoint= new Point();  // creating a new point to represent vector of curve
+    
+    int numberOfCords = hashedCurve->getNumberOfCoordinates(); //in order to know how many points there are in the vector of hashed Curve
+    cout << "numerofcoors:" << numberOfCords << "\n";
+
+    
+
+    int coordinatesCounter=0;
+    for(int i=0; i< numberOfCords; i++){ // adding x,y to the list of coordinates of pointer
+
+        newPoint->addCoordinate(hashedCurve->getSpecificXCoord(i));
+        newPoint->addCoordinate(hashedCurve->getSpecificYCoord(i));
+        coordinatesCounter+=2;
+    
+
+    }
+    
+    newPoint->setD(numberOfCords);
+
+    return newPoint;
+}
+
 int main(){
     
     //=======================================================================================================
@@ -130,9 +155,35 @@ int main(){
     LSHC* newLSHC;
     newLSHC = new LSHC(0.5,2);
     newLSHC->readData(queryFilePath);
+      cout << "HEEYYYYY1" ;
     
     Curve* testCurve;
-    testCurve = new Curve;
+    testCurve = new Curve();
+    cout << "HEEYYYYY2" ;
+   
+
+    Point* testPoint1;
+    testPoint1 = new Point;
+    testPoint1->setX(1);
+    testPoint1->setY(2);
+      cout << "HEEYYYYY3" ;
+
+    Point* testPoint2;
+    testPoint2 = new Point;
+    testPoint1->setX(3);
+    testPoint1->setY(4);
+    cout << "HEEYYYYY4" ;
+
+  
+    testCurve->PushToVector(testPoint1);
+
+    testCurve->PushToVector(testPoint2);
+
+    testCurve->setNumberOfCoordinates(2);
+
+    vectorCurveToPoint(testCurve);
+
+    
     
     
     
