@@ -105,7 +105,7 @@ void LSHC::lshInsertAll(){
     int maxD = maxCurveLength();
     cout << "MaxD:" << maxD << endl;
     int w = 4000, k=4; //TODO arguments?
-    //lsh = new LSH(w, maxD, k, 1);
+    lsh = new LSH(w, maxD, k, 1);
 
     // For every Curve
     for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
