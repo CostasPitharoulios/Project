@@ -6,7 +6,8 @@
 #include "../Point.hpp"
 #include "readingFunctions.hpp"
 #include "DTW.hpp"
-#include "curveHashing.hpp"
+/*#include "curveHashing.hpp"*/
+#include "Grid.hpp"
 
 using namespace std;
 
@@ -76,8 +77,7 @@ int main(){
     for(vector<Curve*>::iterator i = listOfInputCurves->begin(); i != listOfInputCurves->end(); i++)
     {
         cout << (*i)->getId() << endl;
-        cout << "COORDINA
-        TES OF THIS CURVE\n";
+        cout << "COORDINATES OF THIS CURVE\n";
         (*i)->DisplayVectorContents();
     }
 

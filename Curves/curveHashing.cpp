@@ -1,3 +1,5 @@
+#if 0
+/*
 #include "curveHashing.hpp"
 #include <iostream>
 #include <limits>
@@ -11,7 +13,7 @@ using namespace std;
 
 
 // returns a pointer to hashed curve
-Curve* curveHashing(vector<Curve *>::iterator queryCurve){
+Curve* curveHashing(vector<Curve *>::iterator queryCurve, double t){
     
     // first of all we need to caldulate delta
     int m1,m2;
@@ -36,8 +38,8 @@ Curve* curveHashing(vector<Curve *>::iterator queryCurve){
     for (int i=0; i< m1; i++){
         x = (*queryCurve)->getSpecificXCoord(i);
         y = (*queryCurve)->getSpecificYCoord(i);
-        int xStartOfBucket = x/delta;
-        int yStartOfBucket = y/delta;
+        int xStartOfBucket = (x-t)/delta;
+        int yStartOfBucket = (y-t)/delta;
         
         int x1  = xStartOfBucket * delta; // x start of bucket
         int x2  = (xStartOfBucket+1) * delta; // x end of bucket
@@ -95,3 +97,7 @@ Curve* curveHashing(vector<Curve *>::iterator queryCurve){
     
     
 }
+
+*/
+#endif
+

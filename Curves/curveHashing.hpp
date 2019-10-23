@@ -1,3 +1,6 @@
+#if 0
+/*
+
 #pragma once
 
 #include <vector>
@@ -5,3 +8,5 @@
 
 
 Curve* curveHashing(vector<Curve *>::iterator queryCurve);
+*/
+#endif
