@@ -78,8 +78,6 @@ int main(int argc,char *argv[]){
 
     lsh.insert(p1);
 
-    //lsh.insert(p2);
-
     // Read input file
     cout << "Reading input dataset..." << endl;
     while(getline(in,str)){

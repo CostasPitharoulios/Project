@@ -37,7 +37,7 @@ void LSH::insert(Point p){
         uint32_t hashkey = g.at(i).hash(p);
         hashTables.at(i).insert(make_pair(hashkey, ptr));
     }
-    //cout << "Point " << ptr->getId() << " was inserted!" << endl;
+    cout << "Point " << ptr->getId() << " was inserted!" << endl;
 
     /*cout << "Dataset: ";
     for (int i=0; i<dataset.size(); i++){
@@ -82,6 +82,7 @@ Point *LSH::nearestNeighbour(Point p){
 
             // Compute the distance between the two points
             double dist = manhattanDistance(p.getCoordinates(), it1->second->getCoordinates());
+            
             if (dist < min){
                 min = dist;
                 min_ptr = it1->second;
