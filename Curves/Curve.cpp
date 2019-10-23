@@ -44,8 +44,7 @@ void Curve::setNumberOfCoordinates(int number){
 
 int Curve::getNumberOfCoordinates(void){
     return numberOfCoordinates;
-}
-
+} 
 double Curve::getSpecificXCoord(int position){
     return listOfCoordinates.at(position)->getX();
 }

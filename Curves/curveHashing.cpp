@@ -1,5 +1,6 @@
 #include "curveHashing.hpp"
 #include <iostream>
+#include <limits>
 #include <math.h>
 #include "DTW.hpp"
 #include "../Point.hpp"
@@ -28,8 +29,8 @@ Curve* curveHashing(vector<Curve *>::iterator queryCurve){
      //===============================================================================================
     
     float x,y; //coordinates of a point of curve
-    int previousMinX = -1;   // stores minX of the previous point of curve
-    int previousMinY = -1;   // stores minY of the precious point of curve
+    int previousMinX = numeric_limits<double>::min();;   // stores minX of the previous point of curve
+    int previousMinY = numeric_limits<double>::min();;   // stores minY of the precious point of curve
     Point *aPoint;
     Curve* hashedCurve = new Curve();   // creating a vector to store all hashed points
     for (int i=0; i< m1; i++){

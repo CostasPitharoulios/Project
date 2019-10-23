@@ -19,7 +19,7 @@ int main(){
     string dataSetPath;     // stores the data to dataSet
     
     // getting the path for dataset
-    cout << "Hello! Please give path to datashet\n ";
+    cout << "Hello! Please give path to dataset\n ";
     getline(cin, dataSetPath);  // storing path to dataSet
     cout << "The path you gave for dataset file is: " << dataSetPath << "\n";
     

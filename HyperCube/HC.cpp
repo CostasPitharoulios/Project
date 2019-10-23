@@ -69,7 +69,8 @@ uint32_t HC::hash(Point p){
 }
 
 // Recursice function to find near Vertices of the hypercube with
-// Hamming distance = probes
+// Hamming distance = probes //TODO kanonika prepei na einai probes ta sunolika vertices pou 8a elextoun
+// ... ara probes <= 2^n - 1
 set<uint32_t> nearVertices(uint32_t num, int length, int probes){
     set<uint32_t> s;
     s.insert(num);
