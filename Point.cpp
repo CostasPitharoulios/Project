@@ -4,6 +4,7 @@
 using namespace std;
 
 Point::Point(int id):d(0),id(id){
+//    origin=nullptr;
     //printf("Point was created\n");
 }
 
@@ -31,6 +32,16 @@ int Point::getId(){
 int Point::getD(){
     return d;
 }
+
+#if 0
+void Point::setOrigin(Curve *ptr){
+    this->origin=ptr;
+}
+
+Curve *Point::getOrigin(){
+    return origin;
+}
+#endif
 
 void Point::printPoint(){
     cout << "id:" << (this->id) << "<";

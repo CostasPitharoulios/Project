@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include "Grid.hpp"
 #include "Curve.hpp"
