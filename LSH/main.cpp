@@ -113,7 +113,8 @@ int main(int argc,char *argv[]){
             p.addCoordinate(stod(token));
 
         // Find its A-NN
-        Point *nn = lsh.nearestNeighbour(p,"manh");
+        double dist;
+        Point *nn = lsh.nearestNeighbour(p,"manh",dist);
 
         if (nn!=nullptr)
             cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << manhattanDistance(p.getCoordinates(),nn->getCoordinates()) << endl;

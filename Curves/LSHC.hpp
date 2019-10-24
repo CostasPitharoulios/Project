@@ -11,13 +11,14 @@ using namespace std;
 class LSHC{
     private:
         vector<Curve*> allCurves;
-        LSH *lsh;
+        vector<LSH*> lsh;
         int d; //Dimension of the points of the curves
         double delta;
-        vector<Grid> grids; // L grids
+        vector<Grid> grids;
+        int L; // ammout of grids
 
     public:
-        LSHC(double delta, int d);
+        LSHC(double delta, int d, int L);
         
         void readData(string path); // Read curves from file path
         void readQueries(string path);

@@ -9,9 +9,9 @@ Point::Point(int id):d(0),id(id){
     //printf("Point was created\n");
 }
 
-Point::~Point(){
+//Point::~Point(){
     //printf("Point was destroyed\n");
-}
+//}
 
 void Point::addCoordinate(double x){
     listOfCoordinates.push_back(x);

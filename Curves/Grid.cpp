@@ -8,15 +8,12 @@
 
 using namespace std;
 
-Grid::Grid(double delta, int d):delta(delta){
-    cout << "New grid" << endl;
-    double t_dummy = 0.5;
-    t.push_back(t_dummy);
-    t.push_back(t_dummy);
+Grid::Grid(double delta, int d, vector<double> t):delta(delta){
+    cout << "New grid : delta=" << delta << ", t1=" << t.at(0) << ", t2=" << t.at(1) << endl;
+    this->t = t;
 }
 
 
-//Curve* Grid::curveHashing(vector<Curve *>::iterator queryCurve){
 Curve* Grid::curveHashing(Curve *queryCurve){
     
     // first of all we need to caldulate delta
@@ -24,7 +21,6 @@ Curve* Grid::curveHashing(Curve *queryCurve){
     int coordinatesCounter = 0;
     m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
     //m2 = (*inputCurve)->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
-    double delta = 0.5;
     
     //===============================================================================================
     //          *** SOME INFO FOR WHAT WE ARE GOING TO DO ***
