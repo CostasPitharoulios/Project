@@ -3,8 +3,8 @@ all: Curves/demo LSH/demo #HC/demo
 Curves/demo : Curves/main.o Point.o Curves/Curve.o Curves/readingFunctions.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o dist.o H.o G.o LSH/LSH.o util.o
 	g++ Curves/main.o  Point.o Curves/Curve.o Curves/readingFunctions.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o dist.o H.o G.o LSH/LSH.o util.o -o Curves/demo -g
 
-LSH/demo : LSH/main.o Point.o dist.o H.o G.o LSH/LSH.o util.o
-	g++ LSH/main.o Point.o dist.o H.o G.o LSH/LSH.o util.o -o LSH/demo
+LSH/demo : LSH/main.o Point.o dist.o H.o G.o LSH/LSH.o util.o Curves/Curve.o
+	g++ LSH/main.o Point.o dist.o H.o G.o LSH/LSH.o util.o Curves/Curve.o -o LSH/demo
 
 Curves/main.o : Curves/main.cpp
 	g++ -c Curves/main.cpp -g -o Curves/main.o

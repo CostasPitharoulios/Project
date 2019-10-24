@@ -5,6 +5,7 @@
 using namespace std;
 
 Curve::Curve(){
+    numberOfCoordinates = 0;
     //id = "0";
    // vector<Point> get_listOfCoordinates;
     printf("Curve was created\n");
@@ -36,10 +37,11 @@ void Curve::DisplayVectorContents(void){
 
 void Curve::PushToVector(Point* aPoint){
     listOfCoordinates.push_back(aPoint);
+    numberOfCoordinates++;
 }
 
 void Curve::setNumberOfCoordinates(int number){
-    numberOfCoordinates = number;
+    numberOfCoordinates = number; //TODO del
 }
 
 int Curve::getNumberOfCoordinates(void){
