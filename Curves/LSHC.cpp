@@ -129,13 +129,14 @@ void LSHC::readQueries(string path){
         double x,y;
         for (int i=0; i< numberOfCords; i++){   // reading each coordinate
             
-<<<<<<< HEAD
             getline(linestream, word, ' ');
-            sscanf(word.c_str(), "(%f, %f)", &x, &y);       // storing x and y Coordinates in separete variables
-=======
-            getline(linestream, word, '\t');
-            sscanf(word.c_str(), "(%lf, %lf)", &x, &y);       // storing x and y Coordinates in separete variables
->>>>>>> 40aa73958446692504c5992373bbfc7baea53273
+            //cout << ":::"<< word << endl;
+            sscanf(word.c_str(), "(%lf,", &x);       // storing x and y Coordinates in separete variables
+
+            getline(linestream, word, ' ');
+            //cout << ":::"<< word << endl;
+            sscanf(word.c_str(), "%lf)", &y);       // storing x and y Coordinates in separete variables
+            cout << ":::x,y: " << x << ", " << y << endl;
             
             aPoint = new Point();                 // creating new Point for curve
             aPoint->setX(x);                       // storing x in new Point
