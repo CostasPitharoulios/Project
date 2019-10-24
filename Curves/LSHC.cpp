@@ -123,7 +123,7 @@ void LSHC::readQueries(string path){
         float x,y;
         for (int i=0; i< numberOfCords; i++){   // reading each coordinate
             
-            getline(linestream, word, '\t');
+            getline(linestream, word, ' ');
             sscanf(word.c_str(), "(%f, %f)", &x, &y);       // storing x and y Coordinates in separete variables
             
             aPoint = new Point();                 // creating new Point for curve
