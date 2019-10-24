@@ -256,7 +256,6 @@ void LSHC::nearestNeighbourCurve(Curve *query){
     double dist,min = numeric_limits<double>::max();   // stores minY of the precious point of curve
     Point *nn;
     for(int i=0; i<L; i++){
-        cout << "i=" << i << endl;
         // Convert the curve into grid Curve
         Curve *gridCurve = grids.at(i).curveHashing(query);
         //cout << "Grid curve:";
@@ -284,7 +283,7 @@ void LSHC::nearestNeighbourCurve(Curve *query){
         }
     }
 
-    cout << "NEAREST OF THE NEAREST: ";
+    cout << "NEAREST OF THE NEAREST: Id:" << nn->getOrigin()->getId();
     nn->getOrigin()->printCoordinates();
     cout << " with distance : " << min << endl;
 }

@@ -7,7 +7,7 @@
 using namespace std;
 
 LSH::LSH(int w, int d, int k, int L):w(w), d(d), k(k), L(L){
-    cout << "Whatap LSH\n";
+    //cout << "Whatap LSH\n";
     for (int i=0; i<L; i++){
         // Create the i-th g() and save it to the vector G
         G g_i(w, d, k);

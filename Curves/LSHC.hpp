@@ -11,7 +11,7 @@ using namespace std;
 class LSHC{
     private:
         vector<Curve*> allCurves; // stores dataset
-        LSH *lsh;
+        vector<LSH*> lsh;
         int d; //Dimension of the points of the curves
         double delta;
         vector<Grid> grids;
