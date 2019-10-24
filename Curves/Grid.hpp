@@ -11,5 +11,5 @@ class Grid {
         vector<double> t; // Shift each dimension by t.at(i)
     public:
         Grid(double delta, int d);
-        Curve* curveHashing(vector<Curve *>::iterator queryCurve);
+        Curve* curveHashing(Curve *queryCurve);
 };

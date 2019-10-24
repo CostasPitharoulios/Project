@@ -15,12 +15,13 @@ Grid::Grid(double delta, int d):delta(delta){
 }
 
 
-Curve* Grid::curveHashing(vector<Curve *>::iterator queryCurve){
+//Curve* Grid::curveHashing(vector<Curve *>::iterator queryCurve){
+Curve* Grid::curveHashing(Curve *queryCurve){
     
     // first of all we need to caldulate delta
     int m1,m2;
     int coordinatesCounter = 0;
-    m1 = (*queryCurve)->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
+    m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
     //m2 = (*inputCurve)->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
     double delta = 0.5;
     
@@ -39,8 +40,8 @@ Curve* Grid::curveHashing(vector<Curve *>::iterator queryCurve){
     Point *aPoint;
     Curve* hashedCurve = new Curve();   // creating a vector to store all hashed points
     for (int i=0; i< m1; i++){
-        x = (*queryCurve)->getSpecificXCoord(i);
-        y = (*queryCurve)->getSpecificYCoord(i);
+        x = queryCurve->getSpecificXCoord(i);
+        y = queryCurve->getSpecificYCoord(i);
         int xStartOfBucket = (x-t.at(0))/delta;
         int yStartOfBucket = (y-t.at(1))/delta;
         

@@ -11,6 +11,8 @@ using namespace std;
 
 LSHC::LSHC(double delta, int d):d(d){
     cout << "New LSH for curves bitch" << endl;
+    Grid dummy(delta,d);
+    grids.push_back(dummy);
 }
 
 void LSHC::readData(string path){
@@ -142,7 +144,7 @@ void LSHC::readQueries(string path){
 
 
 
-Point* LSHC::vectorCurveToPoint(Curve* hashedCurve){
+Point* LSHC::vectorCurveToPoint(Curve* hashedCurve, Curve *origin){
     Point* newPoint;
     newPoint= new Point();  // creating a new point to represent vector of curve
     
@@ -155,6 +157,7 @@ Point* LSHC::vectorCurveToPoint(Curve* hashedCurve){
         newPoint->addCoordinate(hashedCurve->getSpecificYCoord(i));
         coordinatesCounter+=2;
     }
+    newPoint->setOrigin(origin);
     
     return newPoint;
 }
@@ -176,9 +179,16 @@ void LSHC::lshInsertAll(){
 
     // For every Curve
     for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
-        // Convert the curve into a point
+        cout << "Initial curve:";
         (*it)->printCoordinates();
-        Point *ptr = vectorCurveToPoint(*it);
+
+        // Convert the curve into grid Curve
+        Curve *gridCurve = grids.at(0).curveHashing(*it);
+        cout << "Grid curve:";
+        gridCurve->printCoordinates();
+
+        // Convert the curve into a point
+        Point *ptr = vectorCurveToPoint(gridCurve,*it);
         cout << "Point of curve: ";
         ptr->printPoint();
         cout << endl;
@@ -198,21 +208,30 @@ void LSHC::lshInsertAll(){
 void LSHC::nearestNeighbourCurve(Curve *querie){
     int maxD = maxCurveLength(); //TODO if querie is bigger than maxD she should get cut i think
 
-    // Convert the curve into a point
+    cout << "Initial curve:";
     querie->printCoordinates();
-    Point *ptr = vectorCurveToPoint(querie);
-    cout << "Point of querie curve: ";
+
+    // Convert the curve into grid Curve
+    Curve *gridCurve = grids.at(0).curveHashing(querie);
+    cout << "Grid curve:";
+    gridCurve->printCoordinates();
+
+    // Convert the curve into a point
+    Point *ptr = vectorCurveToPoint(gridCurve,querie);
+    cout << "Point of curve: ";
     ptr->printPoint();
     cout << endl;
 
     // Add padding so that all points have the same ammout of dimensions
     ptr->addPadding(d*maxD);
-    cout << "Point of querie after padding: ";
+    cout << "Point after padding: ";
     ptr->printPoint();
     cout << endl;
 
     // Find its nearestNeighbour point using lsh
-    lsh->nearestNeighbour(*ptr, "dtw");
+    Point *nn = lsh->nearestNeighbour(*ptr, "dtw");
+    cout << "Nearest curve is : ";
+    nn->getOrigin()->printCoordinates();
     free(ptr);
 }
 

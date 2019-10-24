@@ -5,7 +5,7 @@
 using namespace std;
 
 Point::Point(int id):d(0),id(id){
-//    origin=nullptr;
+    origin=nullptr;
     //printf("Point was created\n");
 }
 
