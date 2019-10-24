@@ -54,7 +54,7 @@ void LSHC::readData(string path){
         getline(linestream, id, '\t');
         aCurve = new Curve();                        //!!! creating a new object class
         aCurve->setId(id);                        //!!! storing id in new object
-        cout << ":::Id= " << id << "\n";
+        //cout << ":::Id= " << id << "\n";
         
         getline(linestream, word, '\t');                    // reading second word -> number of coordinates
         //cout << ":::word: " << word << endl;
@@ -72,7 +72,7 @@ void LSHC::readData(string path){
             getline(linestream, word, ' ');
             //cout << ":::"<< word << endl;
             sscanf(word.c_str(), "%lf)", &y);       // storing x and y Coordinates in separete variables
-            cout << ":::x,y: " << x << ", " << y << endl;
+           // cout << ":::x,y: " << x << ", " << y << endl;
             
             aPoint = new Point();                 // creating new Point for curve
             aPoint->setX(x);                       // storing x in new Point
