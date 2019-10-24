@@ -39,6 +39,7 @@ int main(int argc,char *argv[]){
     
     LSHC lshc(0.5,2);
     lshc.readData(inputFile);
+    lshc.printAllCurves();
     lshc.lshInsertAll();
     lshc.readQueries(queryFile);
 

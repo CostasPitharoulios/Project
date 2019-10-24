@@ -41,7 +41,7 @@ void Curve::PushToVector(Point* aPoint){
 }
 
 void Curve::setNumberOfCoordinates(int number){
-    numberOfCoordinates = number; //TODO del
+    //numberOfCoordinates = number; //TODO del
 }
 
 int Curve::getNumberOfCoordinates(void){

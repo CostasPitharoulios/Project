@@ -21,6 +21,7 @@ class LSHC{
         
         void readData(string path); // Read curves from file path
         void readQueries(string path);
+        void printAllCurves();
         void lshInsertAll(); // Insert all curves to the LSH hash tables
         int maxCurveLength();
         Point* vectorCurveToPoint(Curve* hashedCurve); // We have already created a grid vector of curve, so with this function we convert the vector to a single point and we finally get a pointer to this.

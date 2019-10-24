@@ -147,7 +147,7 @@ Point* LSHC::vectorCurveToPoint(Curve* hashedCurve){
     newPoint= new Point();  // creating a new point to represent vector of curve
     
     int numberOfCords = hashedCurve->getNumberOfCoordinates(); //in order to know how many points there are in the vector of hashed Curve
-    //cout << "numerofcoors:" << numberOfCords << "\n";
+    cout << "numerofcoors:" << numberOfCords << "\n";
 
     int coordinatesCounter=0;
     for(int i=0; i< numberOfCords; i++){ // adding x,y to the list of coordinates of pointer
@@ -216,4 +216,11 @@ void LSHC::nearestNeighbourCurve(Curve *querie){
     free(ptr);
 }
 
-
+void LSHC::printAllCurves(){
+    cout << "ALL CURVES:" << endl;
+    for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
+        cout << "numOfCoordinates: " << (*it)->getNumberOfCoordinates();
+        (*it)->printCoordinates();
+        cout << endl;
+    }
+}
