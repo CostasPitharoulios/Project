@@ -50,19 +50,25 @@ void LSHC::readData(string path){
         getline(linestream, id, '\t');
         aCurve = new Curve();                        //!!! creating a new object class
         aCurve->setId(id);                        //!!! storing id in new object
-        //cout << "Id= " << id << "\n";
+        cout << ":::Id= " << id << "\n";
         
         getline(linestream, word, '\t');                    // reading second word -> number of coordinates
-        //cout << "word: " << word << endl;
+        //cout << ":::word: " << word << endl;
         int numberOfCords = std::stoi(word);    // storing number of cords
         aCurve->setNumberOfCoordinates(numberOfCords);
         //cout << "number of coordinates is: " << aCurve->getNumberOfCoordinates() << "\n";
         
-        float x,y;
+        double x,y;
         for (int i=0; i< numberOfCords; i++){   // reading each coordinate
             
-            getline(linestream, word, '\t');
-            sscanf(word.c_str(), "(%f, %f)", &x, &y);       // storing x and y Coordinates in separete variables
+            getline(linestream, word, ' ');
+            //cout << ":::"<< word << endl;
+            sscanf(word.c_str(), "(%lf,", &x);       // storing x and y Coordinates in separete variables
+
+            getline(linestream, word, ' ');
+            //cout << ":::"<< word << endl;
+            sscanf(word.c_str(), "%lf)", &y);       // storing x and y Coordinates in separete variables
+            cout << ":::x,y: " << x << ", " << y << endl;
             
             aPoint = new Point();                 // creating new Point for curve
             aPoint->setX(x);                       // storing x in new Point
@@ -120,11 +126,16 @@ void LSHC::readQueries(string path){
         aCurve->setNumberOfCoordinates(numberOfCords);
         //cout << "number of coordinates is: " << aCurve->getNumberOfCoordinates() << "\n";
         
-        float x,y;
+        double x,y;
         for (int i=0; i< numberOfCords; i++){   // reading each coordinate
             
+<<<<<<< HEAD
             getline(linestream, word, ' ');
             sscanf(word.c_str(), "(%f, %f)", &x, &y);       // storing x and y Coordinates in separete variables
+=======
+            getline(linestream, word, '\t');
+            sscanf(word.c_str(), "(%lf, %lf)", &x, &y);       // storing x and y Coordinates in separete variables
+>>>>>>> 40aa73958446692504c5992373bbfc7baea53273
             
             aPoint = new Point();                 // creating new Point for curve
             aPoint->setX(x);                       // storing x in new Point
