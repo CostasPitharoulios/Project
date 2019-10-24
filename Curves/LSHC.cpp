@@ -15,6 +15,10 @@ LSHC::LSHC(double delta, int d):d(d){
     grids.push_back(dummy);
 }
 
+vector<Curve*> LSHC::getAllCurves(void){
+    return allCurves;
+}
+
 void LSHC::readData(string path){
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES ***
