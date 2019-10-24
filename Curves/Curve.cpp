@@ -8,11 +8,11 @@ Curve::Curve(){
     numberOfCoordinates = 0;
     //id = "0";
    // vector<Point> get_listOfCoordinates;
-    printf("Curve was created\n");
+    //printf("Curve was created\n");
 }
 
 Curve::~Curve(){
-    printf("Curve was destroyed\n");
+    //printf("Curve was destroyed\n");
 }
 
 

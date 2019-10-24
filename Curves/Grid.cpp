@@ -76,7 +76,7 @@ Curve* Grid::curveHashing(Curve *queryCurve){
         // if it is the same, we do not store it again. We go to the next point of curve
         
         if (minX == previousMinX && minY == previousMinY){
-            cout << "Previous had the same point\n";
+            //cout << "Previous had the same point\n";
             //cout << previousMinX << " " << minX << " " << previousMinY << " " << minY <<"\n";
             // cout << "Point of vector is: " << minX << "-" << minY << "\n";
         }

@@ -37,10 +37,14 @@ int main(int argc,char *argv[]){
     }
     
     
-    LSHC lshc(0.5,2);
+    LSHC lshc(8,2);
+    cout << "Reading input file..." << endl;
     lshc.readData(inputFile);
-    lshc.printAllCurves();
+    cout << "Reading complete." << endl;
+    //lshc.printAllCurves();
+    cout << "Inserting data to the hashtable..." << endl;
     lshc.lshInsertAll();
+    cout << "Inserting complete." << endl;
     lshc.readQueries(queryFile);
 
     return 0;

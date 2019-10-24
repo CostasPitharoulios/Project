@@ -136,6 +136,11 @@ void LSHC::readQueries(string path){
 
         // Find its nearest neighbour curve
         nearestNeighbourCurve(aCurve);
+
+
+        ///////////////////////////////////////////
+        break; //TODO TODO TODO TODO TODO TODO TODO
+        ///////////////////////////////////////////
     }
     
     queries.close(); //closing opened file
@@ -146,7 +151,7 @@ void LSHC::readQueries(string path){
 
 Point* LSHC::vectorCurveToPoint(Curve* hashedCurve, Curve *origin){
     Point* newPoint;
-    newPoint= new Point();  // creating a new point to represent vector of curve
+    newPoint = new Point(stoi(origin->getId()));  // creating a new point to represent vector of curve with the same id as the curve
     
     int numberOfCords = hashedCurve->getNumberOfCoordinates(); //in order to know how many points there are in the vector of hashed Curve
     cout << "numerofcoors:" << numberOfCords << "\n";
@@ -179,7 +184,7 @@ void LSHC::lshInsertAll(){
 
     // For every Curve
     for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
-        cout << "Initial curve:";
+        //cout << "Initial curve:";
         (*it)->printCoordinates();
 
         // Convert the curve into grid Curve
@@ -206,32 +211,32 @@ void LSHC::lshInsertAll(){
 }
 
 void LSHC::nearestNeighbourCurve(Curve *querie){
-    int maxD = maxCurveLength(); //TODO if querie is bigger than maxD she should get cut i think
+    int maxD = maxCurveLength(); //TODO if querie is bigger than maxD she should get it cut i think
 
-    cout << "Initial curve:";
-    querie->printCoordinates();
+    //cout << "Initial curve:";
+    //querie->printCoordinates();
 
     // Convert the curve into grid Curve
     Curve *gridCurve = grids.at(0).curveHashing(querie);
-    cout << "Grid curve:";
-    gridCurve->printCoordinates();
+    //cout << "Grid curve:";
+    //gridCurve->printCoordinates();
 
     // Convert the curve into a point
     Point *ptr = vectorCurveToPoint(gridCurve,querie);
-    cout << "Point of curve: ";
-    ptr->printPoint();
-    cout << endl;
+    //cout << "Point of curve: ";
+    //ptr->printPoint();
+    //cout << endl;
 
     // Add padding so that all points have the same ammout of dimensions
     ptr->addPadding(d*maxD);
-    cout << "Point after padding: ";
-    ptr->printPoint();
-    cout << endl;
+    //cout << "Point after padding: ";
+    //ptr->printPoint();
+    //cout << endl;
 
     // Find its nearestNeighbour point using lsh
     Point *nn = lsh->nearestNeighbour(*ptr, "dtw");
-    cout << "Nearest curve is : ";
-    nn->getOrigin()->printCoordinates();
+    cout << "Nearest curve is : " << nn->getId() << endl;
+    //nn->getOrigin()->printCoordinates();
     free(ptr);
 }
 
