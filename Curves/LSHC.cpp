@@ -28,6 +28,10 @@ LSHC::LSHC(double delta, int d, int L):d(d), L(L){
     }
 }
 
+vector<Curve*> LSHC::getAllCurves(void){
+    return allCurves;
+}
+
 void LSHC::readData(string path){
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES ***

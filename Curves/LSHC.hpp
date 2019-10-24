@@ -10,8 +10,8 @@ using namespace std;
 // LSH for Curves
 class LSHC{
     private:
-        vector<Curve*> allCurves;
-        vector<LSH*> lsh;
+        vector<Curve*> allCurves; // stores dataset
+        LSH *lsh;
         int d; //Dimension of the points of the curves
         double delta;
         vector<Grid> grids;
@@ -27,4 +27,5 @@ class LSHC{
         int maxCurveLength();
         Point* vectorCurveToPoint(Curve* hashedCurve, Curve *origin); // We have already created a grid vector of curve, so with this function we convert the vector to a single point and we finally get a pointer to this.
         void nearestNeighbourCurve(Curve *);
+        vector<Curve*> getAllCurves(void);
 };

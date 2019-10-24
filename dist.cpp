@@ -28,11 +28,11 @@ double getValueDTW(Curve *queryCurve,Curve *inputCurve){
     
     // initialization  first line
     double previousSum = 0.0; // keeps the sum of previous items
-    int x1,y1; // cordinates of first point of query curve
+    double x1,y1; // cordinates of first point of query curve
     x1 = queryCurve->getSpecificXCoord(0);
     y1 = queryCurve->getSpecificYCoord(0);
     for (int i=0; i< m2; i++){
-        int x2,y2;
+        double x2,y2;
         x2 = inputCurve->getSpecificXCoord(i);
         y2 = inputCurve->getSpecificYCoord(i);
         arrayDTW[0][i] = previousSum + distance(x1,x2,y1,y2);
@@ -42,7 +42,7 @@ double getValueDTW(Curve *queryCurve,Curve *inputCurve){
     
     //initializing first column
     previousSum = arrayDTW[0][0];
-    int x2, y2;
+    double x2, y2;
     x2 = inputCurve->getSpecificXCoord(0);
     y2 = inputCurve->getSpecificYCoord(0);
     for (int i=1; i<m1; i++){
