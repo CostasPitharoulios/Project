@@ -4,6 +4,7 @@
 #include <math.h>
 #include "DTW.hpp"
 #include "../Point.hpp"
+#include "../dist.hpp"
 
 using namespace std;
 
@@ -34,9 +35,9 @@ Curve* Grid::curveHashing(Curve *queryCurve){
     // between point and the points of the grid - the four corners of the bucket
     //===============================================================================================
     
-    float x,y; //coordinates of a point of curve
-    int previousMinX = numeric_limits<double>::min();;   // stores minX of the previous point of curve
-    int previousMinY = numeric_limits<double>::min();;   // stores minY of the precious point of curve
+    double x,y; //coordinates of a point of curve
+    double previousMinX = numeric_limits<double>::min();;   // stores minX of the previous point of curve
+    double previousMinY = numeric_limits<double>::min();;   // stores minY of the precious point of curve
     Point *aPoint;
     Curve* hashedCurve = new Curve();   // creating a vector to store all hashed points
     for (int i=0; i< m1; i++){
@@ -45,16 +46,16 @@ Curve* Grid::curveHashing(Curve *queryCurve){
         int xStartOfBucket = (x-t.at(0))/delta;
         int yStartOfBucket = (y-t.at(1))/delta;
         
-        int x1  = xStartOfBucket * delta; // x start of bucket
-        int x2  = (xStartOfBucket+1) * delta; // x end of bucket
-        int y1  = yStartOfBucket * delta; // y start of bucket
-        int y2  = (yStartOfBucket +1) * delta; // y end of bucket
+        double x1  = xStartOfBucket * delta; // x start of bucket
+        double x2  = (xStartOfBucket+1) * delta; // x end of bucket
+        double y1  = yStartOfBucket * delta; // y start of bucket
+        double y2  = (yStartOfBucket +1) * delta; // y end of bucket
         
-        int minX;      // stores the x of the bucket corner closest to point of curve
-        int minY;      // stores the y of the bucket corner closest to point of curve
+        double minX;      // stores the x of the bucket corner closest to point of curve
+        double minY;      // stores the y of the bucket corner closest to point of curve
         
         
-        if (distance(x,(float) x1, y,(float)y1) < distance(x,(float)x1,y,(float)y2)){
+        if (distance(x,x1, y,y1) < distance(x,x1,y,y2)){
             minX = x1;
             minY = y1;
         }
@@ -62,11 +63,11 @@ Curve* Grid::curveHashing(Curve *queryCurve){
             minX = x1;
             minY = y2;
         }
-        if (distance(x,(float) minX, y,(float)minY) > distance(x,(float)x2,y,(float)y1)){
+        if (distance(x, minX, y,minY) > distance(x,x2,y,y1)){
             minX = x2;
             minY = y1;
         }
-        if(distance(x,(float)minX, y,(float)minY) > distance(x,(float)x2,y,(float)y2)){
+        if(distance(x,minX, y,minY) > distance(x,x2,y,y2)){
             minX = x2;
             minY = y2;
         }

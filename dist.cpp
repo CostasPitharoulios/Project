@@ -81,6 +81,6 @@ double getDTWfromPoints(Point* pointA, Point* pointB){
 }
 
 // returns the distance between two points
-double distance(float x1, float x2, float y1, float y2){
+double distance(double x1, double x2, double y1, double y2){
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
 }
