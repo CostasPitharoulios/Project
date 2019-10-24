@@ -37,7 +37,7 @@ int main(int argc,char *argv[]){
     }
     
     
-    LSHC lshc(0.001,2);
+    LSHC lshc(0.0005,2,4);
     cout << "Reading input file..." << endl;
     lshc.readData(inputFile);
     cout << "Reading complete." << endl;

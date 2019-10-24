@@ -7,7 +7,7 @@
 using namespace std;
 
 LSH::LSH(int w, int d, int k, int L):w(w), d(d), k(k), L(L){
-    cout << "Whatap LSH\n";
+    //cout << "Whatap LSH\n";
     for (int i=0; i<L; i++){
         // Create the i-th g() and save it to the vector G
         G g_i(w, d, k);
@@ -37,7 +37,7 @@ void LSH::insert(Point p){
         uint32_t hashkey = g.at(i).hash(p);
         hashTables.at(i).insert(make_pair(hashkey, ptr));
     }
-    cout << "Point " << ptr->getId() << " was inserted!" << endl;
+    //cout << "Point " << ptr->getId() << " was inserted!" << endl;
 
     /*cout << "Dataset: ";
     for (int i=0; i<dataset.size(); i++){
@@ -62,7 +62,7 @@ void LSH::printG(int i){
 // TODO mhpws na epestrefe sketo Point? wste o ap e3w na mhn exei prosvash 
 // sto dataset. Alla etsi den 3erw ti prepei na epistrepsei otan den vre8ei nn
 // (isws ena Point me id = -1)
-Point *LSH::nearestNeighbour(Point p, string distFunc){
+Point *LSH::nearestNeighbour(Point p, string distFunc, double &min_dist){
     cout << "Finding Nearest Neighbour...\n";
     
     // Loop over the points that have this hash key, and find the nearest
@@ -100,6 +100,6 @@ Point *LSH::nearestNeighbour(Point p, string distFunc){
         }
         cout << "Points in the same bucket on g(" << i << "): " << count << endl;; 
     }
-
+    min_dist = min;
     return min_ptr;
 }
