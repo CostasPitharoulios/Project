@@ -4,6 +4,7 @@
 #include "Curve.hpp"
 #include "../Point.hpp"
 #include "../LSH/LSH.hpp"
+#include "../HyperCube/HC.hpp"
 
 using namespace std;
 
@@ -36,6 +37,20 @@ class LSHC: public CurveHashing{
     public:
         LSHC(double delta, int d, int L);
         
-        void hashAll(); // Insert all curves to the LSH hash tables
+        void hashAll() override; // Insert all curves to the LSH hash tables
+        void nearestNeighbourCurve(Curve *) override; 
+};
+
+// HyperCube for Curves
+class HCC: public CurveHashing{
+    private:
+        vector<HC*> hc;
+        int dd; // Number of f_i's
+        int hd; // Hamming distance of near vertices
+
+    public:
+        HCC(double delta, int d, int L, int dd, int hd);
+        
+        void hashAll() override; // Insert all curves to the LSH hash tables
         void nearestNeighbourCurve(Curve *) override; 
 };

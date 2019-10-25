@@ -36,8 +36,12 @@ int main(int argc,char *argv[]){
         return 1;
     }
     
-    
-    CurveHashing *ch = new LSHC(0.0005,2,4);
+   
+    double delta=0.0005; 
+    int d=2,L=4,dd=8,hd=2;
+    //CurveHashing *ch = new LSHC(delta,d,L);
+    CurveHashing *ch;
+    ch = new HCC(delta,d,L, dd, hd);
     cout << "Reading input file..." << endl;
     ch->readData(inputFile);
     cout << "Reading complete." << endl;
