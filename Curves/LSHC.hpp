@@ -7,25 +7,35 @@
 
 using namespace std;
 
-// LSH for Curves
-class LSHC{
-    private:
+class CurveHashing{
+    protected:
         vector<Curve*> allCurves; // stores dataset
-        vector<LSH*> lsh;
         int d; //Dimension of the points of the curves
         double delta;
         vector<Grid> grids;
         int L; // ammout of grids
 
     public:
+        CurveHashing(double delta, int d, int L);
+        void readData(string path); // Read curves from file path
+        void printAllCurves();
+        int maxCurveLength();
+        Point* vectorCurveToPoint(Curve* hashedCurve, Curve *origin); // Convert vector of curve to a single point
+        vector<Curve*> getAllCurves(void);
+        void readQueries(string path);
+        virtual void hashAll() = 0; //pure virtual functions
+        virtual void nearestNeighbourCurve(Curve *) = 0;
+
+};
+
+// LSH for Curves
+class LSHC: public CurveHashing{
+    private:
+        vector<LSH*> lsh;
+
+    public:
         LSHC(double delta, int d, int L);
         
-        void readData(string path); // Read curves from file path
-        void readQueries(string path);
-        void printAllCurves();
-        void lshInsertAll(); // Insert all curves to the LSH hash tables
-        int maxCurveLength();
-        Point* vectorCurveToPoint(Curve* hashedCurve, Curve *origin); // We have already created a grid vector of curve, so with this function we convert the vector to a single point and we finally get a pointer to this.
-        void nearestNeighbourCurve(Curve *);
-        vector<Curve*> getAllCurves(void);
+        void hashAll(); // Insert all curves to the LSH hash tables
+        void nearestNeighbourCurve(Curve *) override; 
 };

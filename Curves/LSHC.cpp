@@ -11,8 +11,12 @@
 
 using namespace std;
 
-LSHC::LSHC(double delta, int d, int L):d(d), L(L){
-    cout << "New LSH for curves bitch" << endl;
+LSHC::LSHC(double delta, int d, int L):CurveHashing(delta,d,L){
+    cout << "New LSHC bitch" << endl;
+}
+
+CurveHashing::CurveHashing(double delta, int d, int L):d(d), L(L){
+    cout << "New CurveHashing bitch" << endl;
    
     random_device rd; //seed
     mt19937 gen(rd());
@@ -28,11 +32,11 @@ LSHC::LSHC(double delta, int d, int L):d(d), L(L){
     }
 }
 
-vector<Curve*> LSHC::getAllCurves(void){
+vector<Curve*> CurveHashing::getAllCurves(void){
     return allCurves;
 }
 
-void LSHC::readData(string path){
+void CurveHashing::readData(string path){
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES ***
     // Info: We are going to make a vector of Curve classes. So its item of vector will include a curve
@@ -101,7 +105,7 @@ void LSHC::readData(string path){
     dataSet.close(); //closing opened file
 }
 
-void LSHC::readQueries(string path){
+void CurveHashing::readQueries(string path){
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES ***
     // Info: We are going to make a vector of Curve classes. So its item of vector will include a curve
@@ -178,7 +182,7 @@ void LSHC::readQueries(string path){
 
 
 
-Point* LSHC::vectorCurveToPoint(Curve* hashedCurve, Curve *origin){
+Point* CurveHashing::vectorCurveToPoint(Curve* hashedCurve, Curve *origin){
     Point* newPoint;
     newPoint = new Point(stoi(origin->getId()));  // creating a new point to represent vector of curve with the same id as the curve
     
@@ -196,7 +200,7 @@ Point* LSHC::vectorCurveToPoint(Curve* hashedCurve, Curve *origin){
     return newPoint;
 }
 
-int LSHC::maxCurveLength(){
+int CurveHashing::maxCurveLength(){
     int max = -1;
     for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
         if ( (*it)->getNumberOfCoordinates() > max )
@@ -205,7 +209,7 @@ int LSHC::maxCurveLength(){
     return max;
 }
 
-void LSHC::lshInsertAll(){
+void LSHC::hashAll(){
     int maxD = maxCurveLength();
     cout << "MaxD:" << maxD << endl;
     int w = 4000, k=4; //TODO arguments?
@@ -288,7 +292,7 @@ void LSHC::nearestNeighbourCurve(Curve *query){
     cout << " with distance : " << min << endl;
 }
 
-void LSHC::printAllCurves(){
+void CurveHashing::printAllCurves(){
     cout << "ALL CURVES:" << endl;
     for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
         cout << "numOfCoordinates: " << (*it)->getNumberOfCoordinates();

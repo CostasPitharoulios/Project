@@ -37,15 +37,15 @@ int main(int argc,char *argv[]){
     }
     
     
-    LSHC lshc(0.0005,2,4);
+    CurveHashing *ch = new LSHC(0.0005,2,4);
     cout << "Reading input file..." << endl;
-    lshc.readData(inputFile);
+    ch->readData(inputFile);
     cout << "Reading complete." << endl;
-    //lshc.printAllCurves();
+    //ch->printAllCurves();
     cout << "Inserting data to the hashtable..." << endl;
-    lshc.lshInsertAll();
+    ch->hashAll();
     cout << "Inserting complete." << endl;
-    lshc.readQueries(queryFile);
+    ch->readQueries(queryFile);
 
     return 0;
 }
