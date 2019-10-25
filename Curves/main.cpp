@@ -38,14 +38,20 @@ int main(int argc,char *argv[]){
     
     
     LSHC lshc(0.0005,2,5);
+   
+    double delta=0.0005; 
+    int d=2,L=4,dd=8,hd=2;
+    //CurveHashing *ch = new LSHC(delta,d,L);
+    CurveHashing *ch;
+    ch = new HCC(delta,d,L, dd, hd);
     cout << "Reading input file..." << endl;
-    lshc.readData(inputFile);
+    ch->readData(inputFile);
     cout << "Reading complete." << endl;
-    //lshc.printAllCurves();
+    //ch->printAllCurves();
     cout << "Inserting data to the hashtable..." << endl;
-    lshc.lshInsertAll();
+    ch->hashAll();
     cout << "Inserting complete." << endl;
-    lshc.readQueries(queryFile);
+    ch->readQueries(queryFile);
 
     return 0;
 }

@@ -96,11 +96,11 @@ set<uint32_t> nearVertices(uint32_t num, int length, int probes){
     return s;
 }
 
-Point *HC::nearestNeighbour(Point p){
+Point *HC::nearestNeighbour(Point p, string distFunc, double &min_dist){
     cout << "Finding Nearest Neighbour...\n";
     
     uint32_t hashkey = hash(p);
-    cout << "hashkey=" << (bitset<32>(hashkey)) << endl;
+    //cout << "hashkey=" << (bitset<32>(hashkey)) << endl;
     double min = numeric_limits<double>::max();
     Point *min_ptr=nullptr;
 
@@ -120,7 +120,16 @@ Point *HC::nearestNeighbour(Point p){
 
         while (it1 != it.second){
             // Compute the distance between the two points
-            double dist = manhattanDistance(p.getCoordinates(), it1->second->getCoordinates());
+            double dist;
+            if(!distFunc.compare("manh"))
+                dist = manhattanDistance(p.getCoordinates(), it1->second->getCoordinates());
+            else if(!distFunc.compare("dtw"))
+                dist = getDTWfromPoints(&p, it1->second);
+            else{
+                cout << "Wrong distFunc argument" << endl;
+                return nullptr;
+            }
+
             if (dist < min){
                 min = dist;
                 min_ptr = it1->second;
@@ -132,6 +141,7 @@ Point *HC::nearestNeighbour(Point p){
     }
     cout << "Examined " << verticescount << " vertices. (";
     cout << pointscount << " Points in total)." << endl;
+    min_dist = min;
     return min_ptr;
 }
 

@@ -11,8 +11,16 @@
 
 using namespace std;
 
-LSHC::LSHC(double delta, int d, int L):d(d), L(L){
-    cout << "New LSH for curves bitch" << endl;
+LSHC::LSHC(double delta, int d, int L):CurveHashing(delta,d,L){
+    cout << "New LSHC bitch" << endl;
+}
+
+HCC::HCC(double delta, int d, int L, int dd, int hd):CurveHashing(delta,d,L), dd(dd), hd(hd){
+    cout << "New HCC bitch" << endl;
+}
+
+CurveHashing::CurveHashing(double delta, int d, int L):d(d), L(L){
+    cout << "New CurveHashing bitch" << endl;
    
     random_device rd; //seed
     mt19937 gen(rd());
@@ -28,11 +36,11 @@ LSHC::LSHC(double delta, int d, int L):d(d), L(L){
     }
 }
 
-vector<Curve*> LSHC::getAllCurves(void){
+vector<Curve*> CurveHashing::getAllCurves(void){
     return allCurves;
 }
 
-void LSHC::readData(string path){
+void CurveHashing::readData(string path){
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES ***
     // Info: We are going to make a vector of Curve classes. So its item of vector will include a curve
@@ -100,7 +108,7 @@ void LSHC::readData(string path){
     dataSet.close(); //closing opened file
 }
 
-void LSHC::readQueries(string path){
+void CurveHashing::readQueries(string path){
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES ***
     // Info: We are going to make a vector of Curve classes. So its item of vector will include a curve
@@ -177,7 +185,7 @@ void LSHC::readQueries(string path){
 
 
 
-Point* LSHC::vectorCurveToPoint(Curve* hashedCurve, Curve *origin){
+Point* CurveHashing::vectorCurveToPoint(Curve* hashedCurve, Curve *origin){
     Point* newPoint;
     newPoint = new Point(stoi(origin->getId()));  // creating a new point to represent vector of curve with the same id as the curve
     
@@ -195,7 +203,7 @@ Point* LSHC::vectorCurveToPoint(Curve* hashedCurve, Curve *origin){
     return newPoint;
 }
 
-int LSHC::maxCurveLength(){
+int CurveHashing::maxCurveLength(){
     int max = -1;
     for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
         if ( (*it)->getNumberOfCoordinates() > max )
@@ -204,7 +212,7 @@ int LSHC::maxCurveLength(){
     return max;
 }
 
-void LSHC::lshInsertAll(){
+void LSHC::hashAll(){
     int maxD = maxCurveLength();
     cout << "MaxD:" << maxD << endl;
     int w = 4000, k=4; //TODO arguments?
@@ -287,7 +295,91 @@ void LSHC::nearestNeighbourCurve(Curve *query){
     cout << " with distance : " << min << endl;
 }
 
-void LSHC::printAllCurves(){
+void HCC::hashAll(){
+    int maxD = maxCurveLength();
+    cout << "MaxD:" << maxD << endl;
+    int w = 4000, k=1; //TODO arguments?
+
+
+    // For every grid
+    for(int i=0; i<L; i++){
+
+        // Make an instance of lsh
+        //LSH lsh_i(w, maxD, k, 1);
+        hc.push_back(new HC(w, maxD, k, dd, hd));
+
+        // For every Curve
+        for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
+            //cout << "Initial curve:";
+            //(*it)->printCoordinates();
+
+            // Convert the curve into grid Curve
+            Curve *gridCurve = grids.at(i).curveHashing(*it);
+            //cout << "Grid curve:";
+            //gridCurve->printCoordinates();
+
+            // Convert the curve into a point
+            Point *ptr = vectorCurveToPoint(gridCurve,*it);
+            //cout << "Point of curve: ";
+            //ptr->printPoint();
+            //cout << endl;
+
+            // Add padding so that all points have the same ammout of dimensions
+            ptr->addPadding(d*maxD);
+            //cout << "Point after padding: ";
+            //ptr->printPoint();
+            //cout << endl;
+
+            // Insert it to the lsh HashTable
+            hc.at(i)->insert(*ptr);
+        }
+    }
+}
+
+void HCC::nearestNeighbourCurve(Curve *query){
+    int maxD = maxCurveLength(); //TODO if query is bigger than maxD she should get it cut i think
+    //set<Curve*> nearestCurves; // Set of the nearest curves found in each grid
+
+    //cout << "Initial curve:";
+    //query->printCoordinates();
+
+    double dist,min = numeric_limits<double>::max();   // stores minY of the precious point of curve
+    Point *nn;
+    for(int i=0; i<L; i++){
+        // Convert the curve into grid Curve
+        Curve *gridCurve = grids.at(i).curveHashing(query);
+        //cout << "Grid curve:";
+        //gridCurve->printCoordinates();
+
+        // Convert the curve into a point
+        Point *p = vectorCurveToPoint(gridCurve,query);
+        //cout << "Point of curve: ";
+        //ptr->printPoint();
+        //cout << endl;
+
+        // Add padding so that all points have the same ammout of dimensions
+        p->addPadding(d*maxD);
+        //cout << "Point after padding: ";
+        //ptr->printPoint();
+        //cout << endl;
+
+        // Find its nearestNeighbour point using lsh
+        Point *ptr = hc.at(i)->nearestNeighbour(*p, "dtw", dist);
+        cout << "Nearest curve in grids["<<i<<"] : " << ptr->getId() << endl;
+        //nearestCurves.insert(nn->getOrigin());
+        if (dist < min){
+            min = dist;
+            nn = ptr;
+        }
+    }
+
+    cout << "NEAREST OF THE NEAREST: Id:" << nn->getOrigin()->getId();
+    nn->getOrigin()->printCoordinates();
+    cout << " with distance : " << min << endl;
+}
+
+
+void CurveHashing::printAllCurves(){
     cout << "ALL CURVES:" << endl;
     for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
         cout << "numOfCoordinates: " << (*it)->getNumberOfCoordinates();

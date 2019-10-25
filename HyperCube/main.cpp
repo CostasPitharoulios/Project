@@ -110,7 +110,8 @@ int main(int argc,char *argv[]){
             p.addCoordinate(stod(token));
 
         // Find its A-NN
-        Point *nn = hc.nearestNeighbour(p);
+        double dist;
+        Point *nn = hc.nearestNeighbour(p,"manh",dist);
 
         if (nn!=nullptr){
             cout << "NN of " << p.getId() << " is " << nn->getId();
