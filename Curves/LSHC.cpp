@@ -282,8 +282,8 @@ void LSHC::nearestNeighbourCurve(Curve *query){
         }
     }
 
-    cout << "NEAREST OF THE NEAREST: Id:" << nn->getOrigin()->getId();
-    nn->getOrigin()->printCoordinates();
+    //cout << "NEAREST OF THE NEAREST: Id:" << nn->getOrigin()->getId();
+   // nn->getOrigin()->printCoordinates();
     cout << " with distance : " << min << endl;
 }
 
