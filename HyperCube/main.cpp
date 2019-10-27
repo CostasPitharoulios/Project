@@ -14,7 +14,7 @@ using namespace std;
 
 int main(int argc,char *argv[]){
     string inputFile, outputFile, queryFile;
-    int r=-1;
+    double r=-1;
 
     // Handling arguments
     if (argc == 5 || argc == 7){
@@ -27,7 +27,7 @@ int main(int argc,char *argv[]){
             if(!strcmp(argv[i],"-o"))
                 outputFile = argv[i+1];
             if(!strcmp(argv[i],"-r"))
-                r = stoi(argv[i+1]);
+                r = stod(argv[i+1]);
         }
     }
     else{
@@ -41,7 +41,7 @@ int main(int argc,char *argv[]){
         cerr << "Cannot open the input file : " << inputFile << endl;
         return 1;
     }
-    if (r < 0){
+    if (r < 0 && r!=-1){
         cerr << "r must be positive." << endl;
         return 1;
     }
@@ -109,16 +109,29 @@ int main(int argc,char *argv[]){
         while( ss >> token )
             p.addCoordinate(stod(token));
 
-        // Find its A-NN
-        double dist;
-        Point *nn = hc.nearestNeighbour(p,"manh",dist);
+        // Find nearest neighbour(s)
+        if ( r==-1){ // if r is not given as argument
+            // Find its A-NN
+            double dist;
+            Point *nn = hc.nearestNeighbour(p,"manh",dist);
 
-        if (nn!=nullptr){
-            cout << "NN of " << p.getId() << " is " << nn->getId();
-            cout << " with distance " << manhattanDistance(p.getCoordinates(),nn->getCoordinates()) << endl;
-        }else
-            cout << "NN of " << p.getId() << " is was not found " << endl;
+            if (nn!=nullptr)
+                cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
+            else
+                cout << "NN of " << p.getId() << " is was not found " << endl;
+        }else{
+            vector<double> dist;
+            vector<Point *> rnn = hc.nearestNeighbours(p,"manh",r,dist);
 
+            if ( rnn.size()==0 ){
+                cout << "NN of " << p.getId() << " in radius " << r << " is was not found " << endl;
+            }else{
+                cout << "NN of " << p.getId() << " in radius " << r << " are: " << endl;
+                for (int i=0; i<rnn.size(); i++){
+                    cout << "- " << rnn.at(i)->getId() << " with distance " << dist.at(i) << endl;
+                }
+            }
+        }
         //////////////
         break;
         /////////////

@@ -145,6 +145,64 @@ Point *HC::nearestNeighbour(Point p, string distFunc, double &min_dist){
     return min_ptr;
 }
 
+vector<Point *> HC::nearestNeighbours(Point p, string distFunc, double r, vector<double> &min_dist){
+    cout << "Finding Nearest Neighbours in radius r...\n";
+    
+    uint32_t hashkey = hash(p);
+    //cout << "hashkey=" << (bitset<32>(hashkey)) << endl;
+    vector<Point *> neighbours;
+    min_dist.clear(); 
+
+    // Compute a set of vertices with hamming distance < hd
+    set<uint32_t> s = nearVertices(hashkey, dd, hd);
+    set<uint32_t>::iterator itr;
+    // Loop over the points that were hashed in the same vertice, or in a 
+    // vertice with a certain hamming distance.
+    // TODO : stop after 3L points
+    int pointscount = 0; 
+    int verticescount = 0; 
+    for(itr = s.begin(); itr!=s.end(); itr++){
+        uint32_t vertice = (*itr);
+ 
+        pair<mapIt, mapIt> it = cube.equal_range(vertice);
+        mapIt it1 = it.first;
+
+        while (it1 != it.second){
+            // Compute the distance between the two points
+            double dist;
+            if(!distFunc.compare("manh"))
+                dist = manhattanDistance(p.getCoordinates(), it1->second->getCoordinates());
+            else if(!distFunc.compare("dtw"))
+                dist = getDTWfromPoints(&p, it1->second);
+            else{
+                cout << "Wrong distFunc argument" << endl;
+                return neighbours;
+            }
+
+            if (dist <= r){
+                 // We found a point in radius r
+
+                // If it has not been already pushed, push it
+                bool exists = false;
+                for (int i=0; i<neighbours.size(); i++){
+                    if (neighbours.at(i)->getId() == it1->second->getId())
+                        exists = true;
+                }
+                if (!exists){
+                    neighbours.push_back(it1->second);
+                    min_dist.push_back(dist);
+                }
+            }
+            pointscount++;
+            it1++;
+        }
+        verticescount++;
+    }
+    cout << "Examined " << verticescount << " vertices. (";
+    cout << pointscount << " Points in total)." << endl;
+    return neighbours;
+}
+
 void HC::printCube(){
     cout << "Cube:\n";
     mapIt it = cube.begin(); 

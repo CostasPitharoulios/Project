@@ -28,6 +28,7 @@ class HC{
         void insert(Point p);
         uint32_t hash(Point p); // returns a key < 2^dd
         Point *nearestNeighbour(Point p, string distFunc, double &min_dist);
+        vector<Point*> nearestNeighbours(Point p, string distFunc, double r,vector<double>& min_dist);
         void printCube();
         //TODO radius nn
 };
