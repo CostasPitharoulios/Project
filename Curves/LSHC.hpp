@@ -18,6 +18,8 @@ class CurveHashing{
 
     public:
         CurveHashing(double delta, int d, int L);
+        virtual ~CurveHashing();
+
         void readData(string path); // Read curves from file path
         void printAllCurves();
         int maxCurveLength();
@@ -36,6 +38,7 @@ class LSHC: public CurveHashing{
 
     public:
         LSHC(double delta, int d, int L);
+        ~LSHC();
         
         void hashAll() override; // Insert all curves to the LSH hash tables
         void nearestNeighbourCurve(Curve *) override; 
@@ -50,6 +53,7 @@ class HCC: public CurveHashing{
 
     public:
         HCC(double delta, int d, int L, int dd, int hd);
+        ~HCC();
         
         void hashAll() override; // Insert all curves to the LSH hash tables
         void nearestNeighbourCurve(Curve *) override; 

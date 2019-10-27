@@ -11,12 +11,33 @@
 
 using namespace std;
 
+CurveHashing::~CurveHashing(){
+    //cout << "  CurveHashing destructor" << endl;
+    for(int i=0; i<allCurves.size(); i++){
+        delete allCurves.at(i);
+    }
+}
+
 LSHC::LSHC(double delta, int d, int L):CurveHashing(delta,d,L){
     cout << "New LSHC bitch" << endl;
 }
 
+LSHC::~LSHC(){
+    //cout << "  LSHC destructor" << endl;
+    for (int i=0; i<lsh.size(); i++){
+        delete lsh.at(i);
+    }
+}
+
 HCC::HCC(double delta, int d, int L, int dd, int hd):CurveHashing(delta,d,L), dd(dd), hd(hd){
     cout << "New HCC bitch" << endl;
+}
+
+HCC::~HCC(){
+    //cout << "  HCC destructor" << endl;
+    for (int i=0; i<hc.size(); i++){
+        delete hc.at(i);
+    }
 }
 
 CurveHashing::CurveHashing(double delta, int d, int L):d(d), L(L){
@@ -173,6 +194,8 @@ void CurveHashing::readQueries(string path){
         // Find its nearest neighbour curve
         nearestNeighbourCurve(aCurve);
 
+        delete aCurve;
+
 
         ///////////////////////////////////////////
         break; //TODO TODO TODO TODO TODO TODO TODO
@@ -249,6 +272,8 @@ void LSHC::hashAll(){
 
             // Insert it to the lsh HashTable
             lsh.at(i)->insert(*ptr);
+            delete ptr;
+            delete gridCurve;
         }
     }
 }
@@ -288,6 +313,8 @@ void LSHC::nearestNeighbourCurve(Curve *query){
             min = dist;
             nn = ptr;
         }
+        delete p;
+        delete gridCurve;
     }
 
     //cout << "NEAREST OF THE NEAREST: Id:" << nn->getOrigin()->getId();
@@ -332,6 +359,8 @@ void HCC::hashAll(){
 
             // Insert it to the lsh HashTable
             hc.at(i)->insert(*ptr);
+            delete ptr;
+            delete gridCurve;
         }
     }
 }
@@ -371,6 +400,8 @@ void HCC::nearestNeighbourCurve(Curve *query){
             min = dist;
             nn = ptr;
         }
+        delete p;
+        delete gridCurve;
     }
 
     cout << "NEAREST OF THE NEAREST: Id:" << nn->getOrigin()->getId();

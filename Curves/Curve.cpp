@@ -12,6 +12,10 @@ Curve::Curve(){
 }
 
 Curve::~Curve(){
+
+    for (int i=0; i<listOfCoordinates.size(); i++){
+        delete listOfCoordinates.at(i);
+    }
     //printf("Curve was destroyed\n");
 }
 

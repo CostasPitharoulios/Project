@@ -20,6 +20,7 @@ LSH::LSH(int w, int d, int k, int L):w(w), d(d), k(k), L(L){
 }
 
 LSH::~LSH(){ 
+    //cout << "      LSH destructor" << endl;
     for (vector<Point *>::iterator it=dataset.begin(); it != dataset.end(); it++){
         delete *it;
     }
