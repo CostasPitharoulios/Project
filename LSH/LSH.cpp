@@ -19,8 +19,7 @@ LSH::LSH(int w, int d, int k, int L):w(w), d(d), k(k), L(L){
     }
 }
 
-LSH::~LSH(){ //TODO solve leaks
-     
+LSH::~LSH(){ 
     for (vector<Point *>::iterator it=dataset.begin(); it != dataset.end(); it++){
         delete *it;
     }

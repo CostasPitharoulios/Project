@@ -33,6 +33,11 @@ HC::HC(int w, int d, int k, int dd, int hd):w(w), d(d), k(k), dd(dd), hd(hd){
     }
 }
 
+HC::~HC(){
+    for(int i=0; i<dataset.size(); i++){
+        delete dataset.at(i);
+    }
+}
 
 void HC::insert(Point p){
     Point *ptr = new Point(p);

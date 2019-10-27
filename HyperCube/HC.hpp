@@ -24,6 +24,7 @@ class HC{
 
     public:
         HC(int w, int d, int k, int dd, int hd);
+        ~HC();
 
         void insert(Point p);
         uint32_t hash(Point p); // returns a key < 2^dd
