@@ -103,3 +103,55 @@ Point *LSH::nearestNeighbour(Point p, string distFunc, double &min_dist){
     min_dist = min;
     return min_ptr;
 }
+
+
+vector<Point *> LSH::nearestNeighbours(Point p, string distFunc, double r, vector<double>& min_dist){
+    cout << "Finding Nearest Neighbours in radious r...\n";
+    vector<Point *> neighbours;
+    min_dist.clear();
+    
+    // Loop over the points that have this hash key, and find the nearest
+    // TODO : stop after 3L points
+    for (int i=0; i<L; i++){
+        //cout << "g(" << i << ") = " << (bitset<32>(g.at(i).hash(p))) << endl;
+        uint32_t hashkey = g.at(i).hash(p);
+
+        pair<mapIt, mapIt> it = hashTables.at(i).equal_range(hashkey);
+        mapIt it1 = it.first;
+
+        int count = 0; 
+        while (it1 != it.second){
+            count++;
+
+            // Compute the distance between the two points
+            double dist;
+            if(!distFunc.compare("manh"))
+               dist = manhattanDistance(p.getCoordinates(), it1->second->getCoordinates());
+            else if(!distFunc.compare("dtw"))
+               dist = getDTWfromPoints(&p, it1->second);
+            else{
+                cout << "Wrong distFunc argument" << endl;
+                return neighbours;
+            }
+
+            
+            if (dist <= r){
+                // We found a point in radius r
+
+                // If it has not been already pushed, push it
+                bool exists = false;
+                for (int i=0; i<neighbours.size(); i++){
+                    if (neighbours.at(i)->getId() == it1->second->getId())
+                        exists = true;
+                }
+                if (!exists){
+                    neighbours.push_back(it1->second);
+                    min_dist.push_back(dist);
+                }
+            }
+            it1++;
+        }
+        cout << "Points in the same bucket on g(" << i << "): " << count << endl;; 
+    }
+    return neighbours;
+}

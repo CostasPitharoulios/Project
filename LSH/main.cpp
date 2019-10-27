@@ -13,7 +13,7 @@ using namespace std;
 
 int main(int argc,char *argv[]){
     string inputFile, outputFile, queryFile;
-    int r;
+    double r=-1;
 
     // Handling arguments
     if (argc == 5 || argc == 7){
@@ -26,7 +26,7 @@ int main(int argc,char *argv[]){
             if(!strcmp(argv[i],"-o"))
                 outputFile = argv[i+1];
             if(!strcmp(argv[i],"-r"))
-                r = stoi(argv[i+1]);
+                r = stod(argv[i+1]);
         }
     }
     else{
@@ -40,7 +40,7 @@ int main(int argc,char *argv[]){
         cerr << "Cannot open the input file : " << inputFile << endl;
         return 1;
     }
-    if (r < 0){
+    if (r < 0 && r!=-1){
         cerr << "r must be positive." << endl;
         return 1;
     }
@@ -78,7 +78,7 @@ int main(int argc,char *argv[]){
 
     lsh.insert(p1);
 
-    // Read input file
+    // Read input file line by line
     cout << "Reading input dataset..." << endl;
     while(getline(in,str)){
         istringstream ss(str);
@@ -103,8 +103,10 @@ int main(int argc,char *argv[]){
         return 1;
     }
 
-    // Read query file
+    // Read query file line by line
     while(getline(qin,str)){
+
+        // Read Curve info
         istringstream ss(str);
         ss >> token;
         Point p(stoi(token));
@@ -112,15 +114,29 @@ int main(int argc,char *argv[]){
         while( ss >> token )
             p.addCoordinate(stod(token));
 
-        // Find its A-NN
-        double dist;
-        Point *nn = lsh.nearestNeighbour(p,"manh",dist);
+        // Find nearest neighbour(s)
+        if ( r==-1){ // if r is not given as argument
+            // Find its A-NN
+            double dist;
+            Point *nn = lsh.nearestNeighbour(p,"manh",dist);
 
-        if (nn!=nullptr)
-            cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << manhattanDistance(p.getCoordinates(),nn->getCoordinates()) << endl;
-        else
-            cout << "NN of " << p.getId() << " is was not found " << endl;
+            if (nn!=nullptr)
+                cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
+            else
+                cout << "NN of " << p.getId() << " is was not found " << endl;
+        }else{
+            vector<double> dist;
+            vector<Point *> rnn = lsh.nearestNeighbours(p,"manh",r,dist);
 
+            if ( rnn.size()==0 ){
+                cout << "NN of " << p.getId() << " in radius " << r << " is was not found " << endl;
+            }else{
+                cout << "NN of " << p.getId() << " in radius " << r << " are: " << endl;
+                for (int i=0; i<rnn.size(); i++){
+                    cout << "- " << rnn.at(i)->getId() << " with distance " << dist.at(i) << endl;
+                }
+            }
+        }
 
         //////////////
         break;

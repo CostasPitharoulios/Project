@@ -21,8 +21,8 @@ class LSH{
         void insert(Point p);
         void printG(int i);
         
-        Point *nearestNeighbour(Point p, /* in */ string distFunc, /* in */ double& min_dist /* out */); // A-NN
-        //TODO radius nn
+        Point *nearestNeighbour(Point p /* in */, string distFunc /* in */, double& min_dist /* out */); // A-NN
+        vector<Point *>nearestNeighbours(Point p /* in */, string distFunc /* in */, double r /* in */, vector<double>& min_dist /* out */);
 };
 
 typedef unordered_multimap<uint32_t,Point *>::iterator mapIt;
