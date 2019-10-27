@@ -1,4 +1,5 @@
 #include <bitset>
+#include <ctime>
 #include <iostream>
 #include <limits>
 #include "LSH.hpp"
@@ -6,7 +7,7 @@
 
 using namespace std;
 
-LSH::LSH(int w, int d, int k, int L):w(w), d(d), k(k), L(L){
+LSH::LSH(int w, int d, int k, int L, double r):w(w), d(d), k(k), L(L), r(r){
     //cout << "Whatap LSH\n";
     for (int i=0; i<L; i++){
         // Create the i-th g() and save it to the vector G
@@ -98,14 +99,14 @@ Point *LSH::nearestNeighbour(Point p, string distFunc, double &min_dist){
             }
             it1++;
         }
-        cout << "Points in the same bucket on g(" << i << "): " << count << endl;; 
+        //cout << "Points in the same bucket on g(" << i << "): " << count << endl;; 
     }
     min_dist = min;
     return min_ptr;
 }
 
 
-vector<Point *> LSH::nearestNeighbours(Point p, string distFunc, double r, vector<double>& min_dist){
+vector<Point *> LSH::nearestNeighbours(Point p, string distFunc, vector<double>& min_dist){
     cout << "Finding Nearest Neighbours in radious r...\n";
     vector<Point *> neighbours;
     min_dist.clear();
@@ -154,4 +155,34 @@ vector<Point *> LSH::nearestNeighbours(Point p, string distFunc, double r, vecto
         cout << "Points in the same bucket on g(" << i << "): " << count << endl;; 
     }
     return neighbours;
+}
+
+void LSH::answerQuery(Point p){
+    clock_t start = clock();
+    // Find nearest neighbour(s)
+    if ( r==-1){ // if r is not given as argument
+        // Find its A-NN
+        double dist;
+        Point *nn = nearestNeighbour(p,"manh",dist);
+
+        if (nn!=nullptr)
+            cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
+        else
+            cout << "NN of " << p.getId() << " is was not found " << endl;
+    }else{
+        vector<double> dist;
+        vector<Point *> rnn = nearestNeighbours(p,"manh",dist);
+
+        if ( rnn.size()==0 ){
+            cout << "NN of " << p.getId() << " in radius " << r << " is was not found " << endl;
+        }else{
+            cout << "NN of " << p.getId() << " in radius " << r << " are: " << endl;
+            for (int i=0; i<rnn.size(); i++){
+                cout << "- " << rnn.at(i)->getId() << " with distance " << dist.at(i) << endl;
+            }
+        }
+    }
+    clock_t end = clock();
+    long double time_ms = 1000.0 * (end-start) / CLOCKS_PER_SEC;
+    cout << "CPU time: " << time_ms << " ms" << endl;
 }

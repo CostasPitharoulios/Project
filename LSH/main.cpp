@@ -14,36 +14,46 @@ using namespace std;
 int main(int argc,char *argv[]){
     string inputFile, outputFile, queryFile;
     double r=-1;
+    int k = 4, L=5, w=4000;
 
     // Handling arguments
-    if (argc == 5 || argc == 7){
-        int i;
-        for(i=1 ; i<argc ; i++){
-            if(!strcmp(argv[i],"-d"))
-                inputFile = argv[i+1];
-            if(!strcmp(argv[i],"-q"))
-                queryFile = argv[i+1];
-            if(!strcmp(argv[i],"-o"))
-                outputFile = argv[i+1];
-            if(!strcmp(argv[i],"-r"))
-                r = stod(argv[i+1]);
+    int n=0;
+    for(int i=1 ; i<argc ; i++){
+        if(!strcmp(argv[i],"-d")){
+            inputFile = argv[i+1];
+            n++;
         }
+        if(!strcmp(argv[i],"-q")){
+            queryFile = argv[i+1];
+            n++;
+        }
+        if(!strcmp(argv[i],"-o"))
+            outputFile = argv[i+1];
+        if(!strcmp(argv[i],"-r"))
+            r = stod(argv[i+1]);
+        if(!strcmp(argv[i],"-k"))
+            k = stoi(argv[i+1]);
+        if(!strcmp(argv[i],"-L"))
+            L = stoi(argv[i+1]);
+        if(!strcmp(argv[i],"-w"))
+            w = stoi(argv[i+1]);
     }
-    else{
-        cerr << "Wrong number of arguments" << endl;
+    if ( n < 2){
+        cerr << "Expected the necessary arguments -d [inputFile], -q [queryFile]" << endl;
         return 1;
     }
 
     // Open file
     ifstream in(inputFile.c_str());
     if (!in){
-        cerr << "Cannot open the input file : " << inputFile << endl;
+        cerr << "Cannot open the input file " << inputFile << ".(Specify with -d argument)" << endl;
         return 1;
     }
     if (r < 0 && r!=-1){
         cerr << "r must be positive." << endl;
         return 1;
     }
+
 
     // Read the first point
     string str,token;
@@ -59,6 +69,9 @@ int main(int argc,char *argv[]){
         return 1;
     }
     
+    cout << "Starting LSH with w=" << w << ", k=" << k << ", L=" << L ;
+    if (r!=-1) cout << ", r=" << r;
+    cout << "." << endl;
  
     /*Point p1(1);
     p1.addCoordinate(0);
@@ -73,8 +86,7 @@ int main(int argc,char *argv[]){
     p2.addCoordinate(5);
     */
 
-    int k = 4, L=5, w=4000; //TODO arguments?
-    LSH lsh(w, p1.getD(), k, L);
+    LSH lsh(w, p1.getD(), k, L, r);
 
     lsh.insert(p1);
 
@@ -99,7 +111,7 @@ int main(int argc,char *argv[]){
 
     ifstream qin(queryFile.c_str());
     if (!qin){
-        cerr << "Cannot open the query file : " << queryFile << endl;
+        cerr << "Cannot open the query file : " << queryFile << ".(Specify with -d argument)" << endl;
         return 1;
     }
 
@@ -114,29 +126,7 @@ int main(int argc,char *argv[]){
         while( ss >> token )
             p.addCoordinate(stod(token));
 
-        // Find nearest neighbour(s)
-        if ( r==-1){ // if r is not given as argument
-            // Find its A-NN
-            double dist;
-            Point *nn = lsh.nearestNeighbour(p,"manh",dist);
-
-            if (nn!=nullptr)
-                cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
-            else
-                cout << "NN of " << p.getId() << " is was not found " << endl;
-        }else{
-            vector<double> dist;
-            vector<Point *> rnn = lsh.nearestNeighbours(p,"manh",r,dist);
-
-            if ( rnn.size()==0 ){
-                cout << "NN of " << p.getId() << " in radius " << r << " is was not found " << endl;
-            }else{
-                cout << "NN of " << p.getId() << " in radius " << r << " are: " << endl;
-                for (int i=0; i<rnn.size(); i++){
-                    cout << "- " << rnn.at(i)->getId() << " with distance " << dist.at(i) << endl;
-                }
-            }
-        }
+        lsh.answerQuery(p);
 
         //////////////
         break;

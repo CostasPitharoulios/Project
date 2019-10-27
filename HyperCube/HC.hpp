@@ -21,17 +21,18 @@ class HC{
         int d;
         int k;  // Number of f_i's   
         int hd; // Hamming distance of near vertices
+        double r; // (radius)
 
     public:
-        HC(int w, int d, int k, int dd, int hd);
+        HC(int w, int d, int k, int dd, int hd, double r);
         ~HC();
 
         void insert(Point p);
         uint32_t hash(Point p); // returns a key < 2^dd
         Point *nearestNeighbour(Point p, string distFunc, double &min_dist);
-        vector<Point*> nearestNeighbours(Point p, string distFunc, double r,vector<double>& min_dist);
+        vector<Point*> nearestNeighbours(Point p, string distFunc, vector<double>& min_dist);
+        void answerQuery(Point p);
         void printCube();
-        //TODO radius nn
 };
 
 set<uint32_t> nearVertices(uint32_t num, int length, int probes);

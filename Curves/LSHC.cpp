@@ -246,7 +246,7 @@ void LSHC::hashAll(){
 
         // Make an instance of lsh
         //LSH lsh_i(w, maxD, k, 1);
-        lsh.push_back(new LSH(w, maxD, k, 1));
+        lsh.push_back(new LSH(w, maxD, k, 1, -1));
 
         // For every Curve
         for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){
@@ -333,7 +333,7 @@ void HCC::hashAll(){
 
         // Make an instance of lsh
         //LSH lsh_i(w, maxD, k, 1);
-        hc.push_back(new HC(w, maxD, k, dd, hd));
+        hc.push_back(new HC(w, maxD, k, dd, hd, -1));
 
         // For every Curve
         for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){

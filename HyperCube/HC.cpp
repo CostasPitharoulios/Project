@@ -1,4 +1,5 @@
 #include <bitset>
+#include <ctime>
 #include <cmath>
 #include <ctime>
 #include <iostream>
@@ -9,7 +10,7 @@
 
 using namespace std;
 
-HC::HC(int w, int d, int k, int dd, int hd):w(w), d(d), k(k), dd(dd), hd(hd){
+HC::HC(int w, int d, int k, int dd, int hd, double r):w(w), d(d), k(k), dd(dd), hd(hd), r(r){
     //random_device rd; // seed
     //mt19937 gen(rd());
     //uniform_int_distribution<> dis(0,1);
@@ -150,7 +151,7 @@ Point *HC::nearestNeighbour(Point p, string distFunc, double &min_dist){
     return min_ptr;
 }
 
-vector<Point *> HC::nearestNeighbours(Point p, string distFunc, double r, vector<double> &min_dist){
+vector<Point *> HC::nearestNeighbours(Point p, string distFunc, vector<double> &min_dist){
     cout << "Finding Nearest Neighbours in radius r...\n";
     
     uint32_t hashkey = hash(p);
@@ -217,4 +218,35 @@ void HC::printCube(){
              << ">  "; 
   
     cout << endl;
+}
+
+
+void HC::answerQuery(Point p){
+    clock_t start = clock();
+    // Find nearest neighbour(s)
+    if ( r==-1){ // if r is not given as argument
+        // Find its A-NN
+        double dist;
+        Point *nn = nearestNeighbour(p,"manh",dist);
+
+        if (nn!=nullptr)
+            cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
+        else
+            cout << "NN of " << p.getId() << " is was not found " << endl;
+    }else{
+        vector<double> dist;
+        vector<Point *> rnn = nearestNeighbours(p,"manh",dist);
+
+        if ( rnn.size()==0 ){
+            cout << "NN of " << p.getId() << " in radius " << r << " is was not found " << endl;
+        }else{
+            cout << "NN of " << p.getId() << " in radius " << r << " are: " << endl;
+            for (int i=0; i<rnn.size(); i++){
+                cout << "- " << rnn.at(i)->getId() << " with distance " << dist.at(i) << endl;
+            }
+        }
+    }
+    clock_t end = clock();
+    long double time_ms = 1000.0 * (end-start) / CLOCKS_PER_SEC;
+    cout << "CPU time: " << time_ms << " ms" << endl;
 }

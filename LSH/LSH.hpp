@@ -14,15 +14,17 @@ class LSH{
         int w; // Grid cell size
         int L; // Number of hashfunctions
         int k; // Number of sub-hashfunctions
+        double r; // (Radius)
     public:
-        LSH(int w, int d, int k,int L);
+        LSH(int w, int d, int k,int L, double r);
         ~LSH();
 
         void insert(Point p);
         void printG(int i);
         
         Point *nearestNeighbour(Point p /* in */, string distFunc /* in */, double& min_dist /* out */); // A-NN
-        vector<Point *>nearestNeighbours(Point p /* in */, string distFunc /* in */, double r /* in */, vector<double>& min_dist /* out */);
+        vector<Point *>nearestNeighbours(Point p /* in */, string distFunc /* in */, vector<double>& min_dist /* out */);
+        void answerQuery(Point p);
 };
 
 typedef unordered_multimap<uint32_t,Point *>::iterator mapIt;

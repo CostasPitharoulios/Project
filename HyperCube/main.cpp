@@ -14,24 +14,37 @@ using namespace std;
 
 int main(int argc,char *argv[]){
     string inputFile, outputFile, queryFile;
+    int k=4, dd=8, w=4, hd=2, M = numeric_limits<int>::max();
     double r=-1;
 
     // Handling arguments
-    if (argc == 5 || argc == 7){
-        int i;
-        for(i=1 ; i<argc ; i++){
-            if(!strcmp(argv[i],"-d"))
-                inputFile = argv[i+1];
-            if(!strcmp(argv[i],"-q"))
-                queryFile = argv[i+1];
-            if(!strcmp(argv[i],"-o"))
-                outputFile = argv[i+1];
-            if(!strcmp(argv[i],"-r"))
-                r = stod(argv[i+1]);
+    int n=0;
+    for(int i=1 ; i<argc ; i++){
+        if(!strcmp(argv[i],"-d")){
+            inputFile = argv[i+1];
+            n++;
         }
+        if(!strcmp(argv[i],"-q")){
+            queryFile = argv[i+1];
+            n++;
+        }
+        if(!strcmp(argv[i],"-o"))
+            outputFile = argv[i+1];
+        if(!strcmp(argv[i],"-r"))
+            r = stod(argv[i+1]);
+        if(!strcmp(argv[i],"-k"))
+            k = stoi(argv[i+1]);
+        if(!strcmp(argv[i],"-dd"))
+            dd = stoi(argv[i+1]);
+        if(!strcmp(argv[i],"-w"))
+            w = stoi(argv[i+1]);
+        if(!strcmp(argv[i],"-hd"))
+            hd = stoi(argv[i+1]);
+        if(!strcmp(argv[i],"-M"))
+            M = stoi(argv[i+1]);
     }
-    else{
-        cerr << "Wrong number of arguments" << endl;
+    if (n<2){
+        cerr << "Expected the necessary arguments -d [inputFile], -q [queryFIle]" << endl;
         return 1;
     }
 
@@ -74,8 +87,7 @@ int main(int argc,char *argv[]){
     */
 
     srand(time(NULL));
-    int k = 4, dd=8, w=4, hd=2;
-    HC hc(w, p1.getD(), k, dd, hd);
+    HC hc(w, p1.getD(), k, dd, hd, r);
 
     hc.insert(p1);
 
@@ -109,29 +121,8 @@ int main(int argc,char *argv[]){
         while( ss >> token )
             p.addCoordinate(stod(token));
 
-        // Find nearest neighbour(s)
-        if ( r==-1){ // if r is not given as argument
-            // Find its A-NN
-            double dist;
-            Point *nn = hc.nearestNeighbour(p,"manh",dist);
+        hc.answerQuery(p);
 
-            if (nn!=nullptr)
-                cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
-            else
-                cout << "NN of " << p.getId() << " is was not found " << endl;
-        }else{
-            vector<double> dist;
-            vector<Point *> rnn = hc.nearestNeighbours(p,"manh",r,dist);
-
-            if ( rnn.size()==0 ){
-                cout << "NN of " << p.getId() << " in radius " << r << " is was not found " << endl;
-            }else{
-                cout << "NN of " << p.getId() << " in radius " << r << " are: " << endl;
-                for (int i=0; i<rnn.size(); i++){
-                    cout << "- " << rnn.at(i)->getId() << " with distance " << dist.at(i) << endl;
-                }
-            }
-        }
         //////////////
         break;
         /////////////
