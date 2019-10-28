@@ -17,7 +17,7 @@ using namespace std;
 int main(int argc,char *argv[]){
     string inputFile, outputFile, queryFile;
     double r=-1,delta=0.0005; 
-    int k = 4, L=5,w=4000, M=numeric_limits<int>::max(),d=2,dd=8,hd=2;
+    int k = 4, L=5,w=4000, M=100,d=2,dd=8,probes=3;
 
     // Handling arguments
     int n=0;
@@ -42,8 +42,8 @@ int main(int argc,char *argv[]){
             w = stoi(argv[i+1]);
         if(!strcmp(argv[i],"-dd"))
             dd = stoi(argv[i+1]);
-        if(!strcmp(argv[i],"-hd"))
-            hd = stoi(argv[i+1]);
+        if(!strcmp(argv[i],"-probes"))
+            probes = stoi(argv[i+1]);
         if(!strcmp(argv[i],"-M"))
             M = stoi(argv[i+1]);
         if(!strcmp(argv[i],"-delta"))
@@ -56,7 +56,7 @@ int main(int argc,char *argv[]){
     
     CurveHashing *ch;
     //ch = new LSHC(delta,d,L);
-    ch = new HCC(delta,d,L, dd, hd);
+    ch = new HCC(delta,d,L, dd, probes, M);
     cout << "Reading input file..." << endl;
     ch->readData(inputFile);
     cout << "Reading complete." << endl;

@@ -119,6 +119,7 @@ int main(int argc,char *argv[]){
         cerr << "Cannot open the output file : " << outputFile << "(Specify with -o argument)" << endl;
     }
 
+    cout << "Solving queries..." << endl;
     // Read query file line by line
     while(getline(qin,str)){
 
@@ -137,8 +138,7 @@ int main(int argc,char *argv[]){
         /////////////
     }
 
-    //uint32_t gp = g.hash(p);
-    //cout << "g(p) = " << bitset<32>(gp) << " = " << gp << endl;
+    cout << "Process complete. The output is written on file " << outputFile << endl;
 
     in.close();
     qin.close();

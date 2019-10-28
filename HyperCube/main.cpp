@@ -14,7 +14,7 @@ using namespace std;
 
 int main(int argc,char *argv[]){
     string inputFile, outputFile, queryFile;
-    int k=4, dd=3, w=4000, hd=2, M = 10;
+    int k=4, dd=3, w=4000, probes=3, M = 10000;
     double r=-1;
 
     // Handling arguments
@@ -38,8 +38,8 @@ int main(int argc,char *argv[]){
             dd = stoi(argv[i+1]);
         if(!strcmp(argv[i],"-w"))
             w = stoi(argv[i+1]);
-        if(!strcmp(argv[i],"-hd"))
-            hd = stoi(argv[i+1]);
+        if(!strcmp(argv[i],"-probes"))
+            probes = stoi(argv[i+1]);
         if(!strcmp(argv[i],"-M"))
             M = stoi(argv[i+1]);
     }
@@ -87,7 +87,7 @@ int main(int argc,char *argv[]){
     */
 
     srand(time(NULL));
-    HC hc(w, p1.getD(), k, dd, hd, r);
+    HC hc(w, p1.getD(), k, dd, probes, M, r);
 
     hc.insert(p1);
 
@@ -116,6 +116,7 @@ int main(int argc,char *argv[]){
         cerr << "Cannot open the output file : " << outputFile << "(Specify with -o argument)" << endl;
     }
 
+    cout << "Solving queries..." << endl;
     // Read query file
     while(getline(qin,str)){
         istringstream ss(str);
@@ -126,12 +127,10 @@ int main(int argc,char *argv[]){
             p.addCoordinate(stod(token));
 
         hc.answerQuery(p, out);
-
-        //////////////
-        //break;
-        /////////////
     }
 
+
+    cout << "Process complete. The output is written on file " << outputFile << endl;
     //uint32_t gp = g.hash(p);
     //cout << "g(p) = " << bitset<32>(gp) << " = " << gp << endl;
 

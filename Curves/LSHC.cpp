@@ -29,7 +29,7 @@ LSHC::~LSHC(){
     }
 }
 
-HCC::HCC(double delta, int d, int L, int dd, int hd):CurveHashing(delta,d,L), dd(dd), hd(hd){
+HCC::HCC(double delta, int d, int L, int dd, int probes, int M):CurveHashing(delta,d,L), dd(dd), probes(probes), M(M){
     cout << "New HCC bitch" << endl;
 }
 
@@ -333,7 +333,7 @@ void HCC::hashAll(){
 
         // Make an instance of lsh
         //LSH lsh_i(w, maxD, k, 1);
-        hc.push_back(new HC(w, maxD, k, dd, hd, -1));
+        hc.push_back(new HC(w, maxD, k, dd, probes, M, -1));
 
         // For every Curve
         for(vector<Curve*>::iterator it = allCurves.begin(); it != allCurves.end(); it++){

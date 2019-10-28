@@ -6,3 +6,5 @@ anti gia probes: hamming distance hd (e3alou uparxei to M)
 
 padding me 0
 
+oi default metavlhtes exoun ginei vash tou small dataset
+

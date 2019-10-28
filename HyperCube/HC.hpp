@@ -20,11 +20,12 @@ class HC{
         int w;
         int d;
         int k;  // Number of f_i's   
-        int hd; // Hamming distance of near vertices
+        int probes; // Max number of near vertices examined
+        int M; // Max number of points examined
         double r; // (radius)
 
     public:
-        HC(int w, int d, int k, int dd, int hd, double r);
+        HC(int w, int d, int k, int dd, int hd, int M, double r);
         ~HC();
 
         void insert(Point p);

@@ -49,10 +49,11 @@ class HCC: public CurveHashing{
     private:
         vector<HC*> hc;
         int dd; // Number of f_i's
-        int hd; // Hamming distance of near vertices
+        int probes; // Max vertices examined
+        int M; // Max points examined
 
     public:
-        HCC(double delta, int d, int L, int dd, int hd);
+        HCC(double delta, int d, int L, int dd, int probes, int M);
         ~HCC();
         
         void hashAll() override; // Insert all curves to the LSH hash tables

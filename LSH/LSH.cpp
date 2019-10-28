@@ -63,7 +63,7 @@ void LSH::printG(int i){
 }
 
 Point *LSH::nearestNeighbour(Point p, string distFunc, double &min_dist){
-    cout << "Finding Nearest Neighbour...\n";
+    //cout << "Finding Nearest Neighbour...\n";
     
     // Loop over the points that have this hash key, and find the nearest
     // TODO : stop after 3L points
@@ -105,7 +105,7 @@ Point *LSH::nearestNeighbour(Point p, string distFunc, double &min_dist){
 }
 
 Point *LSH::nearestNeighbourBruteForce(Point p, string distFunc, double &min_dist){
-    cout << "Finding Nearest Neighbour...\n";
+    //cout << "Finding Nearest Neighbour with Brute Force...\n";
 
     double min = numeric_limits<double>::max();
     Point *min_ptr = nullptr;
@@ -123,7 +123,7 @@ Point *LSH::nearestNeighbourBruteForce(Point p, string distFunc, double &min_dis
 
 
 vector<Point *> LSH::nearestNeighbours(Point p, string distFunc, vector<double>& min_dist){
-    cout << "Finding Nearest Neighbours in radious r...\n";
+    //cout << "Finding Nearest Neighbours in radious r...\n";
     vector<Point *> neighbours;
     min_dist.clear();
     
@@ -168,29 +168,32 @@ vector<Point *> LSH::nearestNeighbours(Point p, string distFunc, vector<double>&
             }
             it1++;
         }
-        cout << "Points in the same bucket on g(" << i << "): " << count << endl;; 
+        //cout << "Points in the same bucket on g(" << i << "): " << count << endl;; 
     }
     return neighbours;
 }
 
 void LSH::answerQuery(Point p, ofstream& out){
-    clock_t start = clock();
     double dist, true_dist;
     vector<Point*> rnn;
 
     // Find its A-NN
+    clock_t start = clock();
     Point *nn = nearestNeighbour(p,"manh",dist);
+    clock_t end = clock();
 
-    if (nn!=nullptr)
+    /*if (nn!=nullptr)
         cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
     else
         cout << "NN of " << p.getId() << " is was not found " << endl;
+    */
 
     // Find neighbours in radius r
     if(r>=0){
         vector<double> dist;
         rnn = nearestNeighbours(p,"manh",dist);
 
+        /*
         if ( rnn.size()==0 ){
             cout << "NN of " << p.getId() << " in radius " << r << " is was not found " << endl;
         }else{
@@ -199,10 +202,10 @@ void LSH::answerQuery(Point p, ofstream& out){
                 cout << "- " << rnn.at(i)->getId() << " with distance " << dist.at(i) << endl;
             }
         }
+        */
     }
-    clock_t end = clock();
     double time_ms = 1000.0 * (end-start) / CLOCKS_PER_SEC;
-    cout << "CPU time: " << time_ms << " ms" << endl;
+    //cout << "CPU time: " << time_ms << " ms" << endl;
 
     // Find its NN using brute force
     start = clock();
