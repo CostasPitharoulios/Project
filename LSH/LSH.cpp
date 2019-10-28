@@ -2,6 +2,7 @@
 #include <ctime>
 #include <iostream>
 #include <limits>
+#include <fstream>
 #include "LSH.hpp"
 #include "../dist.hpp"
 
@@ -60,9 +61,6 @@ void LSH::printG(int i){
     }
 }
 
-// TODO mhpws na epestrefe sketo Point? wste o ap e3w na mhn exei prosvash 
-// sto dataset. Alla etsi den 3erw ti prepei na epistrepsei otan den vre8ei nn
-// (isws ena Point me id = -1)
 Point *LSH::nearestNeighbour(Point p, string distFunc, double &min_dist){
     cout << "Finding Nearest Neighbour...\n";
     
@@ -100,6 +98,23 @@ Point *LSH::nearestNeighbour(Point p, string distFunc, double &min_dist){
             it1++;
         }
         //cout << "Points in the same bucket on g(" << i << "): " << count << endl;; 
+    }
+    min_dist = min;
+    return min_ptr;
+}
+
+Point *LSH::nearestNeighbourBruteForce(Point p, string distFunc, double &min_dist){
+    cout << "Finding Nearest Neighbour...\n";
+
+    double min = numeric_limits<double>::max();
+    Point *min_ptr = nullptr;
+    vector<double> coords = p.getCoordinates();
+    for (int i=0; i<dataset.size(); i++){
+        double dist = manhattanDistance(dataset.at(i)->getCoordinates(), coords);
+        if (dist < min){
+            min = dist;
+            min_ptr = dataset.at(i);
+        }
     }
     min_dist = min;
     return min_ptr;
@@ -157,21 +172,23 @@ vector<Point *> LSH::nearestNeighbours(Point p, string distFunc, vector<double>&
     return neighbours;
 }
 
-void LSH::answerQuery(Point p){
+void LSH::answerQuery(Point p, ofstream& out){
     clock_t start = clock();
-    // Find nearest neighbour(s)
-    if ( r==-1){ // if r is not given as argument
-        // Find its A-NN
-        double dist;
-        Point *nn = nearestNeighbour(p,"manh",dist);
+    double dist, true_dist;
+    vector<Point*> rnn;
 
-        if (nn!=nullptr)
-            cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
-        else
-            cout << "NN of " << p.getId() << " is was not found " << endl;
-    }else{
+    // Find its A-NN
+    Point *nn = nearestNeighbour(p,"manh",dist);
+
+    if (nn!=nullptr)
+        cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
+    else
+        cout << "NN of " << p.getId() << " is was not found " << endl;
+
+    // Find neighbours in radius r
+    if(r>=0){
         vector<double> dist;
-        vector<Point *> rnn = nearestNeighbours(p,"manh",dist);
+        rnn = nearestNeighbours(p,"manh",dist);
 
         if ( rnn.size()==0 ){
             cout << "NN of " << p.getId() << " in radius " << r << " is was not found " << endl;
@@ -183,6 +200,37 @@ void LSH::answerQuery(Point p){
         }
     }
     clock_t end = clock();
-    long double time_ms = 1000.0 * (end-start) / CLOCKS_PER_SEC;
+    double time_ms = 1000.0 * (end-start) / CLOCKS_PER_SEC;
     cout << "CPU time: " << time_ms << " ms" << endl;
+
+    // Find its NN using brute force
+    start = clock();
+    Point *true_nn = nearestNeighbourBruteForce(p,"manh",true_dist);
+    end = clock();
+    double true_time_ms = 1000.0 * (end-start) / CLOCKS_PER_SEC;
+
+    printOutput(out, p.getId(), nn->getId(), dist, true_dist, time_ms, true_time_ms, rnn);
+
+}
+
+void LSH::printOutput(ofstream& out, int q_id, int nn_id, double lsh_dist, double true_dist, double lsh_time, double true_time, vector<Point*> rnn){
+    cout << "Print output: query:" << q_id << " nn:" << nn_id << " dist:" <<  lsh_dist << " true_dist:" << true_dist << " time:" << lsh_time << " true_time:" << true_time << endl;
+
+    out << "Query: " << q_id << endl;
+    out << "Nearest neighbour: " << nn_id << endl;
+    out << "distanceLSH: " << lsh_dist << endl;
+    out << "distanceTrue: " << true_dist << endl;
+    out << "tLSH: " << lsh_time << " ms" << endl;
+    out << "tTrue: " << true_time << " ms" << endl;
+    
+    // r-near neighbors:
+    if (rnn.size()>0){
+        out << "R-near neighbours(r=" << r << "):" << endl;
+        out << rnn.at(0)->getId();
+        for(int i=1; i<rnn.size(); i++){
+            out << ", " << rnn.at(i)->getId();
+        }
+        out << endl;
+    }
+    out << endl;
 }

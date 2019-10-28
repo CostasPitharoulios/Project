@@ -1,4 +1,5 @@
 #include <unordered_map>
+#include <fstream>
 #include "../Point.hpp"
 #include "../G.hpp"
 
@@ -24,7 +25,9 @@ class LSH{
         
         Point *nearestNeighbour(Point p /* in */, string distFunc /* in */, double& min_dist /* out */); // A-NN
         vector<Point *>nearestNeighbours(Point p /* in */, string distFunc /* in */, vector<double>& min_dist /* out */);
-        void answerQuery(Point p);
+        Point *nearestNeighbourBruteForce(Point p /* in */, string distFunc /* in */, double& min_dist /* out */); // NN
+        void answerQuery(Point p, ofstream& out);
+        void printOutput(ofstream& out, int q_id, int nn_id, double lsh_dist, double true_dist, double lsh_time, double true_time, vector<Point*> rnn);
 };
 
 typedef unordered_multimap<uint32_t,Point *>::iterator mapIt;

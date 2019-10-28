@@ -114,6 +114,10 @@ int main(int argc,char *argv[]){
         cerr << "Cannot open the query file : " << queryFile << ".(Specify with -d argument)" << endl;
         return 1;
     }
+    ofstream out(outputFile.c_str());
+    if (!out){
+        cerr << "Cannot open the output file : " << outputFile << " so the output will not be saved.(Specify with -o argument)" << endl;
+    }
 
     // Read query file line by line
     while(getline(qin,str)){
@@ -126,7 +130,7 @@ int main(int argc,char *argv[]){
         while( ss >> token )
             p.addCoordinate(stod(token));
 
-        lsh.answerQuery(p);
+        lsh.answerQuery(p, out);
 
         //////////////
         break;
@@ -137,5 +141,7 @@ int main(int argc,char *argv[]){
     //cout << "g(p) = " << bitset<32>(gp) << " = " << gp << endl;
 
     in.close();
+    qin.close();
+    out.close();
     return 0;
 }
