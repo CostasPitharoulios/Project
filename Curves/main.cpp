@@ -74,7 +74,7 @@ int main(int argc,char *argv[]){
     cout << "Inserting data to the hashtable..." << endl;
     ch->hashAll();
     cout << "Inserting complete." << endl;
-    ch->readQueries(queryFile,hf,outputFile);
+    ch->readQueries(queryFile,outputFile,hf);
 
     delete ch;
 

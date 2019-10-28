@@ -198,10 +198,6 @@ void CurveHashing::readQueries(string path,string outputFile, string hf){
 
         delete aCurve;
 
-
-        ///////////////////////////////////////////
-        break; //TODO TODO TODO TODO TODO TODO TODO
-        ///////////////////////////////////////////
     }
     
     queries.close(); //closing opened file
@@ -296,7 +292,6 @@ Curve *CurveHashing::nearestNeighbourCurveBruteForce(Curve *query, double& min_d
         cout << "\n\n\n" ;
         aCurve->DisplayVectorContents();*/
         double distance = getValueDTW(query, (*dataCurve));
-        cout << "dISTANCE IS: " << distance << "\n";
         if (distance < min){
             min = distance;
             nearestCurve = (*dataCurve);
@@ -335,7 +330,7 @@ Curve *LSHC::nearestNeighbourCurve(Curve *query, double& min_dist){
 
         // Find its nearestNeighbour point using lsh
         Point *ptr = lsh.at(i)->nearestNeighbour(*p, "dtw", dist);
-        cout << "Nearest curve in grids["<<i<<"] : " << ptr->getId() << endl;
+        //cout << "Nearest curve in grids["<<i<<"] : " << ptr->getId() << endl;
         //nearestCurves.insert(nn->getOrigin());
         if (dist < min){
             min = dist;
@@ -422,7 +417,7 @@ Curve *HCC::nearestNeighbourCurve(Curve *query, double &min_dist){
 
         // Find its nearestNeighbour point using lsh
         Point *ptr = hc.at(i)->nearestNeighbour(*p, "dtw", dist);
-        cout << "Nearest curve in grids["<<i<<"] : " << ptr->getId() << endl;
+        //cout << "Nearest curve in grids["<<i<<"] : " << ptr->getId() << endl;
         //nearestCurves.insert(nn->getOrigin());
         if (dist < min){
             min = dist;
