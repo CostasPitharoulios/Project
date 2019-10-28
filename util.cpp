@@ -29,7 +29,7 @@ void printOutput(ofstream& out, int q_id, int nn_id, double dist, double true_di
     out << endl;
 }
 
-void printOutput(ofstream& out, int q_id, string hf, int nn_id, int true_id, double dist, double true_dist ){
+void printOutput(ofstream& out, string q_id, string hf, string nn_id, string true_id, double dist, double true_dist ){
     if (!out)
         return;
 

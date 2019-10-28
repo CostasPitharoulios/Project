@@ -27,8 +27,8 @@ class CurveHashing{
         int maxCurveLength();
         Point* vectorCurveToPoint(Curve* hashedCurve, Curve *origin); // Convert vector of curve to a single point
         vector<Curve*> getAllCurves(void);
-        void readQueries(string path, string outputFile);
-        void answerQuery(Curve *aCurve, ofstream& out);
+        void readQueries(string path, string outputFile, string hf);
+        void answerQuery(Curve *aCurve, string hf, ofstream& out);
         Curve *nearestNeighbourCurveBruteForce(Curve *, double &min_dist);
         virtual void hashAll() = 0; //pure virtual functions
         virtual Curve *nearestNeighbourCurve(Curve *, double &min_dist) = 0;

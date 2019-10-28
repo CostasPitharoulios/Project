@@ -63,8 +63,10 @@ int main(int argc,char *argv[]){
         ch = new LSHC(w,delta,d,k,L);
     else if(!hf.compare("HC"))
         ch = new HCC(w,delta,d,k,L, dd, probes, M);
-    else
+    else{
+        hf="LSH";
         ch = new LSHC(w,delta,d,k,L);
+    }
     cout << "Reading input file..." << endl;
     ch->readData(inputFile);
     cout << "Reading complete." << endl;
@@ -72,7 +74,7 @@ int main(int argc,char *argv[]){
     cout << "Inserting data to the hashtable..." << endl;
     ch->hashAll();
     cout << "Inserting complete." << endl;
-    ch->readQueries(queryFile,outputFile);
+    ch->readQueries(queryFile,hf,outputFile);
 
     delete ch;
 

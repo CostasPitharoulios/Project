@@ -8,6 +8,7 @@
 #include "Grid.hpp"
 #include "../Point.hpp"
 #include "../dist.hpp"
+#include "../util.hpp"
 
 using namespace std;
 
@@ -124,7 +125,7 @@ void CurveHashing::readData(string path){
     dataSet.close(); //closing opened file
 }
 
-void CurveHashing::readQueries(string path,string outputFile){
+void CurveHashing::readQueries(string path,string outputFile, string hf){
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES ***
     // Info: We are going to make a vector of Curve classes. So its item of vector will include a curve
@@ -193,7 +194,7 @@ void CurveHashing::readQueries(string path,string outputFile){
         }
 
         // Find its nearest neighbour curve
-        answerQuery(aCurve, out);
+        answerQuery(aCurve, hf,out);
 
         delete aCurve;
 
@@ -206,13 +207,13 @@ void CurveHashing::readQueries(string path,string outputFile){
     queries.close(); //closing opened file
 }
 
-void CurveHashing::answerQuery(Curve *aCurve, ofstream& out){
+void CurveHashing::answerQuery(Curve *aCurve, string hf,ofstream& out){
     double dist, true_dist;
 
     Curve *nn = nearestNeighbourCurve(aCurve, dist);
-    Curve *tnn = nearestNeighbourCurveBruteForce(aCurve, tre_dist);
+    Curve *tnn = nearestNeighbourCurveBruteForce(aCurve, true_dist);
 
-    //printOutput();
+    printOutput(out, aCurve->getId(), hf, nn->getId(), tnn->getId(),dist,true_dist);
 }
 
 
@@ -287,6 +288,22 @@ void LSHC::hashAll(){
 
 Curve *CurveHashing::nearestNeighbourCurveBruteForce(Curve *query, double& min_dist){
 
+    double min = numeric_limits<double>::max();
+    Curve* nearestCurve;
+    for ( vector<Curve*>::iterator dataCurve = allCurves.begin(); dataCurve != allCurves.end(); dataCurve++){
+        
+       /* (*dataCurve)->DisplayVectorContents();
+        cout << "\n\n\n" ;
+        aCurve->DisplayVectorContents();*/
+        double distance = getValueDTW(query, (*dataCurve));
+        cout << "dISTANCE IS: " << distance << "\n";
+        if (distance < min){
+            min = distance;
+            nearestCurve = (*dataCurve);
+        }
+    }
+    min_dist=min;
+    return nearestCurve;
 }
 
 Curve *LSHC::nearestNeighbourCurve(Curve *query, double& min_dist){
