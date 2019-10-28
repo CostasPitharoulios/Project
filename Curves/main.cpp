@@ -8,9 +8,7 @@
 #include "Curve.hpp"
 #include "../Point.hpp"
 #include "readingFunctions.hpp"
-#include "DTW.hpp"
-#include "curveHashing.hpp"
-#include "LSHC.hpp"
+#include "CurveHashing.hpp"
 
 using namespace std;
 

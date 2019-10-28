@@ -104,37 +104,6 @@ set<uint32_t> nearVertices(uint32_t num, int length, int hd){
 }
 
 
-
-
-
-// Recursice function to find near Vertices of the hypercube with
-// Hamming distance = probes //TODO kanonika prepei na einai probes ta sunolika vertices pou 8a elextoun
-// ... ara probes <= 2^n - 1
-/*set<uint32_t> nearVertices(uint32_t num, int length, int probes){
-    set<uint32_t> s;
-    s.insert(num);
-    if(probes == 0)
-        return s;
-
-    // Loop over the bits of num
-    uint32_t mask,num1;
-    for (int i=0; i<length; i++){
-        // Mask to get one bit
-        mask = pow(2,i);
-        //cout << "mask=\t" <<  bitset<32>(mask) << endl;
-
-        // Flip the i-th bit in num
-        num1 = num^mask;
-        //cout << "=>num1=\t" <<  bitset<32>(num1) << endl;
-
-        set<uint32_t> s_deeper = nearVertices(num1, length, probes-1);
-
-        // Unite s with s_deeper
-        s.insert(s_deeper.begin(), s_deeper.end());
-    }
-    return s;
-}*/
-
 Point *HC::nearestNeighbour(Point p, string distFunc, double &min_dist){
     //cout << "Finding Nearest Neighbour...\n";
     

@@ -1,7 +1,7 @@
 all: curvesDemo lshDemo hyperCubeDemo
 
-curvesDemo : Curves/main.o Point.o Curves/Curve.o Curves/readingFunctions.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o dist.o H.o G.o LSH/LSH.o util.o HyperCube/HC.o
-	g++ Curves/main.o  Point.o Curves/Curve.o Curves/readingFunctions.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o dist.o H.o G.o LSH/LSH.o HyperCube/HC.o util.o -o curvesDemo -g -O3
+curvesDemo : Curves/main.o Point.o Curves/Curve.o Curves/readingFunctions.o Curves/CurveHashing.o Curves/Grid.o dist.o H.o G.o LSH/LSH.o util.o HyperCube/HC.o
+	g++ Curves/main.o  Point.o Curves/Curve.o Curves/readingFunctions.o Curves/CurveHashing.o Curves/Grid.o dist.o H.o G.o LSH/LSH.o HyperCube/HC.o util.o -o curvesDemo -g -O3
 
 lshDemo : LSH/main.o Point.o dist.o H.o G.o LSH/LSH.o util.o Curves/Curve.o
 	g++ LSH/main.o Point.o dist.o H.o G.o LSH/LSH.o util.o Curves/Curve.o -o lshDemo -O3
@@ -18,14 +18,11 @@ Point.o : Point.cpp Point.hpp
 Curves/Curve.o	: Curves/Curve.cpp Curves/Curve.hpp
 	g++ -c Curves/Curve.cpp -o Curves/Curve.o -g -O3
 
-Curves/LSHC.o: Curves/LSHC.cpp Curves/LSHC.hpp
-	g++ -c Curves/LSHC.cpp -o Curves/LSHC.o -g -O3
+Curves/CurveHashing.o: Curves/CurveHashing.cpp Curves/CurveHashing.hpp
+	g++ -c Curves/CurveHashing.cpp -o Curves/CurveHashing.o -g -O3
 
 Curves/readingFunctions.o:	Curves/readingFunctions.cpp Curves/readingFunctions.hpp	
 	g++ -c Curves/readingFunctions.cpp -o Curves/readingFunctions.o -g -O3
-
-Curves/curveHashing.o:	Curves/curveHashing.cpp Curves/curveHashing.hpp
-	g++ -c Curves/curveHashing.cpp -o Curves/curveHashing.o -g -O3
 
 Curves/Grid.o:	Curves/Grid.cpp Curves/Grid.hpp
 	g++ -c Curves/Grid.cpp -o Curves/Grid.o -g  -O3
@@ -55,4 +52,4 @@ HyperCube/HC.o : HyperCube/HC.cpp HyperCube/HC.hpp
 	g++ -c HyperCube/HC.cpp -o HyperCube/HC.o -g -O3
 
 clean:
-	rm curvesDemo Curves/main.o Point.o Curves/Curve.o Curves/readingFunctions.o Curves/curveHashing.o Curves/LSHC.o Curves/Grid.o lshDemo LSH/main.o dist.o H.o G.o LSH/LSH.o util.o HyperCube/main.o HyperCube/HC.o hyperCubeDemo
+	rm curvesDemo Curves/main.o Point.o Curves/Curve.o Curves/readingFunctions.o Curves/CurveHashing.o Curves/Grid.o lshDemo LSH/main.o dist.o H.o G.o LSH/LSH.o util.o HyperCube/main.o HyperCube/HC.o hyperCubeDemo

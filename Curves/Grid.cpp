@@ -2,7 +2,6 @@
 #include <iostream>
 #include <limits>
 #include <math.h>
-#include "DTW.hpp"
 #include "../Point.hpp"
 #include "../dist.hpp"
 

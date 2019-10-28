@@ -66,7 +66,6 @@ Point *LSH::nearestNeighbour(Point p, string distFunc, double &min_dist){
     //cout << "Finding Nearest Neighbour...\n";
     
     // Loop over the points that have this hash key, and find the nearest
-    // TODO : stop after 3L points
     double min = numeric_limits<double>::max();
     Point *min_ptr = nullptr;
     for (int i=0; i<L; i++){
@@ -128,7 +127,6 @@ vector<Point *> LSH::nearestNeighbours(Point p, string distFunc, vector<double>&
     min_dist.clear();
     
     // Loop over the points that have this hash key, and find the nearest
-    // TODO : stop after 3L points
     for (int i=0; i<L; i++){
         //cout << "g(" << i << ") = " << (bitset<32>(g.at(i).hash(p))) << endl;
         uint32_t hashkey = g.at(i).hash(p);

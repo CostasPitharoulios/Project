@@ -3,7 +3,7 @@
 #include <random>
 #include <set>
 #include <sstream>
-#include "LSHC.hpp"
+#include "CurveHashing.hpp"
 #include "Curve.hpp"
 #include "Grid.hpp"
 #include "../Point.hpp"
