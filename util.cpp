@@ -6,15 +6,15 @@ int mod(int a, int b){
     return (a%b + b) % b;
 }
 
-void printOutput(ofstream& out, int q_id, int nn_id, double lsh_dist, double true_dist, double lsh_time, double true_time, vector<Point*> rnn){
+void printOutput(ofstream& out, int q_id, int nn_id, double dist, double true_dist, double time, double true_time, vector<Point*> rnn){
     if (!out)
         return;
 
     out << "Query: " << q_id << endl;
     out << "Nearest neighbour: " << nn_id << endl;
-    out << "distanceLSH: " << lsh_dist << endl;
+    out << "distanceLSH: " << dist << endl;
     out << "distanceTrue: " << true_dist << endl;
-    out << "tLSH: " << lsh_time << " ms" << endl;
+    out << "tLSH: " << time << " ms" << endl;
     out << "tTrue: " << true_time << " ms" << endl;
     
     // r-near neighbors:
@@ -26,5 +26,19 @@ void printOutput(ofstream& out, int q_id, int nn_id, double lsh_dist, double tru
         }
         out << endl;
     }
+    out << endl;
+}
+
+void printOutput(ofstream& out, int q_id, string hf, int nn_id, int true_id, double dist, double true_dist ){
+    if (!out)
+        return;
+
+    out << "Query: " << q_id << endl;
+    out << "HashFunction: " << hf << endl;
+    out << "Found Nearest neighbour: " << nn_id << endl;
+    out << "True Nearest neighbour: " << true_id << endl;
+    out << "distanceFound: " << dist << endl;
+    out << "distanceTrue: " << true_dist << endl;
+    
     out << endl;
 }

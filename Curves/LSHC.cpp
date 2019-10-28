@@ -18,9 +18,7 @@ CurveHashing::~CurveHashing(){
     }
 }
 
-LSHC::LSHC(double delta, int d, int L):CurveHashing(delta,d,L){
-    cout << "New LSHC bitch" << endl;
-}
+LSHC::LSHC(int w, double delta, int d, int k,int L):CurveHashing(w,delta,d,k,L){}
 
 LSHC::~LSHC(){
     //cout << "  LSHC destructor" << endl;
@@ -29,9 +27,7 @@ LSHC::~LSHC(){
     }
 }
 
-HCC::HCC(double delta, int d, int L, int dd, int probes, int M):CurveHashing(delta,d,L), dd(dd), probes(probes), M(M){
-    cout << "New HCC bitch" << endl;
-}
+HCC::HCC(int w, double delta, int d,int k, int L, int dd, int probes, int M):CurveHashing(w,delta,d,k,L), dd(dd), probes(probes), M(M){}
 
 HCC::~HCC(){
     //cout << "  HCC destructor" << endl;
@@ -40,8 +36,7 @@ HCC::~HCC(){
     }
 }
 
-CurveHashing::CurveHashing(double delta, int d, int L):d(d), L(L){
-    cout << "New CurveHashing bitch" << endl;
+CurveHashing::CurveHashing(int w,double delta, int d, int k, int L):d(d), L(L), w(w), k(k){
    
     random_device rd; //seed
     mt19937 gen(rd());
@@ -129,7 +124,7 @@ void CurveHashing::readData(string path){
     dataSet.close(); //closing opened file
 }
 
-void CurveHashing::readQueries(string path){
+void CurveHashing::readQueries(string path,string outputFile){
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES ***
     // Info: We are going to make a vector of Curve classes. So its item of vector will include a curve
@@ -151,6 +146,12 @@ void CurveHashing::readQueries(string path){
     queries.open(path);
     if (!queries){
         cerr << "ERROR: Unable to open file with path:" << path << "\n";
+        exit(1);
+    }
+    ofstream out;
+    out.open(outputFile);
+    if (!out){
+        cerr << "ERROR: Unable to open file with path:" << outputFile << "\n";
         exit(1);
     }
     
@@ -192,7 +193,7 @@ void CurveHashing::readQueries(string path){
         }
 
         // Find its nearest neighbour curve
-        nearestNeighbourCurve(aCurve);
+        answerQuery(aCurve, out);
 
         delete aCurve;
 
@@ -205,6 +206,15 @@ void CurveHashing::readQueries(string path){
     queries.close(); //closing opened file
 }
 
+void CurveHashing::answerQuery(Curve *aCurve, ofstream& out){
+    double dist, true_dist;
+
+    Curve *nn = nearestNeighbourCurve(aCurve, dist);
+    Curve *tnn = nearestNeighbourCurveBruteForce(aCurve, tre_dist);
+
+    //printOutput();
+}
+
 
 
 
@@ -213,7 +223,6 @@ Point* CurveHashing::vectorCurveToPoint(Curve* hashedCurve, Curve *origin){
     newPoint = new Point(stoi(origin->getId()));  // creating a new point to represent vector of curve with the same id as the curve
     
     int numberOfCords = hashedCurve->getNumberOfCoordinates(); //in order to know how many points there are in the vector of hashed Curve
-    //cout << "numOfCoords:" << numberOfCords << "\n";
 
     int coordinatesCounter=0;
     for(int i=0; i< numberOfCords; i++){ // adding x,y to the list of coordinates of pointer
@@ -237,9 +246,7 @@ int CurveHashing::maxCurveLength(){
 
 void LSHC::hashAll(){
     int maxD = maxCurveLength();
-    cout << "MaxD:" << maxD << endl;
-    int w = 4000, k=4; //TODO arguments?
-
+    //cout << "MaxD:" << maxD << endl;
 
     // For every grid
     for(int i=0; i<L; i++){
@@ -278,8 +285,12 @@ void LSHC::hashAll(){
     }
 }
 
-void LSHC::nearestNeighbourCurve(Curve *query){
-    int maxD = maxCurveLength(); //TODO if query is bigger than maxD she should get it cut i think
+Curve *CurveHashing::nearestNeighbourCurveBruteForce(Curve *query, double& min_dist){
+
+}
+
+Curve *LSHC::nearestNeighbourCurve(Curve *query, double& min_dist){
+    int maxD = maxCurveLength(); 
     //set<Curve*> nearestCurves; // Set of the nearest curves found in each grid
 
     //cout << "Initial curve:";
@@ -319,14 +330,14 @@ void LSHC::nearestNeighbourCurve(Curve *query){
 
     //cout << "NEAREST OF THE NEAREST: Id:" << nn->getOrigin()->getId();
    // nn->getOrigin()->printCoordinates();
-    cout << " with distance : " << min << endl;
+    //cout << " with distance : " << min << endl;
+    min_dist = min;
+    return nn->getOrigin();
 }
 
 void HCC::hashAll(){
     int maxD = maxCurveLength();
-    cout << "MaxD:" << maxD << endl;
-    int w = 4000, k=1; //TODO arguments?
-
+    //cout << "MaxD:" << maxD << endl;
 
     // For every grid
     for(int i=0; i<L; i++){
@@ -365,8 +376,8 @@ void HCC::hashAll(){
     }
 }
 
-void HCC::nearestNeighbourCurve(Curve *query){
-    int maxD = maxCurveLength(); //TODO if query is bigger than maxD she should get it cut i think
+Curve *HCC::nearestNeighbourCurve(Curve *query, double &min_dist){
+    int maxD = maxCurveLength(); 
     //set<Curve*> nearestCurves; // Set of the nearest curves found in each grid
 
     //cout << "Initial curve:";
@@ -404,9 +415,11 @@ void HCC::nearestNeighbourCurve(Curve *query){
         delete gridCurve;
     }
 
-    cout << "NEAREST OF THE NEAREST: Id:" << nn->getOrigin()->getId();
-    nn->getOrigin()->printCoordinates();
-    cout << " with distance : " << min << endl;
+    //cout << "NEAREST OF THE NEAREST: Id:" << nn->getOrigin()->getId();
+    //nn->getOrigin()->printCoordinates();
+    //cout << " with distance : " << min << endl;
+    min_dist = min; 
+    return nn->getOrigin();
 }
 
 

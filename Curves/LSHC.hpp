@@ -15,9 +15,11 @@ class CurveHashing{
         double delta;
         vector<Grid> grids;
         int L; // ammout of grids
+        int w;
+        int k;
 
     public:
-        CurveHashing(double delta, int d, int L);
+        CurveHashing(int w, double delta, int d, int k,int L);
         virtual ~CurveHashing();
 
         void readData(string path); // Read curves from file path
@@ -25,9 +27,11 @@ class CurveHashing{
         int maxCurveLength();
         Point* vectorCurveToPoint(Curve* hashedCurve, Curve *origin); // Convert vector of curve to a single point
         vector<Curve*> getAllCurves(void);
-        void readQueries(string path);
+        void readQueries(string path, string outputFile);
+        void answerQuery(Curve *aCurve, ofstream& out);
+        Curve *nearestNeighbourCurveBruteForce(Curve *, double &min_dist);
         virtual void hashAll() = 0; //pure virtual functions
-        virtual void nearestNeighbourCurve(Curve *) = 0;
+        virtual Curve *nearestNeighbourCurve(Curve *, double &min_dist) = 0;
 
 };
 
@@ -37,11 +41,11 @@ class LSHC: public CurveHashing{
         vector<LSH*> lsh;
 
     public:
-        LSHC(double delta, int d, int L);
+        LSHC(int w,double delta, int d, int k, int L);
         ~LSHC();
         
         void hashAll() override; // Insert all curves to the LSH hash tables
-        void nearestNeighbourCurve(Curve *) override; 
+        Curve *nearestNeighbourCurve(Curve *, double &min_dist) override; 
 };
 
 // HyperCube for Curves
@@ -53,9 +57,9 @@ class HCC: public CurveHashing{
         int M; // Max points examined
 
     public:
-        HCC(double delta, int d, int L, int dd, int probes, int M);
+        HCC(int w,double delta, int d, int k, int L, int dd, int probes, int M);
         ~HCC();
         
         void hashAll() override; // Insert all curves to the LSH hash tables
-        void nearestNeighbourCurve(Curve *) override; 
+        Curve *nearestNeighbourCurve(Curve *, double &min_dist) override; 
 };
