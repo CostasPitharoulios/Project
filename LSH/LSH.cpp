@@ -5,6 +5,7 @@
 #include <fstream>
 #include "LSH.hpp"
 #include "../dist.hpp"
+#include "../util.hpp"
 
 using namespace std;
 
@@ -213,7 +214,7 @@ void LSH::answerQuery(Point p, ofstream& out){
 
 }
 
-void LSH::printOutput(ofstream& out, int q_id, int nn_id, double lsh_dist, double true_dist, double lsh_time, double true_time, vector<Point*> rnn){
+/*void LSH::printOutput(ofstream& out, int q_id, int nn_id, double lsh_dist, double true_dist, double lsh_time, double true_time, vector<Point*> rnn){
     cout << "Print output: query:" << q_id << " nn:" << nn_id << " dist:" <<  lsh_dist << " true_dist:" << true_dist << " time:" << lsh_time << " true_time:" << true_time << endl;
 
     out << "Query: " << q_id << endl;
@@ -233,4 +234,4 @@ void LSH::printOutput(ofstream& out, int q_id, int nn_id, double lsh_dist, doubl
         out << endl;
     }
     out << endl;
-}
+}*/

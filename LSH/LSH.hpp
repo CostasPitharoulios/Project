@@ -27,7 +27,7 @@ class LSH{
         vector<Point *>nearestNeighbours(Point p /* in */, string distFunc /* in */, vector<double>& min_dist /* out */);
         Point *nearestNeighbourBruteForce(Point p /* in */, string distFunc /* in */, double& min_dist /* out */); // NN
         void answerQuery(Point p, ofstream& out);
-        void printOutput(ofstream& out, int q_id, int nn_id, double lsh_dist, double true_dist, double lsh_time, double true_time, vector<Point*> rnn);
+        //void printOutput(ofstream& out, int q_id, int nn_id, double lsh_dist, double true_dist, double lsh_time, double true_time, vector<Point*> rnn);
 };
 
 typedef unordered_multimap<uint32_t,Point *>::iterator mapIt;
