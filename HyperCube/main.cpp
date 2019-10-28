@@ -14,7 +14,7 @@ using namespace std;
 
 int main(int argc,char *argv[]){
     string inputFile, outputFile, queryFile;
-    int k=4, dd=8, w=4, hd=2, M = numeric_limits<int>::max();
+    int k=4, dd=3, w=4000, hd=2, M = 10;
     double r=-1;
 
     // Handling arguments
@@ -111,6 +111,10 @@ int main(int argc,char *argv[]){
         cerr << "Cannot open the query file : " << queryFile << endl;
         return 1;
     }
+    ofstream out(outputFile.c_str());
+    if (!out){
+        cerr << "Cannot open the output file : " << outputFile << "(Specify with -o argument)" << endl;
+    }
 
     // Read query file
     while(getline(qin,str)){
@@ -121,10 +125,10 @@ int main(int argc,char *argv[]){
         while( ss >> token )
             p.addCoordinate(stod(token));
 
-        hc.answerQuery(p);
+        hc.answerQuery(p, out);
 
         //////////////
-        break;
+        //break;
         /////////////
     }
 

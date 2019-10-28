@@ -31,7 +31,8 @@ class HC{
         uint32_t hash(Point p); // returns a key < 2^dd
         Point *nearestNeighbour(Point p, string distFunc, double &min_dist);
         vector<Point*> nearestNeighbours(Point p, string distFunc, vector<double>& min_dist);
-        void answerQuery(Point p);
+        Point *nearestNeighbourBruteForce(Point p, string distFunc, double &min_dist);
+        void answerQuery(Point p, ofstream& out);
         void printCube();
 };
 

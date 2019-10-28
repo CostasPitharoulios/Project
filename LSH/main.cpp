@@ -116,7 +116,7 @@ int main(int argc,char *argv[]){
     }
     ofstream out(outputFile.c_str());
     if (!out){
-        cerr << "Cannot open the output file : " << outputFile << " so the output will not be saved.(Specify with -o argument)" << endl;
+        cerr << "Cannot open the output file : " << outputFile << "(Specify with -o argument)" << endl;
     }
 
     // Read query file line by line
@@ -133,7 +133,7 @@ int main(int argc,char *argv[]){
         lsh.answerQuery(p, out);
 
         //////////////
-        break;
+        //break;
         /////////////
     }
 

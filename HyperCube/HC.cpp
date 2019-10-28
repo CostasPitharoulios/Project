@@ -2,11 +2,13 @@
 #include <ctime>
 #include <cmath>
 #include <ctime>
+#include <fstream>
 #include <iostream>
 #include <random>
 #include <set>
 #include "HC.hpp"
 #include "../dist.hpp"
+#include "../util.hpp"
 
 using namespace std;
 
@@ -209,6 +211,23 @@ vector<Point *> HC::nearestNeighbours(Point p, string distFunc, vector<double> &
     return neighbours;
 }
 
+Point *HC::nearestNeighbourBruteForce(Point p, string distFunc, double &min_dist){
+    cout << "Finding Nearest Neighbour...\n";
+
+    double min = numeric_limits<double>::max();
+    Point *min_ptr = nullptr;
+    vector<double> coords = p.getCoordinates();
+    for (int i=0; i<dataset.size(); i++){
+        double dist = manhattanDistance(dataset.at(i)->getCoordinates(), coords);
+        if (dist < min){
+            min = dist;
+            min_ptr = dataset.at(i);
+        }
+    }
+    min_dist = min;
+    return min_ptr;
+}
+
 void HC::printCube(){
     cout << "Cube:\n";
     mapIt it = cube.begin(); 
@@ -221,21 +240,23 @@ void HC::printCube(){
 }
 
 
-void HC::answerQuery(Point p){
+void HC::answerQuery(Point p, ofstream& out){
     clock_t start = clock();
-    // Find nearest neighbour(s)
-    if ( r==-1){ // if r is not given as argument
-        // Find its A-NN
-        double dist;
-        Point *nn = nearestNeighbour(p,"manh",dist);
+    double dist, true_dist;
+    vector<Point *> rnn;
 
-        if (nn!=nullptr)
-            cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
-        else
-            cout << "NN of " << p.getId() << " is was not found " << endl;
-    }else{
+    // Find its A-NN
+    Point *nn = nearestNeighbour(p,"manh",dist);
+
+    if (nn!=nullptr)
+        cout << "NN of " << p.getId() << " is " << nn->getId() << " with distance " << dist << endl;
+    else
+        cout << "NN of " << p.getId() << " is was not found " << endl;
+
+    // Find neighbours in radius r
+    if(r>=0){
         vector<double> dist;
-        vector<Point *> rnn = nearestNeighbours(p,"manh",dist);
+        rnn = nearestNeighbours(p,"manh",dist);
 
         if ( rnn.size()==0 ){
             cout << "NN of " << p.getId() << " in radius " << r << " is was not found " << endl;
@@ -249,4 +270,12 @@ void HC::answerQuery(Point p){
     clock_t end = clock();
     long double time_ms = 1000.0 * (end-start) / CLOCKS_PER_SEC;
     cout << "CPU time: " << time_ms << " ms" << endl;
+
+    // Find its NN using brute force
+    start = clock();
+    Point *true_nn = nearestNeighbourBruteForce(p,"manh",true_dist);
+    end = clock();
+    double true_time_ms = 1000.0 * (end-start) / CLOCKS_PER_SEC;
+
+    printOutput(out, p.getId(), nn->getId(), dist, true_dist, time_ms, true_time_ms, rnn);
 }
