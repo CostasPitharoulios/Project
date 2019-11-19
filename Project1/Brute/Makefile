@@ -14,4 +14,4 @@ Curve.o : ../Curves/Curve.cpp
 	g++ -c ../dist.cpp -o ../dist.o
 
 clean:
-	rm demo main.o ../Point.o ../dist.o
+	rm demo main.o ../Point.o ../dist.o Curve.o
