@@ -9,7 +9,7 @@
 using namespace std;
 
 int main(int argc,char *argv[]){
-    string inputFile, outputFile, configFile;
+    string inputFile, outputFile, confFile;
 
     // Handling arguments
     if ( argc != 7 && argc != 8 ){
@@ -22,7 +22,37 @@ int main(int argc,char *argv[]){
         if(!strcmp(argv[i],"-o"))
             outputFile = argv[i+1];
         if(!strcmp(argv[i],"-c"))
-            configFile = argv[i+1];
+            confFile = argv[i+1];
+    }
+
+    // Read configuration file
+    int n_clusters =-1, n_grids=2, L=3, k=4;
+    ifstream cin(confFile.c_str());
+    if (!cin){
+        cerr << "Cannot open the configuration file " << confFile << endl;
+        return 1;
+    }
+    string str,token,val;
+    while(getline(cin,str)){
+        istringstream ss(str);
+        ss >> token;
+        ss >> val;
+
+        if(!token.compare("number_of_clusters:")){
+            n_clusters = stoi(val);
+        }else if(!token.compare("number_of_grids:")){
+            n_grids = stoi(val);
+        }else if(!token.compare("number_of_vector_hash_tables:")){
+            L = stoi(val);
+        }else if(!token.compare("number_of_vector_hash_functions")){
+            k = stoi(val);
+        }else{
+            cout << "Unknown argument in config file : " << token;
+        }
+    }
+    if(n_clusters == -1){
+        cout << "Error: number_of_clusters argument is neccessary in the config file" << endl;
+        return 1;
     }
 
     // Open input file
@@ -33,7 +63,6 @@ int main(int argc,char *argv[]){
     }
 
     // Read the first line
-    string str,token;
     //Point p1;
     if(getline(in,str)){
         if(!str.compare("vectors")){
@@ -50,6 +79,7 @@ int main(int argc,char *argv[]){
         cerr << "Input file " << inputFile << " is empty." << endl;
         return 1;
     }
+
 
     // For Vectors
     vector<Point*> dataset;
@@ -76,7 +106,7 @@ int main(int argc,char *argv[]){
     cout << "Reading complete." << endl;
 
     // Make a VectorClustering instance
-    VectorClustering vc(dataset,4,"random");
+    VectorClustering vc(dataset,n_clusters,"random");
 
     vc.KMeans();
 
