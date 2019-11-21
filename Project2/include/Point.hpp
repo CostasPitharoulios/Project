@@ -10,7 +10,6 @@ class Point{
         vector<double> listOfCoordinates;
     public:
         Point(int id=-1);
-        //TODO copy constructor for origin
         void addCoordinate(double x);
         int getId();
         void setId(int x);

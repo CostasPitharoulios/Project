@@ -4,11 +4,12 @@
 #include <string>
 #include <sstream>
 #include "../include/Point.hpp"
+#include "../include/Clustering.hpp"
 
 using namespace std;
 
 int main(int argc,char *argv[]){
-    string inputFile, outputFile;
+    string inputFile, outputFile, configFile;
 
     // Handling arguments
     if ( argc != 7 && argc != 8 ){
@@ -20,6 +21,8 @@ int main(int argc,char *argv[]){
             inputFile = argv[i+1];
         if(!strcmp(argv[i],"-o"))
             outputFile = argv[i+1];
+        if(!strcmp(argv[i],"-c"))
+            configFile = argv[i+1];
     }
 
     // Open input file
@@ -49,6 +52,7 @@ int main(int argc,char *argv[]){
     }
 
     // For Vectors
+    vector<Point*> dataset;
     
     // Read input file line by line
     cout << "Reading input dataset..." << endl;
@@ -66,15 +70,15 @@ int main(int argc,char *argv[]){
         while( ss >> token )
             p.addCoordinate(stod(token));
 
-        cout << endl;
-        p.printPoint();
-        cout << endl;
-
-        // Insert it to the dataset and hash it
-        //lsh.insert(p);
+        // Save it to the dataset list
+        dataset.push_back(new Point(p));
     }
     cout << "Reading complete." << endl;
 
+    // Make a VectorClustering instance
+    VectorClustering vc(dataset,4,"random");
+
+    vc.KMeans();
 
     //cout << "Process complete. The output is written on file " << outputFile << endl;
 
