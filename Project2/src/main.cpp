@@ -86,7 +86,7 @@ int main(int argc,char *argv[]){
        
     if(!curvesFlag){ 
         // KMeans for vectors
-        vector<Point*> dataset;
+        vector<void*> dataset;
         
         // Read input file line by line
         cout << "Reading input dataset..." << endl;
@@ -105,18 +105,18 @@ int main(int argc,char *argv[]){
                 p.addCoordinate(stod(token));
 
             // Save it to the dataset list
-            dataset.push_back(new Point(p));
+            dataset.push_back((void*)new Point(p));
         }
         cout << "Reading complete." << endl;
 
-        // Make a VectorClustering instance
-        VectorClustering vc(dataset,n_clusters,"random");
+        // Make a Clustering instance
+        Clustering vc(false,dataset,n_clusters,"random");
 
         vc.KMeans();
     }
     else{ 
         // KMeans for curves
-        vector<Curve*> dataset;
+        vector<void*> dataset;
 
         // Read input file line by line
         cout << "Reading input dataset..." << endl;
@@ -158,13 +158,13 @@ int main(int argc,char *argv[]){
             //c.printCoordinates(); 
 
             // Save curve to the dataset list
-            dataset.push_back(new Curve(c));
+            dataset.push_back((void*)new Curve(c));
         }
 
         cout << "Reading complete." << endl;
 
-        // Make a VectorClustering instance
-        CurveClustering cc(dataset,n_clusters,"random");
+        // Make a Clustering instance
+        Clustering cc(true,dataset,n_clusters,"random");
 
         cc.KMeans();
     }

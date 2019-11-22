@@ -1,23 +1,23 @@
 #include <algorithm>
-#include <random>
 #include <iostream>
+#include <limits>
+#include <random>
 #include "../include/Clustering.hpp"
+#include "../include/dist.hpp"
 
 using namespace std;
 
-//=================== Vector Clustering ====================
-
-VectorClustering::VectorClustering(vector<Point*> dataset, int n_clusters, string i, string a, string u):dataset(dataset),n_clusters(n_clusters),initMethod(i),assignMethod(a),updateMethod(u){
-    cout << "New instance of Vector Clustering(" << initMethod << "," << assignMethod << "," << updateMethod << ")\n";
+Clustering::Clustering(bool curvesFlag, vector<void*> dataset, int n_clusters, string i, string a, string u):curvesFlag(curvesFlag),dataset(dataset),n_clusters(n_clusters),initMethod(i),assignMethod(a),updateMethod(u){
+    cout << "New instance of Clustering(" << initMethod << "," << assignMethod << "," << updateMethod << ")\n";
 }
 
-int VectorClustering::initRandom(){
+int Clustering::initRandom(){
     cout << "Random initialization..." << endl;
 
     centroids.clear();
 
     // Shuffle the dataset into a new vector
-    vector<Point*> shuffledDataset = dataset;
+    vector<void*> shuffledDataset = dataset;
     random_device rd;
     default_random_engine rng(rd());
     shuffle(begin(shuffledDataset), end(shuffledDataset), rng);
@@ -25,21 +25,62 @@ int VectorClustering::initRandom(){
     // Pick the first k elements from the shuffled vector
     shuffledDataset.resize(n_clusters);
     centroids = shuffledDataset;
+
+    // For every centroid: assign it to it self
+    for(int i=0; i<centroids.size(); i++){
+        if(!curvesFlag)
+            ((Point*)centroids.at(i))->assign((Point*)centroids.at(i));
+        else
+            ((Curve*)centroids.at(i))->assign((Curve*)centroids.at(i));
+    }
 }
 
-int VectorClustering::initKMeanspp(){
+int Clustering::initKMeanspp(){
     cout << "Kmeans++ coming soon..." << endl;
 }
 
-int VectorClustering::assignLloyd(){
-    cout << "Assign Lloyd coming soon..." << endl;
+int Clustering::assignLloyd(){
+    cout << "Assign Lloyd" << endl;
+
+    // For every item
+    for(int j=0; j<dataset.size(); j++){
+
+        // If its not centroid
+        if(!isCentroid(dataset.at(j))){
+           
+            // Find the centroid with the least distance and assign it
+            double min = numeric_limits<double>::max();
+            for(int i=0; i<centroids.size(); i++){
+                double dist;
+                if(!curvesFlag){
+                    dist = manhattanDistance(((Point*)dataset.at(j))->getCoordinates(),((Point*)centroids.at(i))->getCoordinates());
+                    if(dist<min){
+                        min = dist;
+                        ((Point*)dataset.at(j))->assign((Point*)centroids.at(i));
+                    }
+                } 
+                else{
+                    cout << "TODO" <<  endl;
+                }
+            }
+        }
+    }
+    cout << endl;
+    printClusters();
 }
 
-int VectorClustering::assignReverse(){
+bool Clustering::isCentroid(void* item){
+    if(!curvesFlag)
+        return (((Point*)item)->getCentroid() == (Point*)item);
+    else
+        return (((Curve*)item)->getCentroid() == (Curve*)item);
+}
+
+int Clustering::assignReverse(){
     cout << "Assign Reverse coming soon..." << endl;
 }
 
-int VectorClustering::KMeans(){
+int Clustering::KMeans(){
     // Initialization
     if (!initMethod.compare("random")){
         initRandom();
@@ -64,61 +105,28 @@ int VectorClustering::KMeans(){
     }
 }
 
-void VectorClustering::printCentroids(){
+void Clustering::printCentroids(){
     for(int i=0; i<centroids.size(); i++){
-        cout << "Point " << centroids.at(i)->getId() << " "<<  endl;
+        if(!curvesFlag)
+            cout << ((Point*)centroids.at(i))->getId() << ", "<<  endl;
+        else
+            cout << ((Curve*)centroids.at(i))->getId() << ", "<<  endl;
     }
 }
 
-
-
-
-
-//=================== Curve Clustering ====================
-
-CurveClustering::CurveClustering(vector<Curve*> dataset, int n_clusters, string i, string a, string u):dataset(dataset),n_clusters(n_clusters),initMethod(i),assignMethod(a),updateMethod(u){
-    cout << "New instance of Curve Clustering(" << initMethod << "," << assignMethod << "," << updateMethod << ")\n";
-}
-
-int CurveClustering::initRandom(){
-    cout << "Random initialization..." << endl;
-
-    centroids.clear();
-
-    // Shuffle the dataset into a new vector
-    vector<Curve*> shuffledDataset = dataset;
-    random_device rd;
-    default_random_engine rng(rd());
-    shuffle(begin(shuffledDataset), end(shuffledDataset), rng);
-
-    // Pick the first k elements from the shuffled vector
-    shuffledDataset.resize(n_clusters);
-    centroids = shuffledDataset;
-
-}
-
-int CurveClustering::initKMeanspp(){
-    cout << "coming soon..." << endl;
-}
-
-int CurveClustering::KMeans(){
-    // Initialization
-    if (!initMethod.compare("random")){
-        initRandom();
-    }else if (!initMethod.compare("k-means++")){
-        initKMeanspp();
-    }else{
-        cout << "Unknown initMethod" << endl;
-        return -1;
-    }
-
-    cout << "Initial Centroids:" << endl;
-    printCentroids();
-
-}
-
-void CurveClustering::printCentroids(){
+void Clustering::printClusters(){
     for(int i=0; i<centroids.size(); i++){
-        cout << "Curve " << centroids.at(i)->getId() << " "<<  endl;
+        if(!curvesFlag){
+            cout << "Cluster of ";
+            cout << ((Point*)centroids.at(i))->getId() << ": "<<  endl;
+            for(int j=0; j<dataset.size(); j++){
+                if(((Point*)dataset.at(j))->getCentroid() == (Point*)centroids.at(i)){
+                    cout << "{" << ((Point*)dataset.at(j))->getId() << "}, ";
+                }
+            }
+            cout << endl;
+        }else{
+            cout << "Print coming soon"<<  endl;
+        }
     }
 }

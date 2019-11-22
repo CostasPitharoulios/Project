@@ -66,3 +66,11 @@ void Curve::printCoordinates(){
     }    
     cout << endl;
 }
+
+void Curve::assign(Curve *cluster){
+    this->cluster = cluster;
+}
+
+Curve *Curve::getCentroid(){
+    return this->cluster;
+}

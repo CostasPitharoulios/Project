@@ -4,40 +4,29 @@
 
 using namespace std;
 
-class VectorClustering{
+class Clustering{
     private:
-        vector<Point*> dataset;
-        
+        bool curvesFlag; // Define Clustering item type. False: Points, True: Curves
+        vector<void*> dataset;
+
         int n_clusters;
         string initMethod;
         string assignMethod;
         string updateMethod;
 
-        vector<Point*> centroids;
+        vector<void*> centroids;
     public:
-        VectorClustering(vector<Point*>, int n_clusters, string initMethod="random", string assignMethod="lloyd", string updateMethod="pam");
+        Clustering(bool curvesFlag, vector<void*>, int n_clusters, string initMethod="random", string assignMethod="lloyd", string updateMethod="pam");
+
+        // Basic functions for clustering
         int KMeans();
         int initRandom();
         int initKMeanspp();
         int assignLloyd();
         int assignReverse();
-        void printCentroids();
-};
 
-class CurveClustering{
-    private:
-        vector<Curve*> dataset;
-        
-        int n_clusters;
-        string initMethod;
-        string assignMethod;
-        string updateMethod;
-
-        vector<Curve*> centroids;
-    public:
-        CurveClustering(vector<Curve*>, int n_clusters, string initMethod="random", string assignMethod="lloyd", string updateMethod="pam");
-        int KMeans();
-        int initRandom();
-        int initKMeanspp();
+        // Assisting functions
+        bool isCentroid(void* item);
         void printCentroids();
+        void printClusters();
 };

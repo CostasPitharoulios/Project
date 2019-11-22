@@ -11,6 +11,7 @@ class Curve{
         string id;
         int numberOfCoordinates; /* TODO number and listOfPoints? */
         vector<Point*> listOfCoordinates;
+        Curve *cluster;
 
     public:
         Curve();
@@ -23,6 +24,8 @@ class Curve{
         //vector<Point*> get_listOfCoordinates();
         void DisplayVectorContents();
         void PushToVector(Point* aPoint);
-    double getSpecificXCoord(int position);
-    double getSpecificYCoord(int position);
+        double getSpecificXCoord(int position);
+        double getSpecificYCoord(int position);
+        void assign(Curve *);
+        Curve *getCentroid();
 };

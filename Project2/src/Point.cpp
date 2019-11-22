@@ -73,3 +73,11 @@ void Point::addPadding(int new_d){
         addCoordinate(0);
     }
 }
+
+void Point::assign(Point *cluster){
+    this->cluster = cluster;
+}
+
+Point *Point::getCentroid(){
+    return this->cluster;
+}

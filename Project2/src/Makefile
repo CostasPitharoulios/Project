@@ -7,10 +7,10 @@ LDIR =../lib
 
 LIBS=-lm
 
-_DEPS = Point.hpp Clustering.hpp Curve.hpp
+_DEPS = Point.hpp Clustering.hpp Curve.hpp dist.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o Point.o Clustering.o Curve.o
+_OBJ = main.o Point.o Clustering.o Curve.o dist.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
@@ -23,7 +23,7 @@ cluster: $(OBJ)
 .PHONY: clean runv runc
 
 runv:
-	./cluster -i vectors_dataset_small.csv -o output.txt -c cluster.conf
+	./cluster -i my_vectors_dataset_small.csv -o output.txt -c cluster.conf
 
 runc:
 	./cluster -i trajectories_dataset_small.csv -o output.txt -c cluster.conf

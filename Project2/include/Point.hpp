@@ -8,6 +8,7 @@ class Point{
         int id;
         int d; // Dimensions
         vector<double> listOfCoordinates;
+        Point *cluster;
     public:
         Point(int id=-1);
         void addCoordinate(double x);
@@ -23,4 +24,6 @@ class Point{
         double getX();
         double getY();
         void addPadding(int new_d); // Add 0's to reach new_d dimensions
+        void assign(Point *);
+        Point *getCentroid();
 };
