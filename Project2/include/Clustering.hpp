@@ -19,6 +19,8 @@ class VectorClustering{
         int KMeans();
         int initRandom();
         int initKMeanspp();
+        int assignLloyd();
+        int assignReverse();
         void printCentroids();
 };
 

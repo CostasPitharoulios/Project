@@ -28,7 +28,15 @@ int VectorClustering::initRandom(){
 }
 
 int VectorClustering::initKMeanspp(){
-    cout << "coming soon..." << endl;
+    cout << "Kmeans++ coming soon..." << endl;
+}
+
+int VectorClustering::assignLloyd(){
+    cout << "Assign Lloyd coming soon..." << endl;
+}
+
+int VectorClustering::assignReverse(){
+    cout << "Assign Reverse coming soon..." << endl;
 }
 
 int VectorClustering::KMeans(){
@@ -42,9 +50,18 @@ int VectorClustering::KMeans(){
         return -1;
     }
 
-
     cout << "Initial Centroids:" << endl;
     printCentroids();
+
+    // Assignment
+    if (!assignMethod.compare("lloyd")){
+        assignLloyd();
+    }else if (!assignMethod.compare("reverse")){
+        assignReverse();
+    }else{
+        cout << "Unknown assignMethod" << endl;
+        return -1;
+    }
 }
 
 void VectorClustering::printCentroids(){
@@ -52,7 +69,6 @@ void VectorClustering::printCentroids(){
         cout << "Point " << centroids.at(i)->getId() << " "<<  endl;
     }
 }
-
 
 
 
