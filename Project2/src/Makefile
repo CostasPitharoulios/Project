@@ -1,6 +1,6 @@
 IDIR =../include
 CC=g++
-CFLAGS=-I$(IDIR)
+CFLAGS=-I$(IDIR) -g
 
 ODIR=obj
 LDIR =../lib
@@ -23,10 +23,13 @@ cluster: $(OBJ)
 .PHONY: clean runv runc
 
 runv:
-	./cluster -i my_vectors_dataset_small.csv -o output.txt -c cluster.conf
+	./cluster -i my_vectors_test.csv -o output.txt -c cluster.conf
 
 runc:
-	./cluster -i trajectories_dataset_small.csv -o output.txt -c cluster.conf
+	./cluster -i my_curves_test.csv -o output.txt -c cluster.conf
+
+debug:
+	valgrind ./cluster -i trajectories_dataset_small.csv -o output.txt -c cluster.conf
 
 clean:
 	rm -f $(ODIR)/*.o cluster

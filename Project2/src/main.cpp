@@ -125,15 +125,15 @@ int main(int argc,char *argv[]){
            
             // The first token is the id 
             getline(linestream, token, '\t');
-            Curve c;
-            c.setId(token);
+            Curve *c = new Curve;
+            c->setId(token);
             //cout << ":::Id= " << token << "\n";
             
             // The second token is the number of coordinates
             getline(linestream, token, '\t');
             //cout << ":::Num of cords: " << token << endl;
             int numberOfCords = stoi(token);
-            c.setNumberOfCoordinates(numberOfCords);
+            c->setNumberOfCoordinates(numberOfCords);
              
             // Reading each coordinate
             double x,y;
@@ -153,12 +153,12 @@ int main(int argc,char *argv[]){
                 aPoint->setY(y);
 
                 // Push it to the Curve 
-                c.PushToVector(aPoint);
+                c->PushToVector(aPoint);
             }
-            //c.printCoordinates(); 
+            //c->printCoordinates(); 
 
             // Save curve to the dataset list
-            dataset.push_back((void*)new Curve(c));
+            dataset.push_back((void*)c);
         }
 
         cout << "Reading complete." << endl;

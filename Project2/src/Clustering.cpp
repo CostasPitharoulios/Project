@@ -40,14 +40,15 @@ int Clustering::initKMeanspp(){
 }
 
 int Clustering::assignLloyd(){
-    cout << "Assign Lloyd" << endl;
+    cout << "Assigning to centroids..." << endl;
 
     // For every item
     for(int j=0; j<dataset.size(); j++){
 
+        //if(curvesFlag) cout << "We at ::" <<((Curve*)dataset.at(j))->getId()  <<  endl;
+
         // If its not centroid
         if(!isCentroid(dataset.at(j))){
-           
             // Find the centroid with the least distance and assign it
             double min = numeric_limits<double>::max();
             for(int i=0; i<centroids.size(); i++){
@@ -60,13 +61,19 @@ int Clustering::assignLloyd(){
                     }
                 } 
                 else{
-                    cout << "TODO" <<  endl;
+                    dist = getValueDTW((Curve*)dataset.at(j),(Curve*)centroids.at(i));
+                    //cout << " Distance between " << ((Curve*)dataset.at(j))->getId() << " and " << ((Curve*)centroids.at(i))->getId() << " is " << dist << endl;
+                    if(dist<min){
+                        min = dist;
+                        ((Curve*)dataset.at(j))->assign((Curve*)centroids.at(i));
+                    }
                 }
             }
+            //if(curvesFlag) cout << "Closest: " <<((Curve*)dataset.at(j))->getCentroid()->getId() << " with distance " << min   <<  endl;
         }
     }
-    cout << endl;
     printClusters();
+    cout << endl;
 }
 
 bool Clustering::isCentroid(void* item){
@@ -126,7 +133,14 @@ void Clustering::printClusters(){
             }
             cout << endl;
         }else{
-            cout << "Print coming soon"<<  endl;
+            cout << "Cluster of ";
+            cout << ((Curve*)centroids.at(i))->getId() << ": "<<  endl;
+            for(int j=0; j<dataset.size(); j++){
+                if(((Curve*)dataset.at(j))->getCentroid() == (Curve*)centroids.at(i)){
+                    cout << "{" << ((Curve*)dataset.at(j))->getId() << "}, ";
+                }
+            }
+            cout << endl;
         }
     }
 }
