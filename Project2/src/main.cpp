@@ -5,6 +5,7 @@
 #include <sstream>
 #include "../include/Point.hpp"
 #include "../include/Clustering.hpp"
+#include "../include/Curve.hpp"
 
 using namespace std;
 
@@ -44,10 +45,10 @@ int main(int argc,char *argv[]){
             n_grids = stoi(val);
         }else if(!token.compare("number_of_vector_hash_tables:")){
             L = stoi(val);
-        }else if(!token.compare("number_of_vector_hash_functions")){
+        }else if(!token.compare("number_of_vector_hash_functions:")){
             k = stoi(val);
         }else{
-            cout << "Unknown argument in config file : " << token;
+            cout << "Unknown argument in config file : " << token << endl;
         }
     }
     if(n_clusters == -1){
@@ -64,12 +65,14 @@ int main(int argc,char *argv[]){
 
     // Read the first line
     //Point p1;
+    bool curvesFlag = false;
     if(getline(in,str)){
         if(!str.compare("vectors")){
             cout << "Its all about vectors" << endl;
         }
         else if(!str.compare("curves")){
             cout << "Its all about Curves" << endl;
+            curvesFlag = true;
         }
         else{
             cerr << "Expected \"curves\" or \"vectors\" as the first line of the input file " << inputFile << endl;
@@ -80,37 +83,92 @@ int main(int argc,char *argv[]){
         return 1;
     }
 
+       
+    if(!curvesFlag){ 
+        // KMeans for vectors
+        vector<Point*> dataset;
+        
+        // Read input file line by line
+        cout << "Reading input dataset..." << endl;
+        while(getline(in,str)){
+            istringstream ss(str);
+            ss >> token;
 
-    // For Vectors
-    vector<Point*> dataset;
-    
-    // Read input file line by line
-    cout << "Reading input dataset..." << endl;
-    while(getline(in,str)){
-        istringstream ss(str);
-        ss >> token;
+            //Read item id
+            int id;
+            sscanf(token.c_str(),"item%d",&id);
 
-        //Read item id
-        int id;
-        sscanf(token.c_str(),"item%d",&id);
+            Point p(id);
 
-        Point p(id);
+            //Read coordinates
+            while( ss >> token )
+                p.addCoordinate(stod(token));
 
-        //Read coordinates
-        while( ss >> token )
-            p.addCoordinate(stod(token));
+            // Save it to the dataset list
+            dataset.push_back(new Point(p));
+        }
+        cout << "Reading complete." << endl;
 
-        // Save it to the dataset list
-        dataset.push_back(new Point(p));
+        // Make a VectorClustering instance
+        VectorClustering vc(dataset,n_clusters,"random");
+
+        vc.KMeans();
     }
-    cout << "Reading complete." << endl;
+    else{ 
+        // KMeans for curves
+        vector<Curve*> dataset;
 
-    // Make a VectorClustering instance
-    VectorClustering vc(dataset,n_clusters,"random");
+        // Read input file line by line
+        cout << "Reading input dataset..." << endl;
+        while (getline(in,str)){
+            stringstream linestream(str);
+           
+            // The first token is the id 
+            getline(linestream, token, '\t');
+            Curve c;
+            c.setId(token);
+            //cout << ":::Id= " << token << "\n";
+            
+            // The second token is the number of coordinates
+            getline(linestream, token, '\t');
+            //cout << ":::Num of cords: " << token << endl;
+            int numberOfCords = stoi(token);
+            c.setNumberOfCoordinates(numberOfCords);
+             
+            // Reading each coordinate
+            double x,y;
+            for (int i=0; i< numberOfCords; i++){
+               
+                // Read x 
+                getline(linestream, token, ' ');
+                sscanf(token.c_str(), "(%lf,", &x);
 
-    vc.KMeans();
+                // Read y
+                getline(linestream, token, ' ');
+                sscanf(token.c_str(), "%lf)", &y);
+               
+                // Make a point 
+                Point *aPoint = new Point();
+                aPoint->setX(x);
+                aPoint->setY(y);
 
-    //cout << "Process complete. The output is written on file " << outputFile << endl;
+                // Push it to the Curve 
+                c.PushToVector(aPoint);
+            }
+            //c.printCoordinates(); 
+
+            // Save curve to the dataset list
+            dataset.push_back(new Curve(c));
+        }
+
+        cout << "Reading complete." << endl;
+
+        // Make a VectorClustering instance
+        CurveClustering cc(dataset,n_clusters,"random");
+
+        cc.KMeans();
+    }
+    cout << "Process complete. The output is written on file " << outputFile << endl;
 
     in.close();
     return 0;
