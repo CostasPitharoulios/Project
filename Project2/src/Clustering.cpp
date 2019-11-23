@@ -33,10 +33,66 @@ int Clustering::initRandom(){
         else
             ((Curve*)centroids.at(i))->assign((Curve*)centroids.at(i));
     }
+    
 }
 
 int Clustering::initKMeanspp(){
-    cout << "Kmeans++ coming soon..." << endl;
+    cout << "Kmeans++ is here bitchessss" << endl;
+    
+    if (n_clusters <= 0){
+        cout << "ERROR: Number of clusters given is incorrect" << endl;
+        return -1;
+    }
+    
+    centroids.clear();
+    centroids = dataset;
+    printCentroids();
+#if 0
+    // we add the first possible centroid to the vector list
+    // we are doing this by randomly picking a point/curve of the dataset
+    int randNumber = rand()%(n_clusters+1); // range is [0...n_clusters
+    //centroids.push_back((Point*)dataset.at(randNumber));
+    ((Point*)centroids.at(0))->assign((Point*)dataset.at(randNumber));
+    this->printCentroids();
+    
+    
+    int numbData = dataset.size();
+    cout << "number of data:" << numbData << endl;
+    // computing the remaining n_clusters-1 centroids
+    for (int cIt=1; cIt <n_clusters; cIt++){
+        // creating a vector to store distances of data points/curves from nearest centroid
+        //vector<double> dist;
+        cout << "heyyyyyyyyyy" << endl;
+        Point* nextCentroid;
+        for (int i=0; i< numbData; i++){
+            
+            // computing all the distances from this point to each centroid
+            // and then keeping the shortest distance
+            double maxOfMinDistances =  std::numeric_limits<double>::min();
+            double minDistance =  std::numeric_limits<double>::max();
+            for (int j=0; j< 2; j++){
+                double tempDistance = manhattanDistance(((Point*)dataset.at(i))->getCoordinates(), ((Point*)centroids.at(j))->getCoordinates());
+                cout << "TempdISTANCE:" << tempDistance << endl;
+                if (tempDistance < minDistance)
+                    minDistance = tempDistance;
+            }
+           // dist.push_back(minDistance);
+            if (minDistance > maxOfMinDistances){
+                maxOfMinDistances = minDistance;
+                nextCentroid = ((Point*)dataset.at(i));
+            }
+            cout << "MIN: " << minDistance << endl;
+            
+        }
+       // cout << "NEXT" <<
+        centroids.push_back((Point*)nextCentroid);
+        cout << "NOW" <<endl;
+        this->printCentroids();
+    }
+    cout << "SIZE: " << centroids.size() << endl;
+    this->printCentroids();
+    cout << "end" << endl;
+#endif
 }
 
 int Clustering::assignLloyd(){
@@ -143,4 +199,21 @@ void Clustering::printClusters(){
             cout << endl;
         }
     }
+}
+
+double Clustering::manhattanDistance(vector<double> a, vector<double> b){
+    double dist = 0;
+    if (a.size() < b.size()){
+        for (int i=0; i<a.size(); i++){
+            dist += abs(a.at(i) - b.at(i));
+           // cout <<"INSIDE " << a.at(i) << " " << b.at(i) << endl;
+        }
+    }
+    else {
+        for (int i=0; i<b.size(); i++){
+            dist += abs(a.at(i) - b.at(i));
+            //cout <<"INSIDE " << a.at(i) << " " << b.at(i) << endl;
+        }
+    }
+    return dist;
 }

@@ -83,13 +83,15 @@ int main(int argc,char *argv[]){
         return 1;
     }
 
-       
+    vector<void*> dataset;
+
     if(!curvesFlag){ 
         // KMeans for vectors
-        vector<void*> dataset;
+        ////vector<void*> dataset;
         
         // Read input file line by line
         cout << "Reading input dataset..." << endl;
+        getline(in,str);
         while(getline(in,str)){
             istringstream ss(str);
             ss >> token;
@@ -97,6 +99,7 @@ int main(int argc,char *argv[]){
             //Read item id
             int id;
             sscanf(token.c_str(),"item%d",&id);
+            cout << "ID:" << id;
 
             Point p(id);
 
@@ -110,13 +113,21 @@ int main(int argc,char *argv[]){
         cout << "Reading complete." << endl;
 
         // Make a Clustering instance
-        Clustering vc(false,dataset,n_clusters,"random");
+        ////Clustering vc(false,dataset,n_clusters,"random");
+        Clustering vc(false,dataset,n_clusters,"k-means++");
+        
+       
 
         vc.KMeans();
+        vc.printClusters(); /////
     }
+     
+    
+    
+    
     else{ 
         // KMeans for curves
-        vector<void*> dataset;
+        ////vector<void*> dataset;
 
         // Read input file line by line
         cout << "Reading input dataset..." << endl;
