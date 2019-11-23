@@ -109,6 +109,11 @@ int main(int argc,char *argv[]){
         }
         cout << "Reading complete." << endl;
 
+        if (dataset.size() < n_clusters){
+            cout << "Error: input dataset is smaller than the number of clusters" << endl;
+            return 2;
+        }
+
         // Make a Clustering instance
         Clustering vc(false,dataset,n_clusters,"random");
 
@@ -160,8 +165,12 @@ int main(int argc,char *argv[]){
             // Save curve to the dataset list
             dataset.push_back((void*)c);
         }
-
         cout << "Reading complete." << endl;
+
+        if (dataset.size() < n_clusters){
+            cout << "Error: input dataset is smaller than the number of clusters" << endl;
+            return 2;
+        }
 
         // Make a Clustering instance
         Clustering cc(true,dataset,n_clusters,"random");
