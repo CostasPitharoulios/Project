@@ -7,10 +7,10 @@ LDIR =../lib
 
 LIBS=-lm
 
-_DEPS = Point.hpp Clustering.hpp Curve.hpp dist.hpp
+_DEPS = Point.hpp Clustering.hpp Curve.hpp dist.hpp util.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o Point.o Clustering.o Curve.o dist.o
+_OBJ = main.o Point.o Clustering.o Curve.o dist.o util.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 

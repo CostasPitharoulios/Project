@@ -6,6 +6,7 @@
 #include "../include/Point.hpp"
 #include "../include/Clustering.hpp"
 #include "../include/Curve.hpp"
+#include "../include/util.hpp"
 
 using namespace std;
 
@@ -56,34 +57,20 @@ int main(int argc,char *argv[]){
         return 1;
     }
 
-    // Open input file
-    ifstream in(inputFile.c_str());
-    if (!in){
-        cerr << "Cannot open the input file " << inputFile << endl;
-        return 1;
-    }
-
-    // Read the first line
-    //Point p1;
-    bool curvesFlag = false;
-    if(getline(in,str)){
-        if(!str.compare("vectors")){
-            cout << "Its all about vectors" << endl;
-        }
-        else if(!str.compare("curves")){
-            cout << "Its all about Curves" << endl;
-            curvesFlag = true;
-        }
-        else{
-            cerr << "Expected \"curves\" or \"vectors\" as the first line of the input file " << inputFile << endl;
-            return 1;
-        }
-    }else{
-        cerr << "Input file " << inputFile << " is empty." << endl;
-        return 1;
-    }
-
     vector<void*> dataset;
+    bool curvesFlag;
+    cout << "Reading input dataset..." << endl;
+    readDataset(inputFile,dataset,curvesFlag);
+    cout << "Reading complete." << endl;
+
+    if (dataset.size() < n_clusters){
+        cout << "Error: input dataset is smaller than the number of clusters" << endl;
+        return 2;
+    }
+
+    ////vector<void*> dataset;
+    
+    ifstream in(inputFile);
 
     if(!curvesFlag){ 
         // KMeans for vectors
@@ -179,8 +166,13 @@ int main(int argc,char *argv[]){
 
         cc.KMeans();
     }
+    // Make a Clustering instance
+    Clustering clustering(curvesFlag,dataset,n_clusters,"random");
+
+    // KMeans
+    clustering.KMeans();
+
     cout << "Process complete. The output is written on file " << outputFile << endl;
 
-    in.close();
     return 0;
 }

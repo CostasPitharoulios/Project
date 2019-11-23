@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Point::Point(int id):d(0),id(id){
+Point::Point(string id):d(0),id(id){
     //printf("Point was created\n");
 }
 
@@ -20,11 +20,11 @@ double Point::getCoordinate(int i){
     return listOfCoordinates.at(i);
 }
 
-void Point::setId(int x){
+void Point::setId(string x){
     this->id = x;
 }
 
-int Point::getId(){
+string Point::getId(){
     return id;
 }
 
