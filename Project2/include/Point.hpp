@@ -5,15 +5,15 @@ using namespace std;
 
 class Point{
     private:
-        int id;
+        string id;
         int d; // Dimensions
         vector<double> listOfCoordinates;
         Point *cluster;
     public:
-        Point(int id=-1);
+        Point(string id="-1");
         void addCoordinate(double x);
-        int getId();
-        void setId(int x);
+        string getId();
+        void setId(string x);
         int getD();
         void setD(int dim);
         void printPoint();

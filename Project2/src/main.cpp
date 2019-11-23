@@ -95,10 +95,10 @@ int main(int argc,char *argv[]){
             ss >> token;
 
             //Read item id
-            int id;
-            sscanf(token.c_str(),"item%d",&id);
-
-            Point p(id);
+            //int id;
+            //sscanf(token.c_str(),"item%d",&id);
+            //Point p(id);
+            Point p(token);
 
             //Read coordinates
             while( ss >> token )
