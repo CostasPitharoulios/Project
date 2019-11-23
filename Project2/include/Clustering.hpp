@@ -18,6 +18,7 @@ class Clustering{
         vector<void*> centroids;
     
         double manhattanDistance(vector<double> a, vector<double> b); // to calculate distance between points
+    double getValueDTW(Curve* queryCurve,Curve* inputCurve);
     public:
         Clustering(bool curvesFlag, vector<void*>, int n_clusters, string initMethod="random", string assignMethod="lloyd", string updateMethod="pam");
 
