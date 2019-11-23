@@ -92,16 +92,16 @@ int Clustering::initKMeanspp(){
             // Our aim is, to keep the item with the longest distance from the closest centroid
             if (minDistance > maxOfMinDistances){
                 maxOfMinDistances = minDistance;
-                if (!curvesFlag)
+                if (!curvesFlag)                                     // if we have points
                     nextCentroid = ((Point*)dataset.at(i));
-                else
+                else                                                 // if we have curves
                     nextCentroid = ((Curve*)dataset.at(i));
             }
         }
         // pushing back new centroid to the vector list of centroids
-        if (!curvesFlag)
+        if (!curvesFlag)                                     // if we have points
             centroids.push_back((Point*)nextCentroid);
-        else
+        else                                                  // if we have curves
             centroids.push_back((Curve*)nextCentroid);
     }
 }
