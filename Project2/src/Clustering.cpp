@@ -71,6 +71,7 @@ int Clustering::initKMeanspp(){
         centroids.push_back((Point*)dataset.at(randNumber));
     else                                                            // if we have curves
         centroids.push_back((Curve*)dataset.at(randNumber));
+    clusters.push_back(new Cluster(0,dataset.at(randNumber),curvesFlag));
 
   
     // computing the remaining n_clusters-1 centroids
@@ -107,6 +108,8 @@ int Clustering::initKMeanspp(){
             centroids.push_back((Point*)nextCentroid);
         else                                                  // if we have curves
             centroids.push_back((Curve*)nextCentroid);
+        // Make cluster
+        clusters.push_back(new Cluster(cIt,nextCentroid,curvesFlag));
     }
 }
 
