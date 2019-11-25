@@ -38,6 +38,7 @@ class Clustering{ // TODO name it KMeans? and the function: fit
         bool isCentroid(void* item);
         void printCentroids();
         void printClusters();
+        double pamCost(vector<void*> items,int centroidIndex);
 };
 
 class Cluster{
@@ -50,8 +51,10 @@ class Cluster{
     public:
         Cluster(int id, void *centroid, bool curvesFlag);
         void addItem(void *item);
+        void setCentroid(void *item);
         bool removeItem(string id);
         void *getCentroid();
         int getId();
+        vector<void*> getItems();
         void printItems();
 };
