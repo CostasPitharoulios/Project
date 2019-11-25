@@ -41,62 +41,73 @@ int Clustering::initRandom(){
 }
 
 int Clustering::initKMeanspp(){
+    
+    //=======================================================================================
+    // The kmeans++ algorithm
+    // 1. Pick the first centroid randomly from the data dataset
+    // 2. To choose the second centroid, for each item of dataset, calculate the distances
+    //    from the closest centroid
+    // 3. Make the item with the maximun distance of the nearest centroid, next centroid
+    // 4. Repeat for the rest of the Centroids
+    //=======================================================================================
+    
     cout << "Kmeans++ is here bitchessss" << endl;
     
+    // check if the number of clusters given is greater than zero
     if (n_clusters <= 0){
         cout << "ERROR: Number of clusters given is incorrect" << endl;
         return -1;
     }
     
+    srand(time(NULL));
     centroids.clear();
-    centroids = dataset;
-    printCentroids();
-#if 0
+ 
+    
     // we add the first possible centroid to the vector list
     // we are doing this by randomly picking a point/curve of the dataset
-    int randNumber = rand()%(n_clusters+1); // range is [0...n_clusters
-    //centroids.push_back((Point*)dataset.at(randNumber));
-    ((Point*)centroids.at(0))->assign((Point*)dataset.at(randNumber));
-    this->printCentroids();
-    
-    
     int numbData = dataset.size();
-    cout << "number of data:" << numbData << endl;
+    int randNumber = rand()%(numbData+1);                           // range is [0...maximun number of items-1]
+    if(!curvesFlag)                                                 // if we have points
+        centroids.push_back((Point*)dataset.at(randNumber));
+    else                                                            // if we have curves
+        centroids.push_back((Curve*)dataset.at(randNumber));
+
+  
     // computing the remaining n_clusters-1 centroids
-    for (int cIt=1; cIt <n_clusters; cIt++){
-        // creating a vector to store distances of data points/curves from nearest centroid
-        //vector<double> dist;
-        cout << "heyyyyyyyyyy" << endl;
-        Point* nextCentroid;
+    for (int cIt=1; cIt < n_clusters; cIt++){
+        
+        void* nextCentroid;
         for (int i=0; i< numbData; i++){
             
-            // computing all the distances from this point to each centroid
+            // computing all the distances from this item to each centroid
             // and then keeping the shortest distance
             double maxOfMinDistances =  std::numeric_limits<double>::min();
             double minDistance =  std::numeric_limits<double>::max();
-            for (int j=0; j< 2; j++){
-                double tempDistance = manhattanDistance(((Point*)dataset.at(i))->getCoordinates(), ((Point*)centroids.at(j))->getCoordinates());
-                cout << "TempdISTANCE:" << tempDistance << endl;
+            for (int j=0; j< centroids.size(); j++){
+                double tempDistance;
+                if(!curvesFlag)                                     // if we have points
+                    tempDistance = manhattanDistance(((Point*)dataset.at(i))->getCoordinates(), ((Point*)centroids.at(j))->getCoordinates());
+                else                                                // if we haev curves
+                    tempDistance = getValueDTW((Curve*)dataset.at(i),(Curve*)centroids.at(j));
+               
                 if (tempDistance < minDistance)
                     minDistance = tempDistance;
             }
-           // dist.push_back(minDistance);
+            // Our aim is, to keep the item with the longest distance from the closest centroid
             if (minDistance > maxOfMinDistances){
                 maxOfMinDistances = minDistance;
-                nextCentroid = ((Point*)dataset.at(i));
+                if (!curvesFlag)                                     // if we have points
+                    nextCentroid = ((Point*)dataset.at(i));
+                else                                                 // if we have curves
+                    nextCentroid = ((Curve*)dataset.at(i));
             }
-            cout << "MIN: " << minDistance << endl;
-            
         }
-       // cout << "NEXT" <<
-        centroids.push_back((Point*)nextCentroid);
-        cout << "NOW" <<endl;
-        this->printCentroids();
+        // pushing back new centroid to the vector list of centroids
+        if (!curvesFlag)                                     // if we have points
+            centroids.push_back((Point*)nextCentroid);
+        else                                                  // if we have curves
+            centroids.push_back((Curve*)nextCentroid);
     }
-    cout << "SIZE: " << centroids.size() << endl;
-    this->printCentroids();
-    cout << "end" << endl;
-#endif
 }
 
 int Clustering::assignLloyd(){
@@ -210,6 +221,59 @@ double Clustering::manhattanDistance(vector<double> a, vector<double> b){
     return dist;
 }
 
+
+double Clustering::getValueDTW(Curve* queryCurve,Curve* inputCurve){
+    int m1,m2;
+    m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
+    m2 = inputCurve->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
+    
+    double arrayDTW[m1][m2];
+    
+    
+    // initialization  first line
+    double previousSum = 0.0; // keeps the sum of previous items
+    double x1,y1; // cordinates of first point of query curve
+    x1 = queryCurve->getSpecificXCoord(0);
+    y1 = queryCurve->getSpecificYCoord(0);
+    for (int i=0; i< m2; i++){
+        double x2,y2;
+        x2 = inputCurve->getSpecificXCoord(i);
+        y2 = inputCurve->getSpecificYCoord(i);
+        arrayDTW[0][i] = previousSum + distance(x1,x2,y1,y2);
+        
+        previousSum += arrayDTW[0][i];
+    }
+    
+    //initializing first column
+    previousSum = arrayDTW[0][0];
+    double x2, y2;
+    x2 = inputCurve->getSpecificXCoord(0);
+    y2 = inputCurve->getSpecificYCoord(0);
+    for (int i=1; i<m1; i++){
+        x1 = queryCurve->getSpecificXCoord(i);
+        y1 = queryCurve->getSpecificYCoord(i);
+        arrayDTW[i][0] = previousSum + distance(x1,x2,y1,y2);
+        
+        previousSum += arrayDTW[i][0];
+    }
+    
+    for (int i=1; i<m1; i++ ){
+        for (int j=1; j<m2; j++){
+            x1 = queryCurve->getSpecificXCoord(i);
+            x2 = inputCurve->getSpecificXCoord(j);
+            y1 = queryCurve->getSpecificYCoord(i);
+            y2 = inputCurve->getSpecificYCoord(j);
+            arrayDTW[i][j] = min(min(arrayDTW[i-1][j],arrayDTW[i-1][j-1]), arrayDTW[i][j-1]) + distance(x1,x2,y1,y2);
+        }
+    }
+    
+    //cout << "dtw of curve is: " << arrayDTW[m1-1][m2-1];
+    
+    return arrayDTW[m1-1][m2-1];
+    
+    
+}
+
 Cluster::Cluster(int id, void *centroid, bool curvesFlag):id(id),centroid(centroid), curvesFlag(curvesFlag){
     cout << "New Cluster with id " << id << endl;
     addItem(centroid);
@@ -253,3 +317,5 @@ void Cluster::printItems(){
     }
     cout << endl;
 }
+
+
