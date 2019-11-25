@@ -28,6 +28,10 @@ int Clustering::initRandom(){
 
     // For every centroid: assign it to it self
     for(int i=0; i<centroids.size(); i++){
+        // Make cluster
+        clusters.push_back(new Cluster(i,centroids.at(i),curvesFlag));
+
+        // TODO maybe delete those: (and assignment data member of points/curves)
         if(!curvesFlag)
             ((Point*)centroids.at(i))->assign((Point*)centroids.at(i));
         else
@@ -67,6 +71,13 @@ int Clustering::initKMeanspp(){
         centroids.push_back((Point*)dataset.at(randNumber));
     else                                                            // if we have curves
         centroids.push_back((Curve*)dataset.at(randNumber));
+    clusters.push_back(new Cluster(0,dataset.at(randNumber),curvesFlag));
+    // TODO maybe delete those: (and assignment data member of points/curves)
+    if(!curvesFlag)
+        ((Point*)dataset.at(randNumber))->assign((Point*)dataset.at(randNumber));
+    else
+        ((Curve*)dataset.at(randNumber))->assign((Curve*)dataset.at(randNumber));
+
 
   
     // computing the remaining n_clusters-1 centroids
@@ -83,12 +94,13 @@ int Clustering::initKMeanspp(){
                 double tempDistance;
                 if(!curvesFlag)                                     // if we have points
                     tempDistance = manhattanDistance(((Point*)dataset.at(i))->getCoordinates(), ((Point*)centroids.at(j))->getCoordinates());
-                else                                                // if we haev curves
+                else                                                // if we have curves
                     tempDistance = getValueDTW((Curve*)dataset.at(i),(Curve*)centroids.at(j));
                
                 if (tempDistance < minDistance)
                     minDistance = tempDistance;
             }
+
             // Our aim is, to keep the item with the longest distance from the closest centroid
             if (minDistance > maxOfMinDistances){
                 maxOfMinDistances = minDistance;
@@ -103,11 +115,18 @@ int Clustering::initKMeanspp(){
             centroids.push_back((Point*)nextCentroid);
         else                                                  // if we have curves
             centroids.push_back((Curve*)nextCentroid);
+        // Make cluster
+        clusters.push_back(new Cluster(cIt,nextCentroid,curvesFlag));
+        // TODO maybe delete those: (and assignment data member of points/curves)
+        if(!curvesFlag)
+            ((Point*)nextCentroid)->assign((Point*)nextCentroid);
+        else
+            ((Curve*)nextCentroid)->assign((Curve*)nextCentroid);
     }
 }
 
 int Clustering::assignLloyd(){
-    cout << "Assigning to centroids..." << endl;
+    cout << "Assigning to clusters..." << endl;
 
     // For every item
     for(int j=0; j<dataset.size(); j++){
@@ -118,29 +137,31 @@ int Clustering::assignLloyd(){
         if(!isCentroid(dataset.at(j))){
             // Find the centroid with the least distance and assign it
             double min = numeric_limits<double>::max();
-            for(int i=0; i<centroids.size(); i++){
+            int pos = -1;
+            for(int i=0; i<clusters.size(); i++){
                 double dist;
                 if(!curvesFlag){
-                    dist = manhattanDistance(((Point*)dataset.at(j))->getCoordinates(),((Point*)centroids.at(i))->getCoordinates());
+                    dist = manhattanDistance(((Point*)dataset.at(j))->getCoordinates(),(((Point*)(clusters.at(i)->getCentroid()))->getCoordinates()));
                     if(dist<min){
                         min = dist;
-                        ((Point*)dataset.at(j))->assign((Point*)centroids.at(i));
+                        pos = i;
+                        ((Point*)dataset.at(j))->assign((Point*)(clusters.at(i)->getCentroid()));
                     }
                 } 
                 else{
-                    dist = getValueDTW((Curve*)dataset.at(j),(Curve*)centroids.at(i));
-                    //cout << " Distance between " << ((Curve*)dataset.at(j))->getId() << " and " << ((Curve*)centroids.at(i))->getId() << " is " << dist << endl;
+                    dist = getValueDTW((Curve*)dataset.at(j),(Curve*)(clusters.at(i)->getCentroid()));
+                    //cout << " Distance between " << ((Curve*)dataset.at(j))->getId() << " and " << ((Curve*)(clusters.at(i)->getCentroid()))->getId() << " is " << dist << endl;
                     if(dist<min){
                         min = dist;
-                        ((Curve*)dataset.at(j))->assign((Curve*)centroids.at(i));
+                        pos = i;
+                        ((Curve*)dataset.at(j))->assign((Curve*)(clusters.at(i)->getCentroid()));
                     }
                 }
             }
+            clusters.at(pos)->addItem(dataset.at(j)); //TODO remove item from previous cluster
             //if(curvesFlag) cout << "Closest: " <<((Curve*)dataset.at(j))->getCentroid()->getId() << " with distance " << min   <<  endl;
         }
     }
-    printClusters();
-    cout << endl;
 }
 
 bool Clustering::isCentroid(void* item){
@@ -152,6 +173,46 @@ bool Clustering::isCentroid(void* item){
 
 int Clustering::assignReverse(){
     cout << "Assign Reverse coming soon..." << endl;
+}
+
+
+double Clustering::pamCost(vector<void*> items,int centroidIndex){
+    double sum = 0;
+    for(int i=0; i<items.size(); i++){
+        if(i!=centroidIndex){
+            if(!curvesFlag)
+                sum += manhattanDistance(((Point*)items.at(i))->getCoordinates(),(((Point*)(items.at(centroidIndex)))->getCoordinates()));
+            else
+                sum += getValueDTW((Curve*)items.at(i),(Curve*)items.at(centroidIndex));
+
+        }
+    }
+    return sum;
+}
+
+int Clustering::updatePAM(){
+    for(int i=0; i<clusters.size(); i++){
+        vector<void*> items = clusters.at(i)->getItems();
+        double minCost = numeric_limits<double>::max();
+        int minIndex=-1;
+        for(int centroidIndex=0; centroidIndex<items.size(); centroidIndex++){
+            double cost = pamCost(items,centroidIndex);
+            if(cost < minCost){
+                minCost = cost;
+                minIndex=centroidIndex;
+            }
+        }
+        cout << "MinCost: " << minCost << " MinIndex: " << minIndex << endl;
+
+        // If a better centroid was found
+        if(items.at(minIndex) != clusters.at(i)->getCentroid()){
+            clusters.at(i)->setCentroid(items.at(minIndex));
+        }
+    }
+}
+
+int Clustering::updateMean(){
+    cout << "updateMean coming soon..." << endl;
 }
 
 int Clustering::KMeans(){
@@ -168,6 +229,10 @@ int Clustering::KMeans(){
     cout << "Initial Centroids:" << endl;
     printCentroids();
 
+    cout << "Initial Clusters:" << endl;
+    printClusters();
+    cout << endl;
+
     // Assignment
     if (!assignMethod.compare("lloyd")){
         assignLloyd();
@@ -177,41 +242,49 @@ int Clustering::KMeans(){
         cout << "Unknown assignMethod" << endl;
         return -1;
     }
+
+    cout << "Clusters after assignment:" << endl;
+    printClusters();
+    cout << endl;
+
+    // Update
+    if (!updateMethod.compare("pam")){
+        updatePAM();
+    }else if (!updateMethod.compare("mean")){
+        updateMean();
+    }else{
+        cout << "Unknown updateMethod" << endl;
+        return -1;
+    }
+
+    cout << "Centroids after update:" << endl;
+    printCentroids();
 }
 
 void Clustering::printCentroids(){
-    for(int i=0; i<centroids.size(); i++){
+    /*for(int i=0; i<centroids.size(); i++){
         if(!curvesFlag)
             cout << ((Point*)centroids.at(i))->getId() << ", "<<  endl;
         else
             cout << ((Curve*)centroids.at(i))->getId() << ", "<<  endl;
+    }*/
+    for(int i=0; i<clusters.size(); i++){
+        if(!curvesFlag)
+            cout << ((Point*)clusters.at(i)->getCentroid())->getId() << ", "<<  endl;
+        else
+            cout << ((Curve*)clusters.at(i)->getCentroid())->getId() << ", "<<  endl;
     }
 }
 
 void Clustering::printClusters(){
-    for(int i=0; i<centroids.size(); i++){
-        if(!curvesFlag){
-            cout << "Cluster of ";
-            cout << ((Point*)centroids.at(i))->getId() << ": "<<  endl;
-            for(int j=0; j<dataset.size(); j++){
-                if(((Point*)dataset.at(j))->getCentroid() == (Point*)centroids.at(i)){
-                    cout << "{" << ((Point*)dataset.at(j))->getId() << "}, ";
-                }
-            }
-            cout << endl;
-        }else{
-            cout << "Cluster of ";
-            cout << ((Curve*)centroids.at(i))->getId() << ": "<<  endl;
-            for(int j=0; j<dataset.size(); j++){
-                if(((Curve*)dataset.at(j))->getCentroid() == (Curve*)centroids.at(i)){
-                    cout << "{" << ((Curve*)dataset.at(j))->getId() << "}, ";
-                }
-            }
-            cout << endl;
-        }
+    for(int i=0; i<clusters.size(); i++){
+        cout << "Cluster of " << clusters.at(i)->getId() << ": "<<  endl;
+        clusters.at(i)->printItems();
+        
     }
 }
 
+// TODO del
 double Clustering::manhattanDistance(vector<double> a, vector<double> b){
     double dist = 0;
     if (a.size() < b.size()){
@@ -229,6 +302,7 @@ double Clustering::manhattanDistance(vector<double> a, vector<double> b){
     return dist;
 }
 
+// TODO del
 double Clustering::getValueDTW(Curve* queryCurve,Curve* inputCurve){
     int m1,m2;
     m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
@@ -281,5 +355,66 @@ double Clustering::getValueDTW(Curve* queryCurve,Curve* inputCurve){
     
 }
 
+Cluster::Cluster(int id, void *centroid, bool curvesFlag):id(id),centroid(centroid), curvesFlag(curvesFlag){
+    //cout << "New Cluster with id " << id << endl;
+    addItem(centroid);
+}
+
+void Cluster::addItem(void *item){
+    items.push_back(item); 
+    if(!curvesFlag)
+        ((Point*)item)->assign((Point*)centroid);
+    else
+        ((Curve*)item)->assign((Curve*)centroid);
+}
+
+bool Cluster::removeItem(string id){
+    for(int i=0; i<items.size(); i++){
+        if(!curvesFlag)
+            if(((Point*)items.at(i))->getId() == id){
+                items.erase(items.begin()+i);
+                return true;
+            }
+        else     
+            if(((Curve*)items.at(i))->getId() == id){
+                items.erase(items.begin()+i);
+                return true;
+            }
+    }
+    return false;
+}
+
+void *Cluster::getCentroid(){
+    return centroid;
+}
+
+void Cluster::setCentroid(void *item){
+    centroid=item;
+
+    // If its not in the items, add it
+    if(find(items.begin(), items.end(), item) == items.end()){
+        cout << "Setting a centroid that is not part of the cluster." << endl;
+        addItem(item);
+    }
+}
+
+vector<void*> Cluster::getItems(){
+    return items;
+}
+
+int Cluster::getId(){
+    return id;
+}
+
+void Cluster::printItems(){
+    for(int i=0; i<items.size(); i++){
+        if(!curvesFlag){
+            cout << "{" << ((Point*)items.at(i))->getId() << "}, ";
+        }else{
+            cout << "{" << ((Curve*)items.at(i))->getId() << "}, ";
+        }
+    }
+    cout << endl;
+}
 
 
