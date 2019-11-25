@@ -88,12 +88,13 @@ int Clustering::initKMeanspp(){
                 double tempDistance;
                 if(!curvesFlag)                                     // if we have points
                     tempDistance = manhattanDistance(((Point*)dataset.at(i))->getCoordinates(), ((Point*)centroids.at(j))->getCoordinates());
-                else                                                // if we haev curves
+                else                                                // if we have curves
                     tempDistance = getValueDTW((Curve*)dataset.at(i),(Curve*)centroids.at(j));
                
                 if (tempDistance < minDistance)
                     minDistance = tempDistance;
             }
+
             // Our aim is, to keep the item with the longest distance from the closest centroid
             if (minDistance > maxOfMinDistances){
                 maxOfMinDistances = minDistance;
@@ -165,8 +166,8 @@ int Clustering::assignReverse(){
     cout << "Assign Reverse coming soon..." << endl;
 }
 
-int Clustering::updateLloyd(){
-    cout << "updateLloyd coming soon..." << endl;
+int Clustering::updatePAM(){
+    cout << "updatePAM coming soon..." << endl;
 }
 
 int Clustering::updateMean(){
@@ -198,8 +199,8 @@ int Clustering::KMeans(){
     }
 
     // Update
-    if (!updateMethod.compare("lloyd")){
-        updateLloyd();
+    if (!updateMethod.compare("pam")){
+        updatePAM();
     }else if (!updateMethod.compare("mean")){
         updateMean();
     }else{

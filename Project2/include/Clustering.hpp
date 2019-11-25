@@ -31,7 +31,7 @@ class Clustering{ // TODO name it KMeans? and the function: fit
         int initKMeanspp();
         int assignLloyd();
         int assignReverse();
-        int updateLloyd();
+        int updatePAM();
         int updateMean();
 
         // Assisting functions
