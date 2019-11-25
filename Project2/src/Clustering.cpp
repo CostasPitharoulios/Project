@@ -162,6 +162,14 @@ int Clustering::assignReverse(){
     cout << "Assign Reverse coming soon..." << endl;
 }
 
+int Clustering::updateLloyd(){
+    cout << "updateLloyd coming soon..." << endl;
+}
+
+int Clustering::updateMean(){
+    cout << "updateMean coming soon..." << endl;
+}
+
 int Clustering::KMeans(){
     // Initialization
     if (!initMethod.compare("random")){
@@ -185,6 +193,17 @@ int Clustering::KMeans(){
         cout << "Unknown assignMethod" << endl;
         return -1;
     }
+
+    // Update
+    if (!updateMethod.compare("lloyd")){
+        updateLloyd();
+    }else if (!updateMethod.compare("reverse")){
+        updateMean();
+    }else{
+        cout << "Unknown updateMethod" << endl;
+        return -1;
+    }
+
 }
 
 void Clustering::printCentroids(){

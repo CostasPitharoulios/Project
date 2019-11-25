@@ -31,6 +31,8 @@ class Clustering{ // TODO name it KMeans? and the function: fit
         int initKMeanspp();
         int assignLloyd();
         int assignReverse();
+        int updateLloyd();
+        int updateMean();
 
         // Assisting functions
         bool isCentroid(void* item);
