@@ -5,7 +5,9 @@
 #include "Curve.hpp"
 using namespace std;
 
-class Clustering{
+class Cluster;
+
+class Clustering{ // TODO name it KMeans? and the function: fit
     private:
         bool curvesFlag; // Define Clustering item type. False: Points, True: Curves
         vector<void*> dataset;
@@ -15,7 +17,8 @@ class Clustering{
         string assignMethod;
         string updateMethod;
 
-        vector<void*> centroids;
+        vector<void*> centroids; // TODO delete
+        vector<Cluster*> clusters;
     
         double manhattanDistance(vector<double> a, vector<double> b); // to calculate distance between points
     public:
@@ -32,4 +35,20 @@ class Clustering{
         bool isCentroid(void* item);
         void printCentroids();
         void printClusters();
+};
+
+class Cluster{
+    private:
+        int id;
+        void *centroid;
+        vector<void*> items;
+        bool curvesFlag;
+
+    public:
+        Cluster(int id, void *centroid, bool curvesFlag);
+        void addItem(void *item);
+        bool removeItem(string id);
+        void *getCentroid();
+        int getId();
+        void printItems();
 };
