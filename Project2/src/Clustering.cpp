@@ -200,7 +200,7 @@ int Clustering::KMeans(){
     // Update
     if (!updateMethod.compare("lloyd")){
         updateLloyd();
-    }else if (!updateMethod.compare("reverse")){
+    }else if (!updateMethod.compare("mean")){
         updateMean();
     }else{
         cout << "Unknown updateMethod" << endl;
