@@ -127,6 +127,10 @@ int Clustering::initKMeanspp(){
     }
 }
 
+int assign(Cluster *cluster, Item *item){ //TODO
+
+}
+
 int Clustering::assignLloyd(){
     cout << "Assigning to clusters..." << endl;
 
@@ -161,6 +165,8 @@ int Clustering::assignLloyd(){
                 }
             }
             clusters.at(pos)->addItem(dataset.at(j)); //TODO remove item from previous cluster
+
+            //TODO if old cluster == new cluster, dont make assignment.. else do, and count them and return the count
             //if(curvesFlag) cout << "Closest: " <<((Curve*)dataset.at(j))->getCentroid()->getId() << " with distance " << min   <<  endl;
         }
     }
