@@ -34,10 +34,12 @@ int Clustering::initRandom(){
         // TODO maybe delete those: (and assignment data member of points/curves)
         if(!curvesFlag)
             ((Point*)centroids.at(i))->assign((Point*)centroids.at(i));
-        else
+        else{
+            //cout << "centroid curve: ";
+            //((Curve*)centroids.at(i))->printCoordinates();
             ((Curve*)centroids.at(i))->assign((Curve*)centroids.at(i));
+        }
     }
-    
 }
 
 int Clustering::initKMeanspp(){
@@ -184,25 +186,29 @@ double Clustering::pamCost(vector<void*> items,int centroidIndex){
                 sum += manhattanDistance(((Point*)items.at(i))->getCoordinates(),(((Point*)(items.at(centroidIndex)))->getCoordinates()));
             else
                 sum += getValueDTW((Curve*)items.at(i),(Curve*)items.at(centroidIndex));
-
         }
     }
     return sum;
 }
 
 int Clustering::updatePAM(){
+    // For every cluster
     for(int i=0; i<clusters.size(); i++){
         vector<void*> items = clusters.at(i)->getItems();
+
+        // For every point in the cluster: compute the cost that the cluster
+        //would have if this point was the centroid, and find the minimum
         double minCost = numeric_limits<double>::max();
         int minIndex=-1;
         for(int centroidIndex=0; centroidIndex<items.size(); centroidIndex++){
             double cost = pamCost(items,centroidIndex);
+            //cout << "Cost of " << centroidIndex << ": " << cost << endl;
             if(cost < minCost){
                 minCost = cost;
                 minIndex=centroidIndex;
             }
         }
-        cout << "MinCost: " << minCost << " MinIndex: " << minIndex << endl;
+        //cout << "MinCost: " << minCost << " MinIndex: " << minIndex << endl;
 
         // If a better centroid was found
         if(items.at(minIndex) != clusters.at(i)->getCentroid()){
@@ -228,10 +234,6 @@ int Clustering::KMeans(){
 
     cout << "Initial Centroids:" << endl;
     printCentroids();
-
-    cout << "Initial Clusters:" << endl;
-    printClusters();
-    cout << endl;
 
     // Assignment
     if (!assignMethod.compare("lloyd")){
@@ -303,6 +305,7 @@ double Clustering::manhattanDistance(vector<double> a, vector<double> b){
 }
 
 // TODO del
+#if 0
 double Clustering::getValueDTW(Curve* queryCurve,Curve* inputCurve){
     int m1,m2;
     m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
@@ -354,6 +357,7 @@ double Clustering::getValueDTW(Curve* queryCurve,Curve* inputCurve){
     
     
 }
+#endif
 
 Cluster::Cluster(int id, void *centroid, bool curvesFlag):id(id),centroid(centroid), curvesFlag(curvesFlag){
     //cout << "New Cluster with id " << id << endl;

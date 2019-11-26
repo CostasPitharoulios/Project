@@ -95,6 +95,9 @@ void readDataset(string inputFile, vector<void*> &dataset, bool &curvesFlag){
                 // Push it to the Curve 
                 c->PushToVector(aPoint);
             }
+            //cout << ":::";
+            //c->printCoordinates();
+            //cout << endl;
 
             // Save curve to the dataset list
             dataset.push_back((void*)c);

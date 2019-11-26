@@ -19,6 +19,11 @@ double manhattanDistance(vector<double> a, vector<double> b){
 
 
 double getValueDTW(Curve *queryCurve,Curve *inputCurve){
+
+    /*cout << "\na:";
+    queryCurve->printCoordinates();
+    cout << "b:";
+    inputCurve->printCoordinates();*/
     int m1,m2;
     m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
     m2 = inputCurve->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
