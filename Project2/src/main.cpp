@@ -73,6 +73,7 @@ int main(int argc,char *argv[]){
 
     // KMeans
     clustering.KMeans();
+    
 
     cout << "Process complete. The output is written on file " << outputFile << endl;
 

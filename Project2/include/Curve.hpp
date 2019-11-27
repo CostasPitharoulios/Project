@@ -28,4 +28,6 @@ class Curve{
         double getSpecificYCoord(int position);
         void assign(Curve *);
         Curve *getCentroid();
+        vector<Point*> getListOfCoordinates(void);
+        void setListOfCoordinates(vector <Point*>);
 };

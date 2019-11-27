@@ -74,3 +74,11 @@ void Curve::assign(Curve *cluster){
 Curve *Curve::getCentroid(){
     return this->cluster;
 }
+
+vector<Point*> Curve:: getListOfCoordinates(void){
+    return listOfCoordinates;
+}
+
+void Curve::setListOfCoordinates(vector <Point*> newListOfCoordinates){
+    this->listOfCoordinates = newListOfCoordinates;
+}

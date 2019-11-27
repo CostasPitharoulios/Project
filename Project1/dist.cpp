@@ -23,6 +23,8 @@ double getValueDTW(Curve *queryCurve,Curve *inputCurve){
     m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
     m2 = inputCurve->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
     
+   
+    
     double arrayDTW[m1][m2];
     
     

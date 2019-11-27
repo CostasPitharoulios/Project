@@ -66,7 +66,7 @@ int Clustering::initKMeanspp(){
     // we add the first possible centroid to the vector list
     // we are doing this by randomly picking a point/curve of the dataset
     int numbData = dataset.size();
-    int randNumber = rand()%(numbData+1);                           // range is [0...maximun number of items-1]
+    int randNumber = rand()%(numbData);                           // range is [0...maximun number of items-1]
     if(!curvesFlag)                                                 // if we have points
         centroids.push_back((Point*)dataset.at(randNumber));
     else                                                            // if we have curves
@@ -161,6 +161,7 @@ int Clustering::assignLloyd(){
             clusters.at(pos)->addItem(dataset.at(j)); //TODO remove item from previous cluster
             //if(curvesFlag) cout << "Closest: " <<((Curve*)dataset.at(j))->getCentroid()->getId() << " with distance " << min   <<  endl;
         }
+        
     }
 }
 
@@ -212,7 +213,122 @@ int Clustering::updatePAM(){
 }
 
 int Clustering::updateMean(){
-    cout << "updateMean coming soon..." << endl;
+    cout << "updateMean is here bitcheeees" << endl;
+    
+    cout << "\n\n\nBegining of test" << endl;
+    cout << "=======================\n\n" << endl;
+    
+    for (int cl=0; cl < clusters.size(); cl++){              // for each cluster
+        vector<void*> items = clusters.at(cl)->getItems();  // getting all items of cluster
+        //vector<Curve*> itemCurve = items;
+        int n = items.size();                               // n keeps the number of items of cluster
+        int sumOfLengths = 0;
+        for (int i=0; i<n; i++){
+            Curve* itemCurve;
+            itemCurve = (Curve*) items.at(i);
+            sumOfLengths += itemCurve->getNumberOfCoordinates(); // adds the number of coordinates of curve to the sum of coordinates of all curves of cluster
+        }
+        
+        
+        
+        getValueDTW((Curve*) items.at(0), (Curve*) items.at(1));
+        
+        cout << sumOfLengths << endl;
+    }
+    
+    
+    
+    cout << "\n\n\nEnd of test" << endl;
+    cout << "=======================\n\n" << endl;
+    
+    
+    
+    
+    for (int cl=0; cl < clusters.size(); cl++){              // for each cluster
+        vector<void*> items = clusters.at(cl)->getItems();  // getting all items of cluster
+       //vector<Curve*> itemCurve = items;
+        int n = items.size();                               // n keeps the number of items of cluster
+        int sumOfLengths = 0;
+        for (int i=0; i<n; i++){
+            Curve* itemCurve;
+            itemCurve = (Curve*) items.at(i);
+            sumOfLengths += itemCurve->getNumberOfCoordinates(); // adds the number of coordinates of curve to the sum of coordinates of all curves of cluster
+        }
+      
+        int lamda = sumOfLengths/n;                         // calculating lamda
+       
+        
+        
+        // -------------------------------------------------------------
+        // here we are going to find a random sequence with length >=0
+        // in order to initialize C
+        // -------------------------------------------------------------
+        int randomI= rand()%n;
+        Curve* oversizedC;                                  // holds a pointer to the random item with legth >= lamda
+        oversizedC = (Curve*) items.at(randomI);
+        while (1){
+            if ( oversizedC->getNumberOfCoordinates() >= lamda)
+            {
+                break;
+            }
+            else{
+                randomI = rand()%n;
+                oversizedC =(Curve*) items.at(randomI);
+            }
+        }
+        // -------------------------------------------------------------
+
+        Curve* C;
+        C=oversizedC;                                           // holds a pointer to C
+
+        // Shuffle the C listOfCoordinates with length>=lamda into a new vector
+        vector<Point*> shuffledOversizedC = oversizedC->getListOfCoordinates();
+        random_device rd;
+        default_random_engine rng(rd());
+        shuffle(begin(shuffledOversizedC), end(shuffledOversizedC), rng);
+        
+        // Pick the first k elements from the shuffled vector
+        shuffledOversizedC.resize(lamda);
+        
+       // C->listOfCoordinates.clear();
+        C->setListOfCoordinates(shuffledOversizedC);
+        C->setNumberOfCoordinates(lamda);
+        
+        vector<Point*> arrayA; // Array of lamda pointsets
+        for (int i=0; i<n; i++){
+            
+            //if (i == randomI)
+                //continue;
+            vector<Point*> setIPairs; // this keeps index-pairs of best traversal(C,Si)
+            Curve* itemCurve;
+            itemCurve = (Curve*) items.at(i);
+           
+            setIPairs = getBestTraversalDTW(C,itemCurve);
+            cout << "LENGTH: " << setIPairs.size() << endl;
+            for (int k=0; k< setIPairs.size(); k++)
+            {
+                cout <<"LETS SEE: " << setIPairs.at(k)->getX() << " " << setIPairs.at(k)->getY() << endl;
+            }
+            
+            if (i==1)
+                break;
+            
+            
+            
+        }
+
+        
+        
+        
+        
+        // NOTE: AT THE END WE CAN UPDATE THE NEW CENTROID TO ALL ITEMS OF CLUSTER
+        
+    }
+    
+
+    
+    
+    
 }
 
 int Clustering::KMeans(){
@@ -302,6 +418,7 @@ double Clustering::manhattanDistance(vector<double> a, vector<double> b){
     return dist;
 }
 
+#if 0
 // TODO del
 double Clustering::getValueDTW(Curve* queryCurve,Curve* inputCurve){
     int m1,m2;
@@ -354,6 +471,8 @@ double Clustering::getValueDTW(Curve* queryCurve,Curve* inputCurve){
     
     
 }
+
+#endif
 
 Cluster::Cluster(int id, void *centroid, bool curvesFlag):id(id),centroid(centroid), curvesFlag(curvesFlag){
     //cout << "New Cluster with id " << id << endl;
