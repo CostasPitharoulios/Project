@@ -11,7 +11,7 @@ class Curve{
         string id;
         int numberOfCoordinates; /* TODO number and listOfPoints? */
         vector<Point*> listOfCoordinates;
-        Curve *cluster;
+        Cluster *cluster;
 
     public:
         Curve();
@@ -30,4 +30,7 @@ class Curve{
         Curve *getCentroid();
         vector<Point*> getListOfCoordinates(void);
         void setListOfCoordinates(vector <Point*>);
+        void setCluster(Cluster *);
+        Cluster *getCluster();
+
 };

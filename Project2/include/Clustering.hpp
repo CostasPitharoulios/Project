@@ -3,6 +3,7 @@
 #include <limits>
 #include "Point.hpp"
 #include "Curve.hpp"
+#include "dist.hpp"
 using namespace std;
 
 class Cluster;
@@ -21,7 +22,7 @@ class Clustering{ // TODO name it KMeans? and the function: fit
         vector<Cluster*> clusters;
     
         double manhattanDistance(vector<double> a, vector<double> b); // to calculate distance between points
-        //double getValueDTW(Curve* queryCurve,Curve* inputCurve); // to calculate distance between curves
+
     public:
         Clustering(bool curvesFlag, vector<void*>, int n_clusters, string initMethod="random", string assignMethod="lloyd", string updateMethod="mean");
 
@@ -50,7 +51,7 @@ class Cluster{
 
     public:
         Cluster(int id, void *centroid, bool curvesFlag);
-        void addItem(void *item);
+        bool assign(void *item);
         void setCentroid(void *item);
         bool removeItem(string id);
         void *getCentroid();
