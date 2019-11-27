@@ -51,7 +51,7 @@ class Cluster{
 
     public:
         Cluster(int id, void *centroid, bool curvesFlag);
-        void addItem(void *item);
+        bool assign(void *item);
         void setCentroid(void *item);
         bool removeItem(string id);
         void *getCentroid();

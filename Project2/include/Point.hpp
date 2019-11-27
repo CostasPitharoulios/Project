@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 
+class Cluster;
+
 using namespace std;
 
 class Point{
@@ -8,7 +10,7 @@ class Point{
         string id;
         int d; // Dimensions
         vector<double> listOfCoordinates;
-        Point *cluster;
+        Cluster *cluster;
     public:
         Point(string id="-1");
         void addCoordinate(double x);
@@ -24,6 +26,6 @@ class Point{
         double getX();
         double getY();
         void addPadding(int new_d); // Add 0's to reach new_d dimensions
-        void assign(Point *);
-        Point *getCentroid();
+        void setCluster(Cluster *);
+        Cluster *getCluster();
 };

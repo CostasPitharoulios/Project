@@ -6,6 +6,7 @@ using namespace std;
 
 Curve::Curve(){
     numberOfCoordinates = 0;
+    cluster = nullptr;
     //id = "0";
    // vector<Point> get_listOfCoordinates;
     //printf("Curve was created\n");
@@ -67,10 +68,10 @@ void Curve::printCoordinates(){
     cout << endl;
 }
 
-void Curve::assign(Curve *cluster){
+void Curve::setCluster(Cluster *cluster){
     this->cluster = cluster;
 }
 
-Curve *Curve::getCentroid(){
+Cluster *Curve::getCluster(){
     return this->cluster;
 }

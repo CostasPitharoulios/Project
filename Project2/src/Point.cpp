@@ -5,6 +5,7 @@ using namespace std;
 
 Point::Point(string id):d(0),id(id){
     //printf("Point was created\n");
+    cluster = nullptr;
 }
 
 //Point::~Point(){
@@ -74,10 +75,10 @@ void Point::addPadding(int new_d){
     }
 }
 
-void Point::assign(Point *cluster){
+void Point::setCluster(Cluster *cluster){
     this->cluster = cluster;
 }
 
-Point *Point::getCentroid(){
+Cluster *Point::getCluster(){
     return this->cluster;
 }
