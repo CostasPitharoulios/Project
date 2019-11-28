@@ -105,40 +105,6 @@ int Clustering::initKMeanspp(){
     }
 }
 
-#if 0
-bool Clustering::assign(Cluster *cluster, void *item){
-    // Find whether the item was in a different cluster or not
-    bool changed=false;
-    if(!curvesFlag){
-        if(((Point*)item)->getCluster() != cluster)
-            changed=true;
-    }else{
-        if(((Curve*)item)->getCluster() != cluster)
-            changed=true;
-    }
-
-    if(!changed)
-        return false;
-
-    // Remove it from the previous cluster
-    if(!curvesFlag)
-        ((Point*)item)->getCluster()->removeItem(((Point*)item)->getId());
-    else
-        ((Curve*)item)->getCluster()->removeItem(((Curve*)item)->getId());
-
-    // Add it to the new cluster
-    cluster->addItem(item);
-
-    // Save its cluster
-    if(!curvesFlag)
-        ((Point*)item)->setCluster(cluster);
-    else
-        ((Curve*)item)->setCluster(cluster);
-
-    return true;
-}
-#endif
-
 int Clustering::assignLloyd(){
     cout << "Assigning to clusters..." << endl;
 
