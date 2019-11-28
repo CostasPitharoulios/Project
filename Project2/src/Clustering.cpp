@@ -2,18 +2,17 @@
 #include <iostream>
 #include <limits>
 #include <random>
+#include <unistd.h>
 #include "../include/Clustering.hpp"
 #include "../include/dist.hpp"
 
 using namespace std;
 
 Clustering::Clustering(bool curvesFlag, vector<void*> dataset, int n_clusters, string i, string a, string u):curvesFlag(curvesFlag),dataset(dataset),n_clusters(n_clusters),initMethod(i),assignMethod(a),updateMethod(u){
-    cout << "New instance of Clustering(" << initMethod << "," << assignMethod << "," << updateMethod << ")\n";
+    //cout << "New instance of Clustering(" << initMethod << "," << assignMethod << "," << updateMethod << ")\n";
 }
 
 int Clustering::initRandom(){
-    cout << "Random initialization..." << endl;
-
     centroids.clear();
 
     // Shuffle the dataset into a new vector
@@ -42,7 +41,7 @@ int Clustering::initKMeanspp(){
     // 4. Repeat for the rest of the Centroids
     //=======================================================================================
     
-    cout << "Kmeans++ is here bitchessss" << endl;
+    //cout << "Kmeans++ is here bitchessss" << endl;
     
     // check if the number of clusters given is greater than zero
     if (n_clusters <= 0){
@@ -106,8 +105,7 @@ int Clustering::initKMeanspp(){
 }
 
 int Clustering::assignLloyd(){
-    cout << "Assigning to clusters..." << endl;
-
+    int changed = 0; // Counts how many items changed cluster
     // For every item
     for(int j=0; j<dataset.size(); j++){
 
@@ -136,12 +134,16 @@ int Clustering::assignLloyd(){
                     }
                 }
             }
-            clusters.at(pos)->assign(dataset.at(j));
+
+            // Assign point to cluster
+            if(clusters.at(pos)->assign(dataset.at(j)))
+                changed++;
 
             //TODO if old cluster == new cluster, dont make assignment.. else do, and count them and return the count
             //if(curvesFlag) cout << "Closest: " <<((Curve*)dataset.at(j))->getCentroid()->getId() << " with distance " << min   <<  endl;
         }
     }
+    return changed;
 }
 
 bool Clustering::isCentroid(void* item){
@@ -206,6 +208,12 @@ int Clustering::updateMean(){
 }
 
 int Clustering::KMeans(){
+    if(!curvesFlag)
+        cout << "Starting KMeans for Points ";
+    else
+        cout << "Starting KMeans for Curves ";
+    cout << "with initMethod=" << initMethod << ", assignMethod=" << assignMethod << ", updateMethod=" << updateMethod << "\n";
+
     // Initialization
     if (!initMethod.compare("random")){
         initRandom();
@@ -218,33 +226,45 @@ int Clustering::KMeans(){
 
     cout << "Initial Centroids:" << endl;
     printCentroids();
-
-    // Assignment
-    if (!assignMethod.compare("lloyd")){
-        assignLloyd();
-    }else if (!assignMethod.compare("reverse")){
-        assignReverse();
-    }else{
-        cout << "Unknown assignMethod" << endl;
-        return -1;
-    }
-
-    cout << "Clusters after assignment:" << endl;
-    printClusters();
     cout << endl;
+    
+    int changed=-1, it=1;
+    while(changed){
 
-    // Update
-    if (!updateMethod.compare("pam")){
-        updatePAM();
-    }else if (!updateMethod.compare("mean")){
-        updateMean();
-    }else{
-        cout << "Unknown updateMethod" << endl;
-        return -1;
+        // Assignment
+        
+        cout << "Assigning items..." << endl;
+        if (!assignMethod.compare("lloyd")){
+            changed = assignLloyd();
+        }else if (!assignMethod.compare("reverse")){
+            changed = assignReverse();
+        }else{
+            cout << "Unknown assignMethod" << endl;
+            return -1;
+        }
+
+
+        // Update
+        cout << "Updating clusters..." << endl;
+        if (!updateMethod.compare("pam")){
+            updatePAM();
+        }else if (!updateMethod.compare("mean")){
+            updateMean();
+        }else{
+            cout << "Unknown updateMethod" << endl;
+            return -1;
+        }
+
+
+        cout << "Iteration " << it << " complete." << endl;
+        for(int i=0; i<clusters.size(); i++)
+            clusters.at(i)->printStats();
+        cout << "(" << changed << " items changed clusters)" << endl << endl;
+
+        //sleep(1);
+        it++;
     }
 
-    cout << "Centroids after update:" << endl;
-    printCentroids();
 }
 
 void Clustering::printCentroids(){
@@ -266,7 +286,6 @@ void Clustering::printClusters(){
     for(int i=0; i<clusters.size(); i++){
         cout << "Cluster of " << clusters.at(i)->getId() << ": "<<  endl;
         clusters.at(i)->printItems();
-        
     }
 }
 
@@ -344,7 +363,7 @@ double Clustering::getValueDTW(Curve* queryCurve,Curve* inputCurve){
 #endif
 
 Cluster::Cluster(int id, void *centroid, bool curvesFlag):id(id),centroid(centroid), curvesFlag(curvesFlag){
-    cout << "New Cluster with id " << id << endl;
+    //cout << "New Cluster with id " << id << endl;
     assign(centroid);
 }
 
@@ -385,7 +404,6 @@ bool Cluster::assign(void *item){
 }
 
 bool Cluster::removeItem(string id){
-    cout << "items size: " << items.size() << endl;
     for(int i=0; i<items.size(); i++){
         if(!curvesFlag)
             if(((Point*)items.at(i))->getId() == id){
@@ -421,6 +439,15 @@ vector<void*> Cluster::getItems(){
 
 int Cluster::getId(){
     return id;
+}
+
+void Cluster::printStats(){
+    cout << "Cluster " << id << ":  size: " << items.size();
+    if(!curvesFlag)
+        cout << "  centroid: " << ((Point*)centroid)->getId() << endl;
+    else
+        cout << "  centroid: " << ((Curve*)centroid)->getId() << endl;
+        
 }
 
 void Cluster::printItems(){

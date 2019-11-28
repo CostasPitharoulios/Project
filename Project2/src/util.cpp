@@ -20,13 +20,11 @@ void readDataset(string inputFile, vector<void*> &dataset, bool &curvesFlag){
 
     // Read the first line
     //Point p1;
-    curvesFlag = false;
     if(getline(in,str)){
         if(!str.compare("vectors")){
-            cout << "Its all about vectors" << endl;
+            curvesFlag = false;
         }
         else if(!str.compare("curves")){
-            cout << "Its all about Curves" << endl;
             curvesFlag = true;
         }
         else{
