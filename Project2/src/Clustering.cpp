@@ -264,7 +264,6 @@ int Clustering::KMeans(){
         //sleep(1);
         it++;
     }
-
 }
 
 void Clustering::printCentroids(){
