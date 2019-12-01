@@ -91,6 +91,10 @@ Cluster *Point::getCluster(){
     return this->cluster;
 }
 
+Cluster *Point::getPreviousCluster(){
+    return this->previousCluster;
+}
+
 void Point::setDist(double dist){
     this->dist=dist;
 }
@@ -109,5 +113,6 @@ bool Point::getChanged(){
 
 void Point::prepareAssignment(){
     this->clusterChanged=false;
+    this->previousCluster=this->cluster;
     dist=-1;
 }

@@ -15,6 +15,7 @@ class Point{
         Curve *origin; // Curve from which this point is originated(in case of LSHC)
         // For the reverse assignment
         bool clusterChanged;
+        Cluster *previousCluster;
         double dist;
     public:
         Point(string id="-1");
@@ -40,4 +41,5 @@ class Point{
         void addPadding(int new_d); // Add 0's to reach new_d dimensions
         void setCluster(Cluster *);
         Cluster *getCluster();
+        Cluster *getPreviousCluster();
 };

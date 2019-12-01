@@ -170,7 +170,7 @@ int Clustering::assignReversePoints(LSH *lsh){
 
     // Count changes
     for(int i=0; i<dataset.size(); i++)
-        if(((Point*)dataset.at(i))->getChanged())
+        if(((Point*)dataset.at(i))->getCluster()!=((Point*)dataset.at(i))->getPreviousCluster())
             changed++;
 
     // For the points that didnt fall in the same bucket as a centroid, use Lloyd's
