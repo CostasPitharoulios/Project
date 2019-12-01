@@ -13,6 +13,9 @@ class Point{
         vector<double> listOfCoordinates;
         Cluster *cluster;
         Curve *origin; // Curve from which this point is originated(in case of LSHC)
+        // For the reverse assignment
+        bool clusterChanged;
+        double dist;
     public:
         Point(string id="-1");
         void addCoordinate(double x);
@@ -20,6 +23,11 @@ class Point{
         void setId(string x);
         int getD();
         void setD(int dim);
+        void setDist(double dist);
+        double getDist();
+        void setChanged();
+        bool getChanged();
+        void prepareAssignment();
         void printPoint();
         double getCoordinate(int i);
         vector<double> getCoordinates();

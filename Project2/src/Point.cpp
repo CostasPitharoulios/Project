@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Point::Point(string id):d(0),id(id){
+Point::Point(string id):d(0),id(id),clusterChanged(false){
     //printf("Point was created\n");
     cluster = nullptr;
 }
@@ -89,4 +89,25 @@ void Point::setCluster(Cluster *cluster){
 
 Cluster *Point::getCluster(){
     return this->cluster;
+}
+
+void Point::setDist(double dist){
+    this->dist=dist;
+}
+
+double Point::getDist(){
+    return this->dist;
+}
+
+void Point::setChanged(){
+    this->clusterChanged=true;
+}
+
+bool Point::getChanged(){
+    return this->clusterChanged;
+}
+
+void Point::prepareAssignment(){
+    this->clusterChanged=false;
+    dist=-1;
 }
