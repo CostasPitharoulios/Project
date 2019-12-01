@@ -2,6 +2,7 @@
 #include <vector>
 
 class Cluster;
+class Curve;
 
 using namespace std;
 
@@ -11,6 +12,7 @@ class Point{
         int d; // Dimensions
         vector<double> listOfCoordinates;
         Cluster *cluster;
+        Curve *origin; // Curve from which this point is originated(in case of LSHC)
     public:
         Point(string id="-1");
         void addCoordinate(double x);
@@ -21,6 +23,8 @@ class Point{
         void printPoint();
         double getCoordinate(int i);
         vector<double> getCoordinates();
+        Curve *getOrigin();
+        void setOrigin(Curve *ptr);
         void setX(double x);
         void setY(double y);
         double getX();

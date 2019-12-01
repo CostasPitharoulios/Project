@@ -4,6 +4,8 @@
 #include "Point.hpp"
 #include "Curve.hpp"
 #include "dist.hpp"
+#include "LSH.hpp"
+
 using namespace std;
 
 class Cluster;
@@ -31,14 +33,15 @@ class Clustering{ // TODO name it KMeans? and the function: fit
         int initRandom();
         int initKMeanspp();
         int assignLloyd();
-        int assignReverse();
+        int assignReversePoints(LSH *);
+        int assignReverseCurves();
         int updatePAM();
         int updateMean();
 
         // Assisting functions
-        bool isCentroid(void* item);
         void printCentroids();
         void printClusters();
+        int getD();
         double pamCost(vector<void*> items,int centroidIndex);
 };
 

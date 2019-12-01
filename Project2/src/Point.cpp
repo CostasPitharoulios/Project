@@ -75,6 +75,14 @@ void Point::addPadding(int new_d){
     }
 }
 
+void Point::setOrigin(Curve *ptr){
+    this->origin=ptr;
+}
+
+Curve *Point::getOrigin(){
+    return origin;
+}
+
 void Point::setCluster(Cluster *cluster){
     this->cluster = cluster;
 }

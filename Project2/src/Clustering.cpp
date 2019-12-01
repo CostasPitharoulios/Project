@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include "../include/Clustering.hpp"
 #include "../include/dist.hpp"
+#include "../include/util.hpp"
+#include "../include/LSH.hpp"
 
 using namespace std;
 
@@ -112,7 +114,7 @@ int Clustering::assignLloyd(){
         //if(curvesFlag) cout << "We at ::" <<((Curve*)dataset.at(j))->getId()  <<  endl;
 
         // If its not centroid
-        if(!isCentroid(dataset.at(j))){
+        if(!isCentroid(dataset.at(j),curvesFlag)){
             // Find the centroid with the least distance and assign it
             double min = numeric_limits<double>::max();
             int pos = -1;
@@ -146,23 +148,21 @@ int Clustering::assignLloyd(){
     return changed;
 }
 
-bool Clustering::isCentroid(void* item){
-    if(!curvesFlag)
-        if(((Point*)item)->getCluster() == nullptr)
-            return false;
-        else
-            return (((Point*)item)->getCluster()->getCentroid() == item);
-    else
-        if(((Curve*)item)->getCluster() == nullptr)
-            return false;
-        else
-            return (((Curve*)item)->getCluster()->getCentroid() == item);
-}
-
-int Clustering::assignReverse(){
+int Clustering::assignReversePoints(LSH *lsh){
     cout << "Assign Reverse coming soon..." << endl;
+    for(int i=0; i<clusters.size(); i++){
+        cout << "Centroid " << i << endl;
+        lsh->assignBucket((Point*)(clusters.at(i)->getCentroid()));
+        //////
+        //break;
+        //////
+    }
 }
 
+int Clustering::assignReverseCurves(){
+    cout << "Assign Reverse for curves coming soon... For now, using Lloyd" << endl; //TODO
+    return assignLloyd();
+}
 
 double Clustering::pamCost(vector<void*> items,int centroidIndex){
     double sum = 0;
@@ -194,7 +194,8 @@ int Clustering::updatePAM(){
                 minIndex=centroidIndex;
             }
         }
-        //cout << "MinCost: " << minCost << " MinIndex: " << minIndex << endl;
+        cout << "items.size():" << items.size() << endl;
+        cout << "MinCost: " << minCost << " MinIndex: " << minIndex << endl;
 
         // If a better centroid was found
         if(items.at(minIndex) != clusters.at(i)->getCentroid()){
@@ -227,17 +228,34 @@ int Clustering::KMeans(){
     cout << "Initial Centroids:" << endl;
     printCentroids();
     cout << endl;
+
+    // In case of reverse assignment, initialize LSH
+    LSH *lsh;
+    if (!assignMethod.compare("reverse")){
+        if(!curvesFlag){
+            int k=4, L=5, w=40; // TODO cmd arguments (default w 4000?)
+            lsh = new LSH(w, getD(), k, L, -1);
+            for(int i=0; i<dataset.size(); i++)
+                lsh->insert(*((Point*)dataset.at(i)));
+        }
+        else{
+            cout << "TODO initialize LSHC\n" << endl; //TODO
+        }
+    }
     
     int changed=-1, it=1;
     while(changed){
 
-        // Assignment
         
+        // Assignment
         cout << "Assigning items..." << endl;
         if (!assignMethod.compare("lloyd")){
             changed = assignLloyd();
         }else if (!assignMethod.compare("reverse")){
-            changed = assignReverse();
+            if(!curvesFlag)
+                changed = assignReversePoints(lsh);
+            else
+                changed = assignReverseCurves();
         }else{
             cout << "Unknown assignMethod" << endl;
             return -1;
@@ -261,9 +279,24 @@ int Clustering::KMeans(){
             clusters.at(i)->printStats();
         cout << "(" << changed << " items changed clusters)" << endl << endl;
 
+        //gia debuging
+        cout << "::Clusters:" << endl;
+        printClusters();
+
         //sleep(1);
         it++;
+
+        //////////////
+        break;
+        //////////////
     }
+}
+
+int Clustering::getD(){
+    if(!curvesFlag)
+        return ((Point*)dataset.at(0))->getD();
+    else
+        return -1;
 }
 
 void Clustering::printCentroids(){

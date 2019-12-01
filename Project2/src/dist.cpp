@@ -79,3 +79,14 @@ double getValueDTW(Curve *queryCurve,Curve *inputCurve){
 double distance(double x1, double x2, double y1, double y2){
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
 }
+
+double getDTWfromPoints(Point* pointA, Point* pointB){
+    Curve *originA;     // stores the pointer to origin curve of point a
+    Curve *originB;     // stores the pointer to origin curve of point b
+    
+    originA = pointA->getOrigin();
+    originB = pointB->getOrigin();
+    
+    return getValueDTW(originA, originB);
+}
+
