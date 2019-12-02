@@ -2,13 +2,13 @@
 #include <iostream>
 #include <limits>
 #include <math.h>
-#include "../Point.hpp"
-#include "../dist.hpp"
+#include "../include/Point.hpp"
+#include "../include/dist.hpp"
 
 using namespace std;
 
 Grid::Grid(double delta, int d, vector<double> t):delta(delta){
-    cout << "New grid : delta=" << delta << ", t1=" << t.at(0) << ", t2=" << t.at(1) << endl;
+    //cout << "New grid : delta=" << delta << ", t1=" << t.at(0) << ", t2=" << t.at(1) << endl;
     this->t = t;
 }
 

@@ -3,12 +3,12 @@
 #include <random>
 #include <set>
 #include <sstream>
-#include "CurveHashing.hpp"
-#include "Curve.hpp"
-#include "Grid.hpp"
-#include "../Point.hpp"
-#include "../dist.hpp"
-#include "../util.hpp"
+#include "../include/CurveHashing.hpp"
+#include "../include/Curve.hpp"
+#include "../include/Grid.hpp"
+#include "../include/Point.hpp"
+#include "../include/dist.hpp"
+#include "../include/util.hpp"
 
 using namespace std;
 
@@ -30,6 +30,7 @@ LSHC::~LSHC(){
     }
 }
 
+#if 0
 HCC::HCC(int w, double delta, int d,int k, int L, int dd, int probes, int M):CurveHashing(w,delta,d,k,L), dd(dd), probes(probes), M(M){}
 
 HCC::~HCC(){
@@ -38,6 +39,7 @@ HCC::~HCC(){
         delete hc.at(i);
     }
 }
+#endif
 
 CurveHashing::CurveHashing(int w,double delta, int d, int k, int L):d(d), L(L), w(w), k(k){
    
@@ -219,7 +221,7 @@ void CurveHashing::answerQuery(Curve *aCurve, string hf,ofstream& out){
 
 Point* CurveHashing::vectorCurveToPoint(Curve* hashedCurve, Curve *origin){
     Point* newPoint;
-    newPoint = new Point(stoi(origin->getId()));  // creating a new point to represent vector of curve with the same id as the curve
+    newPoint = new Point(origin->getId());  // creating a new point to represent vector of curve with the same id as the curve
     
     int numberOfCords = hashedCurve->getNumberOfCoordinates(); //in order to know how many points there are in the vector of hashed Curve
 
@@ -349,6 +351,7 @@ Curve *LSHC::nearestNeighbourCurve(Curve *query, double& min_dist){
     return nn->getOrigin();
 }
 
+#if 0
 void HCC::hashAll(){
     int maxD = maxCurveLength();
     //cout << "MaxD:" << maxD << endl;
@@ -435,6 +438,7 @@ Curve *HCC::nearestNeighbourCurve(Curve *query, double &min_dist){
     min_dist = min; 
     return nn->getOrigin();
 }
+#endif
 
 
 void CurveHashing::printAllCurves(){
