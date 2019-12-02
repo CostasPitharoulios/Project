@@ -49,6 +49,10 @@ void Curve::setNumberOfCoordinates(int number){
     //numberOfCoordinates = number; //TODO del
 }
 
+void Curve::setNumber(int number){
+    numberOfCoordinates = number;
+}
+
 int Curve::getNumberOfCoordinates(void){
     return numberOfCoordinates;
 } 
@@ -58,6 +62,14 @@ double Curve::getSpecificXCoord(int position){
 
 double Curve::getSpecificYCoord(int position){
     return listOfCoordinates.at(position)->getY();
+}
+
+void Curve::setSpecificXCoord(int position, double x){
+    return listOfCoordinates.at(position)->changeX(x);
+}
+
+void Curve::setSpecificYCoord(int position, double y){
+    return listOfCoordinates.at(position)->changeY(y);
 }
 
 void Curve::printCoordinates(){
@@ -82,4 +94,17 @@ vector<Point*> Curve:: getListOfCoordinates(void){
 
 void Curve::setListOfCoordinates(vector <Point*> newListOfCoordinates){
     this->listOfCoordinates = newListOfCoordinates;
+}
+
+/*Curve* Curve::copyCurve(Curve* beforeCurve){
+    Curve* destCurve = new Curve;
+    for (int i=0; i< beforeCurve->getListOfCoordinates().size(); i++){
+        destCurve->listOfCoordinates.push_back(beforeCurve->getListOfCoordinates().at(i));
+    }
+    destCurve->numberOfCoordinates = beforeCurve->numberOfCoordinates;
+    destCurve->cluster = beforeCurve->cluster;
+}*/
+
+Point* Curve::getSpecificPoint(int position){
+    return listOfCoordinates.at(position);
 }

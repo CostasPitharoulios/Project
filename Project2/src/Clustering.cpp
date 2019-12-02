@@ -239,38 +239,16 @@ int Clustering::updatePAM(){
 int Clustering::updateMean(){
     cout << "updateMean is here bitcheeees" << endl;
     
-    cout << "\n\n\nBegining of test" << endl;
-    cout << "=======================\n\n" << endl;
+  
     
     for (int cl=0; cl < clusters.size(); cl++){              // for each cluster
+        
+        
+        // -------------------------------------------------------------
+        // first of all we are calculating lamda
+        // -------------------------------------------------------------
+        
         vector<void*> items = clusters.at(cl)->getItems();  // getting all items of cluster
-        //vector<Curve*> itemCurve = items;
-        int n = items.size();                               // n keeps the number of items of cluster
-        int sumOfLengths = 0;
-        for (int i=0; i<n; i++){
-            Curve* itemCurve;
-            itemCurve = (Curve*) items.at(i);
-            sumOfLengths += itemCurve->getNumberOfCoordinates(); // adds the number of coordinates of curve to the sum of coordinates of all curves of cluster
-        }
-        
-        
-        
-        getValueDTW((Curve*) items.at(0), (Curve*) items.at(1));
-        
-        cout << sumOfLengths << endl;
-    }
-    
-    
-    
-    cout << "\n\n\nEnd of test" << endl;
-    cout << "=======================\n\n" << endl;
-    
-    
-    
-    
-    for (int cl=0; cl < clusters.size(); cl++){              // for each cluster
-        vector<void*> items = clusters.at(cl)->getItems();  // getting all items of cluster
-       //vector<Curve*> itemCurve = items;
         int n = items.size();                               // n keeps the number of items of cluster
         int sumOfLengths = 0;
         for (int i=0; i<n; i++){
@@ -280,9 +258,8 @@ int Clustering::updateMean(){
         }
       
         int lamda = sumOfLengths/n;                         // calculating lamda
-       
         
-        
+
         // -------------------------------------------------------------
         // here we are going to find a random sequence with length >=0
         // in order to initialize C
@@ -300,57 +277,102 @@ int Clustering::updateMean(){
                 oversizedC =(Curve*) items.at(randomI);
             }
         }
+
         // -------------------------------------------------------------
-
-        Curve* C;
-        C=oversizedC;                                           // holds a pointer to C
-
-        // Shuffle the C listOfCoordinates with length>=lamda into a new vector
-        vector<Point*> shuffledOversizedC = oversizedC->getListOfCoordinates();
+        // going to shuffle C and take lamda random points
+        // -------------------------------------------------------------
+        Curve* C = new Curve();
+        C->setNumberOfCoordinates(oversizedC->getNumberOfCoordinates());
+        for (int i=0; i<oversizedC->getNumberOfCoordinates(); i++){
+            C->listOfCoordinates.push_back(oversizedC->getListOfCoordinates().at(i));
+        }
+        
+        vector<Point*> shuffledOversizedC = C->getListOfCoordinates();
         random_device rd;
         default_random_engine rng(rd());
         shuffle(begin(shuffledOversizedC), end(shuffledOversizedC), rng);
-        
+         
         // Pick the first k elements from the shuffled vector
         shuffledOversizedC.resize(lamda);
-        
-       // C->listOfCoordinates.clear();
         C->setListOfCoordinates(shuffledOversizedC);
-        C->setNumberOfCoordinates(lamda);
+        C->setNumber(lamda);
         
-        vector<Point*> arrayA; // Array of lamda pointsets
-        for (int i=0; i<n; i++){
+        
+        
+        // -------------------------------------------------------------
+        // repeatedly calculate C since it does not change much
+        // -------------------------------------------------------------
+        while(1){
             
-            //if (i == randomI)
-                //continue;
-            vector<Point*> setIPairs; // this keeps index-pairs of best traversal(C,Si)
-            Curve* itemCurve;
-            itemCurve = (Curve*) items.at(i);
-           
-            setIPairs = getBestTraversalDTW(C,itemCurve);
-            cout << "LENGTH: " << setIPairs.size() << endl;
-            for (int k=0; k< setIPairs.size(); k++)
-            {
-                cout <<"LETS SEE: " << setIPairs.at(k)->getX() << " " << setIPairs.at(k)->getY() << endl;
+            
+            // storing C Curve to tempC
+            Curve* tempC = new Curve();
+            tempC->setNumberOfCoordinates(C->getNumberOfCoordinates());
+            for (int i=0; i<C->getNumberOfCoordinates(); i++){
+                Point* newPoint = new Point();
+                newPoint->setId(C->getListOfCoordinates().at(i)->getId());
+                newPoint->setD(C->getListOfCoordinates().at(i)->getD());
+                newPoint->setX(C->getListOfCoordinates().at(i)->getX());
+                newPoint->setY(C->getListOfCoordinates().at(i)->getY());
+                newPoint->setCluster(C->getCluster());
+                
+                tempC->listOfCoordinates.push_back(newPoint);
             }
             
-            if (i==1)
-                break;
-            
-            
-            
-        }
 
+            vector< vector<Point*> > arrayA(lamda); // Array of lamda pointsets
+            for (int i=0; i<n; i++){
+                vector<Point*> setIPairs; // this keeps index-pairs of best traversal(C,Si)
+                
+                Curve* itemCurve;
+                itemCurve = (Curve*) items.at(i);
+                setIPairs = getBestTraversalDTW(C,itemCurve); // gets the pointers to best traversal points
         
+                
+                for (int j=0; j< setIPairs.size(); j++){
+                    int x = setIPairs.at(j)->getX();
+                    int y = setIPairs.at(j)->getY();
+                    Point* tempPoint = itemCurve->getSpecificPoint(y);
+                    arrayA[x].push_back(tempPoint);
+                }
+            
+            }
+
+            
+            for (int j=0; j<lamda; j++){
+                double sumX = 0.0;
+                double sumY = 0.0;
+                for (int i=0; i< arrayA[j].size(); i++){
+                    sumX += arrayA[j][i]->getX();
+                    sumY += arrayA[j][i]->getY();
+                }
+                double avX, avY;
+                avX = sumX / (double)arrayA[j].size();
+                avY = sumY / (double)arrayA[j].size();
+                
+                C->setSpecificXCoord(j, avX);
+                C->setSpecificYCoord(j, avY);
+                
+            }
         
+     
+            
+            
+            if (getValueDTW(C, tempC) < 0.10){
+                cout << "\n\n\n\n END OF REPEAT!!! \n\n\n\n" << endl;
+                break;
+            }
+            
         
+        } // end of while loop
+        clusters.at(cl)->setCentroid(C);
         
         // NOTE: AT THE END WE CAN UPDATE THE NEW CENTROID TO ALL ITEMS OF CLUSTER
-        
+
     }
     
 
-    
+
     
     
 }
@@ -438,63 +460,7 @@ double Clustering::manhattanDistance(vector<double> a, vector<double> b){
     return dist;
 }
 
-#if 0
-// TODO del
-#if 0
-double Clustering::getValueDTW(Curve* queryCurve,Curve* inputCurve){
-    int m1,m2;
-    m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
-    m2 = inputCurve->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
-    
-    double arrayDTW[m1][m2];
-    
-    
-    // initialization  first line
-    double previousSum = 0.0; // keeps the sum of previous items
-    double x1,y1; // cordinates of first point of query curve
-    x1 = queryCurve->getSpecificXCoord(0);
-    y1 = queryCurve->getSpecificYCoord(0);
-    for (int i=0; i< m2; i++){
-        double x2,y2;
-        x2 = inputCurve->getSpecificXCoord(i);
-        y2 = inputCurve->getSpecificYCoord(i);
-        arrayDTW[0][i] = previousSum + distance(x1,x2,y1,y2);
-        
-        previousSum += arrayDTW[0][i];
-    }
-    
-    //initializing first column
-    previousSum = arrayDTW[0][0];
-    double x2, y2;
-    x2 = inputCurve->getSpecificXCoord(0);
-    y2 = inputCurve->getSpecificYCoord(0);
-    for (int i=1; i<m1; i++){
-        x1 = queryCurve->getSpecificXCoord(i);
-        y1 = queryCurve->getSpecificYCoord(i);
-        arrayDTW[i][0] = previousSum + distance(x1,x2,y1,y2);
-        
-        previousSum += arrayDTW[i][0];
-    }
-    
-    for (int i=1; i<m1; i++ ){
-        for (int j=1; j<m2; j++){
-            x1 = queryCurve->getSpecificXCoord(i);
-            x2 = inputCurve->getSpecificXCoord(j);
-            y1 = queryCurve->getSpecificYCoord(i);
-            y2 = inputCurve->getSpecificYCoord(j);
-            arrayDTW[i][j] = min(min(arrayDTW[i-1][j],arrayDTW[i-1][j-1]), arrayDTW[i][j-1]) + distance(x1,x2,y1,y2);
-        }
-    }
-    
-    //cout << "dtw of curve is: " << arrayDTW[m1-1][m2-1];
-    
-    return arrayDTW[m1-1][m2-1];
-    
-    
-}
-#endif
 
-#endif
 
 Cluster::Cluster(int id, void *centroid, bool curvesFlag):id(id),centroid(centroid), curvesFlag(curvesFlag){
     cout << "New Cluster with id " << id << endl;
@@ -586,5 +552,6 @@ void Cluster::printItems(){
     }
     cout << endl;
 }
+
 
 

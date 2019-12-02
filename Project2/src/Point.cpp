@@ -54,6 +54,17 @@ void Point::setY(double Y){
     listOfCoordinates.push_back(Y);
 }
 
+void Point::changeX(double X){
+    listOfCoordinates.at(0) = X;
+}
+
+void Point::changeY(double Y){
+    //listOfCoordinates.push_back(Y);
+    listOfCoordinates.at(1) = Y;
+    
+}
+
+
 
 double Point::getX(void){
     return listOfCoordinates[0];

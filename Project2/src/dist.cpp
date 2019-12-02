@@ -30,7 +30,7 @@ double getValueDTW(Curve *queryCurve,Curve *inputCurve){
     m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
     m2 = inputCurve->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
 
-    cout << "m1 = " << m1 << " m2 = " << m2 << endl;
+    //cout << "m1 = " << m1 << " m2 = " << m2 << endl;
     
     double arrayDTW[m1][m2];
     
@@ -72,29 +72,19 @@ double getValueDTW(Curve *queryCurve,Curve *inputCurve){
         }
     }
     
-    
-    cout << "\n\n\nDTW ARRAY CHECK!!!!!\n\n" << endl;
-    for (int i=0; i< m1; i++){
-        for (int j=0; j< m2; j++){
-            cout << arrayDTW[i][j] << " ";
-        }
-        cout << endl;
-    }
-    
-    //cout << "dtw of curve is: " << arrayDTW[m1-1][m2-1];
-    
+
     return arrayDTW[m1-1][m2-1];
     
 }
 
 vector <Point*> getBestTraversalDTW(Curve *queryCurve,Curve *inputCurve){
-    cout << "HELLOOOOOOOOO2" << endl;
+   // cout << "HELLOOOOOOOOO2" << endl;
     int m1,m2;
     
     m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
     m2 = inputCurve->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
     
-    cout << "m1 = " << m1 << " m2 = " << m2 << endl;
+    //cout << "m1 = " << m1 << " m2 = " << m2 << endl;
     
     vector<Point*> setIPairs;
     
@@ -107,7 +97,7 @@ vector <Point*> getBestTraversalDTW(Curve *queryCurve,Curve *inputCurve){
     
     setIPairs.push_back(aPoint);
     
-    cout << "SKATA" << endl;
+    //cout << "SKATA" << endl;
     
     
     // initialization  first line
@@ -137,8 +127,8 @@ vector <Point*> getBestTraversalDTW(Curve *queryCurve,Curve *inputCurve){
         previousSum += arrayDTW[i][0];
     }
     
-    cout << "\nDTW ARRAY:" << endl;
-    
+   // cout << "\nDTW ARRAY:" << endl;
+   /*
     for (int i=1; i<m1; i++ ){
         for (int j=1; j<m2; j++){
             x1 = queryCurve->getSpecificXCoord(i);
@@ -147,19 +137,19 @@ vector <Point*> getBestTraversalDTW(Curve *queryCurve,Curve *inputCurve){
             y2 = inputCurve->getSpecificYCoord(j);
             arrayDTW[i][j] = min(min(arrayDTW[i-1][j],arrayDTW[i-1][j-1]), arrayDTW[i][j-1]) + distance(x1,x2,y1,y2);
         }
-    }
+    }*/
     
-    for (int i=0; i< m1; i++){
+    /*for (int i=0; i< m1; i++){
         for (int j=0; j< m2; j++){
             cout << arrayDTW[i][j] << " ";
         }
         cout << endl;
     }
-    
+    */
     
     int i = 0;
     int j = 0;
-    cout << "hELLO" << endl;
+    //cout << "hELLO" << endl;
     while (1){
         int min1, min2;
         int finalX, finalY;
@@ -200,7 +190,7 @@ vector <Point*> getBestTraversalDTW(Curve *queryCurve,Curve *inputCurve){
         i = finalX;
         j = finalY;
         
-        cout << "new i: " << i << " new j: " << j << endl;
+       // cout << "new i: " << i << " new j: " << j << endl;
         
         Point* newPoint = new Point();
         newPoint->setX((double)finalX);
@@ -211,7 +201,7 @@ vector <Point*> getBestTraversalDTW(Curve *queryCurve,Curve *inputCurve){
     //cout << "dtw of curve is: " << arrayDTW[m1-1][m2-1];
     
     //return arrayDTW[m1-1][m2-1];
-    cout << "BYE" << endl;
+    //cout << "BYE" << endl;
     
     return setIPairs;
     
