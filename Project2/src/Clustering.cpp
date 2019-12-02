@@ -208,7 +208,7 @@ int Clustering::updateMean(){
     cout << "updateMean is here bitcheeees" << endl;
     
   
-    
+    int counter = 0; // this counts new centroids and we use it to make new ids of centroids
     for (int cl=0; cl < clusters.size(); cl++){              // for each cluster
         
         
@@ -219,107 +219,154 @@ int Clustering::updateMean(){
         vector<void*> items = clusters.at(cl)->getItems();  // getting all items of cluster
         int n = items.size();                               // n keeps the number of items of cluster
         int sumOfLengths = 0;
+        
+        
         for (int i=0; i<n; i++){
-            Curve* itemCurve;
-            itemCurve = (Curve*) items.at(i);
-            sumOfLengths += itemCurve->getNumberOfCoordinates(); // adds the number of coordinates of curve to the sum of coordinates of all curves of cluster
+            if(curvesFlag){ // if we have Curves
+                Curve* itemCurve;
+                itemCurve = (Curve*) items.at(i);
+                sumOfLengths += itemCurve->getNumberOfCoordinates(); // adds the number of coordinates of curve to the sum of coordinates of all curves of cluster
+            }
+            else{ // if we have Point
+                Point* itemPoint;
+                itemPoint = (Point*) items.at(i);
+                sumOfLengths += itemPoint->getD();
+            }
         }
       
         int lamda = sumOfLengths/n;                         // calculating lamda
-        
+        cout << "Lamda = " << lamda << endl;
 
         // -------------------------------------------------------------
-        // here we are going to find a random sequence with length >=0
+        // here we are going to find a random sequence with length >= lamda
         // in order to initialize C
         // -------------------------------------------------------------
-        int randomI= rand()%n;
-        Curve* oversizedC;                                  // holds a pointer to the random item with legth >= lamda
-        oversizedC = (Curve*) items.at(randomI);
-        while (1){
-            if ( oversizedC->getNumberOfCoordinates() >= lamda)
-            {
-                break;
+       
+       
+       // Point* oversizedP;
+        if(curvesFlag){ // if we have Curves
+            int randomI= rand()%n;
+            Curve* oversizedC; // holds a pointer to the random item with legth >= lamda
+            oversizedC = (Curve*) items.at(randomI);
+            while (1){
+                if ( oversizedC->getNumberOfCoordinates() >= lamda)
+                    break;
+                else{
+                    randomI = rand()%n;
+                    oversizedC =(Curve*) items.at(randomI);
+                }
             }
-            else{
-                randomI = rand()%n;
-                oversizedC =(Curve*) items.at(randomI);
-            }
-        }
+
 
         // -------------------------------------------------------------
         // going to shuffle C and take lamda random points
         // -------------------------------------------------------------
- 
-        Curve* C;
-        C = oversizedC->copyCurve();
-        
-        vector<Point*> shuffledOversizedC = C->getListOfCoordinates();
-        random_device rd;
-        default_random_engine rng(rd());
-        shuffle(begin(shuffledOversizedC), end(shuffledOversizedC), rng);
-         
-        // Pick the first k elements from the shuffled vector
-        shuffledOversizedC.resize(lamda);
-        C->setListOfCoordinates(shuffledOversizedC);
-        C->setNumber(lamda);
-        
-        
+     
+            Curve* C;
+            //C = oversizedC->copyCurve();
+            C = oversizedC->dublicateCurve();
+            
+            vector<Point*> shuffledOversizedC = C->getListOfCoordinates();
+            random_device rd;
+            default_random_engine rng(rd());
+            shuffle(begin(shuffledOversizedC), end(shuffledOversizedC), rng);
+            
+            // Pick the first k elements from the shuffled vector
+            shuffledOversizedC.resize(lamda);
+            C->setListOfCoordinates(shuffledOversizedC);
+            C->setNumber(lamda);
+            
+            string newId = "NEWid";
+            newId += to_string(counter);
+            counter++;
+            C->setId(newId);
+   
         
         // -------------------------------------------------------------
         // repeatedly calculate C since it does not change much
         // -------------------------------------------------------------
-        while(1){
-            
-            
-            // storing C Curve to tempC - this is a dublicate with new points
-            Curve* tempC = C->dublicateCurve();
-            
+        
+            while(1){
+                // storing C Curve to tempC - this is a dublicate with new points
+                Curve* tempC = C->dublicateCurve();
+                
 
-            vector< vector<Point*> > arrayA(lamda); // Array of lamda pointsets
-            for (int i=0; i<n; i++){
-                vector<Point*> setIPairs; // this keeps index-pairs of best traversal(C,Si)
-                
-                Curve* itemCurve;
-                itemCurve = (Curve*) items.at(i);
-                setIPairs = getBestTraversalDTW(C,itemCurve); // gets the pointers to best traversal points
-        
-                
-                for (int j=0; j< setIPairs.size(); j++){
-                    int x = setIPairs.at(j)->getX();
-                    int y = setIPairs.at(j)->getY();
-                    Point* tempPoint = itemCurve->getSpecificPoint(y);
-                    arrayA[x].push_back(tempPoint);
-                }
+                vector< vector<Point*> > arrayA(lamda); // Array of lamda pointsets
+                for (int i=0; i<n; i++){ // for each one of the Curves of this cluster
+                    vector<Point*> setIPairs; // this keeps index-pairs of best traversal(C,Si)
+                    
+                    Curve* itemCurve;
+                    itemCurve = (Curve*) items.at(i);
+                    setIPairs = getBestTraversalDTW(C,itemCurve); // gets the pointers to best traversal points
             
-            }
+                    
+                    for (int j=0; j< setIPairs.size(); j++){
+                        int x = setIPairs.at(j)->getX();
+                        int y = setIPairs.at(j)->getY();
+                        Point* tempPoint = itemCurve->getSpecificPoint(y);
+                        arrayA[x].push_back(tempPoint);
+                    }
+                
+                }
 
-            
-            for (int j=0; j<lamda; j++){
-                double sumX = 0.0;
-                double sumY = 0.0;
-                for (int i=0; i< arrayA[j].size(); i++){
-                    sumX += arrayA[j][i]->getX();
-                    sumY += arrayA[j][i]->getY();
-                }
-                double avX, avY;
-                avX = sumX / (double)arrayA[j].size();
-                avY = sumY / (double)arrayA[j].size();
                 
-                C->setSpecificXCoord(j, avX);
-                C->setSpecificYCoord(j, avY);
-            }
-        
-            if (getValueDTW(C, tempC) < 0.10){
-              //  cout << "\n\n\n\n END OF REPEAT!!! \n\n\n\n" << endl;
-                break;
-            }
-            else
-                cout << "heuyyyy" << endl;
+                for (int j=0; j<lamda; j++){
+                    double sumX = 0.0;
+                    double sumY = 0.0;
+                    for (int i=0; i< arrayA[j].size(); i++){
+                        sumX += arrayA[j][i]->getX();
+                        sumY += arrayA[j][i]->getY();
+                    }
+                    double avX, avY;
+                    avX = sumX / (double)arrayA[j].size();
+                    avY = sumY / (double)arrayA[j].size();
+                    
+                    C->setSpecificXCoord(j, avX);
+                    C->setSpecificYCoord(j, avY);
+                }
+                
+                newId = "NEWid";
+                newId += to_string(counter);
+                counter++;
+                C->setId(newId);
             
-        
-        } // end of while loop
-        clusters.at(cl)->setCentroid(C);
-        
+                if (getValueDTW(C, tempC) < 0.10){
+                  //  cout << "\n\n\n\n END OF REPEAT!!! \n\n\n\n" << endl;
+                    tempC->~Curve(); // deleting temp Curve
+                    break;
+                }
+                tempC->~Curve(); // deleting temp Curve
+                
+            
+            } // end of while loop
+            clusters.at(cl)->setCentroid(C);
+        } // end of curve section
+        else{ // if we  have vectors
+            Point *P = new Point("newCentroid");
+            P->setD(0);
+            P->setCluster(clusters.at(cl));
+            
+            for (int j=0; j< lamda; j++){
+                double sum = 0.0;
+                int counter = 0;
+                for (int i=0; i<n; i++){
+                    Point* itemPoint;
+                    itemPoint = (Point*) items.at(i);
+                    if ( itemPoint->getD() <= j)
+                        continue;
+                    else{
+                        sum += itemPoint->getCoordinate(j);
+                        counter++;
+                    }
+                }
+                sum = sum / (double)counter;
+                P->addCoordinate(sum);
+            }
+            cout << "new Point Centroid:" << endl;
+            P->printPoint();
+            clusters.at(cl)->setCentroid(P);
+        } // end of vectors
+      
         // NOTE: AT THE END WE CAN UPDATE THE NEW CENTROID TO ALL ITEMS OF CLUSTER
 
     }

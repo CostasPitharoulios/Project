@@ -21,6 +21,7 @@ class Point{
         void printPoint();
         double getCoordinate(int i);
         vector<double> getCoordinates();
+        void setCoordinates(vector<double> Coordinates);
         void setX(double x);
         void setY(double y);
         void changeX(double X);
@@ -30,4 +31,6 @@ class Point{
         void addPadding(int new_d); // Add 0's to reach new_d dimensions
         void setCluster(Cluster *);
         Cluster *getCluster();
+        Point* copyPoint(void);
+        Point* dublicatePoint(void);
 };

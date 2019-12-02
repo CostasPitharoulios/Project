@@ -45,6 +45,10 @@ vector<double> Point::getCoordinates(){
     return listOfCoordinates;
 }
 
+void Point::setCoordinates(vector<double> Coordinates){
+    listOfCoordinates = Coordinates;
+}
+
 void Point::setX(double X){
     listOfCoordinates.push_back(X);
     //x = X;
@@ -94,5 +98,24 @@ Cluster *Point::getCluster(){
     return this->cluster;
 }
 
+Point* Point::copyPoint(void){
+    Point* P = new Point();
+    P->setD(this->getD());
+    for (int i=0; i<this->getD(); i++){
+        P->listOfCoordinates.push_back(this->getCoordinates().at(i));
+    }
+    P->setId(this->getId());
+    P->setCluster(this->getCluster());
+    return P;
+    
+}
 
+Point* Point::dublicatePoint(void){
+    Point* tempP = new Point();
+    tempP->setD(this->getD());
+    for (int i=0; i<this->getD(); i++){
+        tempP->listOfCoordinates.push_back(this->getCoordinates().at(i));
+    }
+    return tempP;
+}
 

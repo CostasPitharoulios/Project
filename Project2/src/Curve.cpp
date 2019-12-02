@@ -17,6 +17,7 @@ Curve::~Curve(){
     for (int i=0; i<listOfCoordinates.size(); i++){
         delete listOfCoordinates.at(i);
     }
+    //this->clear();
     //printf("Curve was destroyed\n");
 }
 
@@ -109,7 +110,7 @@ Point* Curve::getSpecificPoint(int position){
     return listOfCoordinates.at(position);
 }
 
-Curve* Curve::copyCurve(void){
+/*Curve* Curve::copyCurve(void){
     Curve* C = new Curve();
     C->setNumberOfCoordinates(this->getNumberOfCoordinates());
     for (int i=0; i<this->getNumberOfCoordinates(); i++){
@@ -119,7 +120,7 @@ Curve* Curve::copyCurve(void){
     C->setCluster(this->getCluster());
     return C;
     
-}
+}*/
 
 
 Curve* Curve::dublicateCurve(void){
@@ -137,3 +138,5 @@ Curve* Curve::dublicateCurve(void){
     }
     return tempC;
 }
+
+
