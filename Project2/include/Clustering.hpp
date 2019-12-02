@@ -58,4 +58,5 @@ class Cluster{
         int getId();
         vector<void*> getItems();
         void printItems();
+        void printStats();
 };
