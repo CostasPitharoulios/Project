@@ -310,9 +310,11 @@ int Clustering::updateMean(){
             }
         
             if (getValueDTW(C, tempC) < 0.10){
-                cout << "\n\n\n\n END OF REPEAT!!! \n\n\n\n" << endl;
+              //  cout << "\n\n\n\n END OF REPEAT!!! \n\n\n\n" << endl;
                 break;
             }
+            else
+                cout << "heuyyyy" << endl;
             
         
         } // end of while loop
@@ -322,9 +324,7 @@ int Clustering::updateMean(){
 
     }
     
-
-
-    
+    assignLloyd();
     
 }
 
