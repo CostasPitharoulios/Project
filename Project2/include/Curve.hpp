@@ -10,11 +10,11 @@ class Curve{
     private:
         string id;
         int numberOfCoordinates; /* TODO number and listOfPoints? */
-        //vector<Point*> listOfCoordinates;
+        vector<Point*> listOfCoordinates;
         Cluster *cluster;
 
     public:
-        vector<Point*> listOfCoordinates;
+       // vector<Point*> listOfCoordinates;
         Curve();
         ~Curve();
         void setId(string Id);
@@ -37,6 +37,8 @@ class Curve{
         void setCluster(Cluster *);
         Cluster *getCluster();
         Point* getSpecificPoint(int position);
+        Curve* copyCurve(void); // this makes a new curve by keeping pointers to old points
+        Curve* dublicateCurve(void); // this makes a new curve from scratch
         //Curve* copyCurve(Curve* beforeCurve);
 
 };

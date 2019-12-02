@@ -108,3 +108,32 @@ void Curve::setListOfCoordinates(vector <Point*> newListOfCoordinates){
 Point* Curve::getSpecificPoint(int position){
     return listOfCoordinates.at(position);
 }
+
+Curve* Curve::copyCurve(void){
+    Curve* C = new Curve();
+    C->setNumberOfCoordinates(this->getNumberOfCoordinates());
+    for (int i=0; i<this->getNumberOfCoordinates(); i++){
+        C->listOfCoordinates.push_back(this->getListOfCoordinates().at(i));
+    }
+    C->setId(this->getId());
+    C->setCluster(this->getCluster());
+    return C;
+    
+}
+
+
+Curve* Curve::dublicateCurve(void){
+    Curve* tempC = new Curve();
+    tempC->setNumberOfCoordinates(this->getNumberOfCoordinates());
+    for (int i=0; i<this->getNumberOfCoordinates(); i++){
+        Point* newPoint = new Point();
+        newPoint->setId(this->getListOfCoordinates().at(i)->getId());
+        newPoint->setD(this->getListOfCoordinates().at(i)->getD());
+        newPoint->setX(this->getListOfCoordinates().at(i)->getX());
+        newPoint->setY(this->getListOfCoordinates().at(i)->getY());
+        newPoint->setCluster(this->getCluster());
+        
+        tempC->listOfCoordinates.push_back(newPoint);
+    }
+    return tempC;
+}

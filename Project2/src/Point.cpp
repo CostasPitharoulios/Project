@@ -93,3 +93,6 @@ void Point::setCluster(Cluster *cluster){
 Cluster *Point::getCluster(){
     return this->cluster;
 }
+
+
+

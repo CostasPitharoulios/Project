@@ -281,11 +281,9 @@ int Clustering::updateMean(){
         // -------------------------------------------------------------
         // going to shuffle C and take lamda random points
         // -------------------------------------------------------------
-        Curve* C = new Curve();
-        C->setNumberOfCoordinates(oversizedC->getNumberOfCoordinates());
-        for (int i=0; i<oversizedC->getNumberOfCoordinates(); i++){
-            C->listOfCoordinates.push_back(oversizedC->getListOfCoordinates().at(i));
-        }
+ 
+        Curve* C;
+        C = oversizedC->copyCurve();
         
         vector<Point*> shuffledOversizedC = C->getListOfCoordinates();
         random_device rd;
@@ -305,19 +303,8 @@ int Clustering::updateMean(){
         while(1){
             
             
-            // storing C Curve to tempC
-            Curve* tempC = new Curve();
-            tempC->setNumberOfCoordinates(C->getNumberOfCoordinates());
-            for (int i=0; i<C->getNumberOfCoordinates(); i++){
-                Point* newPoint = new Point();
-                newPoint->setId(C->getListOfCoordinates().at(i)->getId());
-                newPoint->setD(C->getListOfCoordinates().at(i)->getD());
-                newPoint->setX(C->getListOfCoordinates().at(i)->getX());
-                newPoint->setY(C->getListOfCoordinates().at(i)->getY());
-                newPoint->setCluster(C->getCluster());
-                
-                tempC->listOfCoordinates.push_back(newPoint);
-            }
+            // storing C Curve to tempC - this is a dublicate with new points
+            Curve* tempC = C->dublicateCurve();
             
 
             vector< vector<Point*> > arrayA(lamda); // Array of lamda pointsets
@@ -352,12 +339,8 @@ int Clustering::updateMean(){
                 
                 C->setSpecificXCoord(j, avX);
                 C->setSpecificYCoord(j, avY);
-                
             }
         
-     
-            
-            
             if (getValueDTW(C, tempC) < 0.10){
                 cout << "\n\n\n\n END OF REPEAT!!! \n\n\n\n" << endl;
                 break;
