@@ -19,7 +19,9 @@ CurveHashing::~CurveHashing(){
     }
 }
 
-LSHC::LSHC(int w, double delta, int d, int k,int L):CurveHashing(w,delta,d,k,L){}
+LSHC::LSHC(int w, double delta, int d, int k,int L):CurveHashing(w,delta,d,k,L){
+    //cout << "New LSHC" << endl;
+}
 
 LSHC::~LSHC(){
     //cout << "  LSHC destructor" << endl;

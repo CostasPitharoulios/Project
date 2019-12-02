@@ -7,10 +7,10 @@ LDIR =../lib
 
 LIBS=-lm
 
-_DEPS = Point.hpp Clustering.hpp Curve.hpp dist.hpp util.hpp G.hpp H.hpp LSH.hpp
+_DEPS = Point.hpp Clustering.hpp Curve.hpp dist.hpp util.hpp G.hpp H.hpp LSH.hpp CurveHashing.hpp Grid.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o Point.o Clustering.o Curve.o dist.o util.o ANN/G.o ANN/H.o ANN/LSH.o
+_OBJ = main.o Point.o Clustering.o Curve.o dist.o util.o ANN/G.o ANN/H.o ANN/LSH.o ANN/Grid.o ANN/CruveHashing.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 

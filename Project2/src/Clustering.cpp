@@ -7,6 +7,7 @@
 #include "../include/dist.hpp"
 #include "../include/util.hpp"
 #include "../include/LSH.hpp"
+#include "../include/CurveHashing.hpp"
 
 using namespace std;
 
@@ -257,7 +258,9 @@ int Clustering::KMeans(){
                 lsh->insert(((Point*)dataset.at(i)));
         }
         else{
-            cout << "TODO initialize LSHC\n" << endl; //TODO
+            double delta=0.0005;
+            int k=4, L=2, w=40, M=100, d=2;
+            LSHC *lshc = new LSHC(w,delta,d,k,L);
         }
     }
     
@@ -304,8 +307,8 @@ int Clustering::KMeans(){
         it++;
 
         //////////////
-        //break;
-        sleep(1);
+        break;
+        //sleep(1);
         //////////////
     }
 }
