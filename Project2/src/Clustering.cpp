@@ -8,6 +8,12 @@
 
 using namespace std;
 
+
+
+//=====================================================================================
+//          *** Class Clustering ***
+//=====================================================================================
+
 Clustering::Clustering(bool curvesFlag, vector<void*> dataset, int n_clusters, string i, string a, string u):curvesFlag(curvesFlag),dataset(dataset),n_clusters(n_clusters),initMethod(i),assignMethod(a),updateMethod(u){
     //cout << "New instance of Clustering(" << initMethod << "," << assignMethod << "," << updateMethod << ")\n";
 }
@@ -287,6 +293,7 @@ int Clustering::updateMean(){
         // -------------------------------------------------------------
         
             while(1){
+                //cout << "heloooooo\n\n\n\n";
                 // storing C Curve to tempC - this is a dublicate with new points
                 Curve* tempC = C->dublicateCurve();
                 
@@ -330,9 +337,22 @@ int Clustering::updateMean(){
                 counter++;
                 C->setId(newId);
             
+              /*  cout << "HELLOOOO" << endl;
+                cout << "\n\n\n\n=============================ERGA==================\n\n\n\n" << endl;
+                cout << "C: " ;
+                C->printCoordinates();
+                cout << "tempC ";
+                tempC->printCoordinates();
+                cout << "\ngetvalue: " << getValueDTW(C, tempC) << endl;
+                //getValueDTW(C,tempC);
+                cout << "\n\n\n\n=========================TELOS ERGWN==================\n\n\n\n" << endl;
+                */
+               
+                //cout << "\ngetvalue: " << getValueDTW(C, tempC) << endl;
                 if (getValueDTW(C, tempC) < 0.10){
                   //  cout << "\n\n\n\n END OF REPEAT!!! \n\n\n\n" << endl;
                     tempC->~Curve(); // deleting temp Curve
+                    //cout << "BBBBBRRRRREEEAAAKKKKKK\n\n\n\n" << endl;
                     break;
                 }
                 tempC->~Curve(); // deleting temp Curve
@@ -432,6 +452,8 @@ int Clustering::KMeans(){
         //sleep(1);
         it++;
     }
+    
+    Silhouette();
 
 }
 
@@ -458,6 +480,7 @@ void Clustering::printClusters(){
 }
 
 // TODO del
+
 double Clustering::manhattanDistance(vector<double> a, vector<double> b){
     double dist = 0;
     if (a.size() < b.size()){
@@ -477,6 +500,150 @@ double Clustering::manhattanDistance(vector<double> a, vector<double> b){
 
 
 
+int Clustering::Silhouette(void){
+    
+    cout << "\n Begining Silhuette..." << endl;
+    
+    int numberOfClusters = clusters.size();
+    
+    if (numberOfClusters == 1){
+        cout << "Your option is only one cluster." << endl;
+        return 0;
+    }
+    
+    //--------------------------------------------------------------------
+    // for each cluster, we are searching for next best neighbor cluster
+    // we are doing this by finding the closest Centroid
+    //--------------------------------------------------------------------
+    int* closestNeighbor;
+    closestNeighbor = (int*) malloc(numberOfClusters *sizeof(int)); // closestNeighbor[0] has the closest neighbor of cluster 0 and so goes on.mak
+    /*for (int i=0; i<numberOfClusters; i++){
+        closestNeighbor[i] = -1;
+    }*/
+    
+ 
+    
+    //closestNeighbor[clusters.size()] = {-1};
+    for(int cl1=0; cl1<clusters.size(); cl1++){
+        cout << "\n\nNext cluster is number: " << cl1 << endl;
+        
+        double minDistance = numeric_limits<double>::max();
+        void* currentCentroid;
+        if(!curvesFlag)
+            currentCentroid = ((Point*)clusters.at(cl1)->getCentroid());
+        else
+            currentCentroid = ((Curve*)clusters.at(cl1)->getCentroid());
+        
+        void* tempCentroid;
+        int closestCluster;
+        for (int cl2=0; cl2<clusters.size(); cl2++){
+           
+            if (cl1 == cl2)
+                continue;
+            
+            double distance;
+            if(!curvesFlag){                                 // if we have points
+                //distance = manhattanDistance(((Point*)dataset.at(i))->getCoordinates(), ((Point*)centroids.at(j))->getCoordinates());
+                tempCentroid = ((Point*)clusters.at(cl2)->getCentroid());
+                distance = manhattanDistance(((Point*)currentCentroid)->getCoordinates(), ((Point*)tempCentroid)->getCoordinates());
+            }
+            else{                                                // if we have curves
+                tempCentroid = ((Curve*)clusters.at(cl2)->getCentroid());
+                distance = getValueDTW(((Curve*)currentCentroid), ((Curve*)tempCentroid));
+            }
+            if (distance < minDistance){
+                minDistance = distance;
+                closestCluster = cl2;
+            }
+            
+        }
+        
+        closestNeighbor[cl1] = closestCluster;
+        cout << "Closest cluster: " << closestCluster << "miN DIST: " << minDistance << endl;
+        
+        //--------------------------------------------------------------------
+        
+        vector<void*> items = clusters.at(cl1)->getItems();
+        int numberOfItems = items.size();
+        
+        //double* alpha = (double*) malloc(numberOfItems*sizeof(double));
+        //double* beta = (double*) malloc(numberOfItems*sizeof(double));
+        
+        double alpha, beta;
+        
+        double sumS=0.0;
+        for (int i=0; i< numberOfItems; i++){
+            double sumOfDistance = 0;
+            // calculating a(i)
+            for (int j=0; j< numberOfItems; j++){
+                if (i==j)
+                    continue;
+                
+                if(!curvesFlag){
+                    sumOfDistance += manhattanDistance(((Point*)items.at(i))->getCoordinates(),((Point*)items.at(j))->getCoordinates());
+                }
+                else{
+                    sumOfDistance += getValueDTW(((Curve*)items.at(i)),((Curve*)items.at(j)));
+                }
+            }
+            if (numberOfItems <= 1)
+                //alpha[i] = 0;
+                alpha = 0;
+            else
+                //alpha[i] = sumOfDistance/(numberOfItems-1);
+                alpha = sumOfDistance/(numberOfItems-1);
+            cout << "alpha[" << i << "] = " << alpha;
+            
+            // calculating b(i)
+            vector<void*> itemsClosestCluster = clusters.at(closestNeighbor[cl1])->getItems();
+            sumOfDistance = 0;
+            for (int j=0; j< itemsClosestCluster.size(); j++){
+                
+                if(!curvesFlag){
+                    sumOfDistance += manhattanDistance(((Point*)items.at(i))->getCoordinates(),((Point*)itemsClosestCluster.at(j))->getCoordinates());
+                }
+                else{
+                    sumOfDistance += getValueDTW(((Curve*)items.at(i)),((Curve*)itemsClosestCluster.at(j)));
+                }
+            }
+           // beta[i] = sumOfDistance / itemsClosestCluster.size();
+            beta = sumOfDistance / itemsClosestCluster.size();
+            cout << " beta[" << i << "] = " << beta;
+            
+            // calculating s(i)
+            double s;
+            if (alpha < beta)
+                s = 1- (alpha/beta);
+            else if (alpha == beta)
+                s = 0;
+            else
+                s = (beta/alpha)-1;
+            
+            sumS += s;
+            
+            cout << " s[" << i << "] = " << s  << " ";
+            
+            
+        }
+        double averageS = sumS / numberOfItems;
+        cout << "\n averageS[" << cl1 << "] = " << averageS  << endl;;
+        //cout << endl;
+        
+        
+        
+        //free(alpha);
+        //free(beta);
+    }
+    
+        //svector<void*> items = clusters.at(cl)->getItems();
+    free(closestNeighbor);
+}
+
+
+
+//=====================================================================================
+//          *** Class Cluster ***
+//=====================================================================================
 Cluster::Cluster(int id, void *centroid, bool curvesFlag):id(id),centroid(centroid), curvesFlag(curvesFlag){
     //cout << "New Cluster with id " << id << endl;
     assign(centroid);

@@ -19,6 +19,7 @@ double manhattanDistance(vector<double> a, vector<double> b){
 
 
 double getValueDTW(Curve *queryCurve,Curve *inputCurve){
+    
 
     /*cout << "\na:";
     queryCurve->printCoordinates();
@@ -46,7 +47,9 @@ double getValueDTW(Curve *queryCurve,Curve *inputCurve){
         y2 = inputCurve->getSpecificYCoord(i);
         arrayDTW[0][i] = previousSum + distance(x1,x2,y1,y2);
         
-        previousSum += arrayDTW[0][i];
+        previousSum = arrayDTW[0][i];
+        
+        //cout << "First line. previous sum: " << previousSum << endl;;
     }
     
     //initializing first column
@@ -59,7 +62,7 @@ double getValueDTW(Curve *queryCurve,Curve *inputCurve){
         y1 = queryCurve->getSpecificYCoord(i);
         arrayDTW[i][0] = previousSum + distance(x1,x2,y1,y2);
         
-        previousSum += arrayDTW[i][0];
+        previousSum = arrayDTW[i][0];
     }
     
     for (int i=1; i<m1; i++ ){
@@ -72,7 +75,7 @@ double getValueDTW(Curve *queryCurve,Curve *inputCurve){
         }
     }
     
-
+   // cout << "edw: " << arrayDTW[m1-1][m2-1] << endl;
     return arrayDTW[m1-1][m2-1];
     
 }
@@ -111,7 +114,7 @@ vector <Point*> getBestTraversalDTW(Curve *queryCurve,Curve *inputCurve){
         y2 = inputCurve->getSpecificYCoord(i);
         arrayDTW[0][i] = previousSum + distance(x1,x2,y1,y2);
         
-        previousSum += arrayDTW[0][i];
+        previousSum = arrayDTW[0][i];
     }
     
     //initializing first column
@@ -124,7 +127,7 @@ vector <Point*> getBestTraversalDTW(Curve *queryCurve,Curve *inputCurve){
         y1 = queryCurve->getSpecificYCoord(i);
         arrayDTW[i][0] = previousSum + distance(x1,x2,y1,y2);
         
-        previousSum += arrayDTW[i][0];
+        previousSum = arrayDTW[i][0];
     }
     
    // cout << "\nDTW ARRAY:" << endl;

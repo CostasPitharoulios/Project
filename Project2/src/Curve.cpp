@@ -134,7 +134,8 @@ Curve* Curve::dublicateCurve(void){
         newPoint->setY(this->getListOfCoordinates().at(i)->getY());
         newPoint->setCluster(this->getCluster());
         
-        tempC->listOfCoordinates.push_back(newPoint);
+        //tempC->listOfCoordinates.push_back(newPoint);
+        tempC->PushToVector(newPoint);
     }
     return tempC;
 }
