@@ -506,48 +506,47 @@ int Clustering::Silhouette(void){
     }
     
     //--------------------------------------------------------------------
-    // for each cluster, we are searching for next closest neighbor cluster
-    // we are doing this by finding the closest Centroid
+    // for each itemi of cluster cl1, we are searching for next closest
+    // neighbor cluster.
+    // We are doing this by finding the second closest Centroid to each item.
     //--------------------------------------------------------------------
-    int* closestNeighbor = (int*) malloc(numberOfClusters *sizeof(int)); // closestNeighbor[0] has the iterator of closest neighbor of cluster 0 and so goes on.
-    
+
 
     for(int cl1=0; cl1<clusters.size(); cl1++){ // do the same calculations for each cluster
         
         cout << "Silhouette of cluster " << cl1 << ": "<< endl;
         
-        double minDistance = numeric_limits<double>::max(); // holds the minimun distance of the next closest cluster to an item.
-        void* currentCentroid; // this keeps out current centroid of cluster.
-        if(!curvesFlag)
-            currentCentroid = ((Point*)clusters.at(cl1)->getCentroid());
-        else
-            currentCentroid = ((Curve*)clusters.at(cl1)->getCentroid());
+        vector<void*> items = clusters.at(cl1)->getItems(); // itemps of cluster cl1
+        int numberOfItems =items.size();
         
+        int* closestNeighbor = (int*) malloc(numberOfItems *sizeof(int)); // closestNeighbor[0] has the iterator of cluster with the second nearest centroid to item 0. etc.
+        double minDistance = numeric_limits<double>::max(); // holds the minimun distance of the next closest centroid to an item.
+       
         void* tempCentroid;
         int closestCluster;
-        for (int cl2=0; cl2<clusters.size(); cl2++){ // for each one of the clusters (except cl1 cluster)
-           
-            if (cl1 == cl2) // we donts want to compare the same cluster
-                continue;
-            
-            double distance;
-            if(!curvesFlag){                                 // if we have points
-                tempCentroid = ((Point*)clusters.at(cl2)->getCentroid());
-                distance = manhattanDistance(((Point*)currentCentroid)->getCoordinates(), ((Point*)tempCentroid)->getCoordinates());
+        for (int i=0; i<numberOfItems; i++){ // for each item of th cluster
+            for (int cl2=0; cl2<clusters.size(); cl2++){ // for each one of the clusters (except cl1 cluster)
+                
+                if (cl1 == cl2) // we donts want to compare the same cluster
+                    continue;
+                
+                double distance;
+                if(!curvesFlag){                                 // if we have points
+                    tempCentroid = ((Point*)clusters.at(cl2)->getCentroid());
+                    distance = manhattanDistance(((Point*)items.at(i))->getCoordinates(), ((Point*)tempCentroid)->getCoordinates());
+                }
+                else{                                                // if we have curves
+                    tempCentroid = ((Curve*)clusters.at(cl2)->getCentroid());
+                    distance = getValueDTW(((Curve*)items.at(i)), ((Curve*)tempCentroid));
+                }
+                if (distance < minDistance){
+                    minDistance = distance;
+                    closestCluster = cl2;
+                }
+                
             }
-            else{                                                // if we have curves
-                tempCentroid = ((Curve*)clusters.at(cl2)->getCentroid());
-                distance = getValueDTW(((Curve*)currentCentroid), ((Curve*)tempCentroid));
-            }
-            if (distance < minDistance){
-                minDistance = distance;
-                closestCluster = cl2;
-            }
-            
+            closestNeighbor[i] = closestCluster;
         }
-        
-        closestNeighbor[cl1] = closestCluster; // this is now the next closest cluster to this cluster
-        cout << "Closest cluster: " << closestCluster << " Minimum Distance: " << minDistance << endl;
         
         ///--------------------------------------------------------------------
         // for each item i of cluster we are calculating a(i) and b(i)
@@ -555,8 +554,8 @@ int Clustering::Silhouette(void){
         // b(i): average distance of item i from all items of nearest cluster
         //--------------------------------------------------------------------
         
-        vector<void*> items = clusters.at(cl1)->getItems();
-        int numberOfItems = items.size();
+        ///vector<void*> items = clusters.at(cl1)->getItems();
+        ///int numberOfItems = items.size();
         
         
         double alpha, beta;
@@ -581,7 +580,7 @@ int Clustering::Silhouette(void){
             //cout << "alpha[" << i << "] = " << alpha;
             
             // calculating b(i)
-            vector<void*> itemsClosestCluster = clusters.at(closestNeighbor[cl1])->getItems();
+            vector<void*> itemsClosestCluster = clusters.at(closestNeighbor[i])->getItems();
             sumOfDistance = 0;
             for (int j=0; j< itemsClosestCluster.size(); j++){
                 
@@ -618,10 +617,10 @@ int Clustering::Silhouette(void){
         double averageS = sumS / numberOfItems;
         cout << "AverageS[" << cl1 << "] = " << averageS  << "\n" << endl;;
         
-        
+        free(closestNeighbor);
     }
+    return 0;
     
-    free(closestNeighbor);
 }
 
 
@@ -727,6 +726,7 @@ void Cluster::printItems(){
     }
     cout << endl;
 }
+
 
 
 
