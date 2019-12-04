@@ -241,7 +241,7 @@ int Clustering::updateMean(){
         }
       
         int lamda = sumOfLengths/n;                         // calculating lamda
-        cout << "Lamda = " << lamda << endl;
+        //cout << "Lamda = " << lamda << endl;
 
         // -------------------------------------------------------------
         // here we are going to find a random sequence with length >= lamda
@@ -291,7 +291,7 @@ int Clustering::updateMean(){
         // -------------------------------------------------------------
         // repeatedly calculate C since it does not change much
         // -------------------------------------------------------------
-        
+            double previousDistance =  std::numeric_limits<double>::max();
             while(1){
                 //cout << "heloooooo\n\n\n\n";
                 // storing C Curve to tempC - this is a dublicate with new points
@@ -337,25 +337,17 @@ int Clustering::updateMean(){
                 counter++;
                 C->setId(newId);
             
-              /*  cout << "HELLOOOO" << endl;
-                cout << "\n\n\n\n=============================ERGA==================\n\n\n\n" << endl;
-                cout << "C: " ;
-                C->printCoordinates();
-                cout << "tempC ";
-                tempC->printCoordinates();
-                cout << "\ngetvalue: " << getValueDTW(C, tempC) << endl;
-                //getValueDTW(C,tempC);
-                cout << "\n\n\n\n=========================TELOS ERGWN==================\n\n\n\n" << endl;
-                */
                
-                //cout << "\ngetvalue: " << getValueDTW(C, tempC) << endl;
-                if (getValueDTW(C, tempC) < 0.10){
-                  //  cout << "\n\n\n\n END OF REPEAT!!! \n\n\n\n" << endl;
-                    tempC->~Curve(); // deleting temp Curve
-                    //cout << "BBBBBRRRRREEEAAAKKKKKK\n\n\n\n" << endl;
+                
+                double currentDistance = getValueDTW(C, tempC);
+                if ((double)(abs(previousDistance-currentDistance))/100.0 < 0.1){
+                    tempC->~Curve();
                     break;
                 }
-                tempC->~Curve(); // deleting temp Curve
+                previousDistance = currentDistance;
+                tempC->~Curve();
+                
+        
                 
             
             } // end of while loop
@@ -387,7 +379,7 @@ int Clustering::updateMean(){
             clusters.at(cl)->setCentroid(P);
         } // end of vectors
       
-        // NOTE: AT THE END WE CAN UPDATE THE NEW CENTROID TO ALL ITEMS OF CLUSTER
+        // NOTE: AT THE END WE UPDATE THE NEW CENTROID TO ALL ITEMS OF CLUSTER
 
     }
     
@@ -502,33 +494,30 @@ double Clustering::manhattanDistance(vector<double> a, vector<double> b){
 
 int Clustering::Silhouette(void){
     
-    cout << "\n Begining Silhuette..." << endl;
+    cout << "\nBegining Silhuette...\n\n" << endl;
     
-    int numberOfClusters = clusters.size();
+    int numberOfClusters = clusters.size(); // holds the number of clusters
     
+    // if we got only one cluster, there is no need for us to try to find
+    // closest cluster etc.
     if (numberOfClusters == 1){
         cout << "Your option is only one cluster." << endl;
         return 0;
     }
     
     //--------------------------------------------------------------------
-    // for each cluster, we are searching for next best neighbor cluster
+    // for each cluster, we are searching for next closest neighbor cluster
     // we are doing this by finding the closest Centroid
     //--------------------------------------------------------------------
-    int* closestNeighbor;
-    closestNeighbor = (int*) malloc(numberOfClusters *sizeof(int)); // closestNeighbor[0] has the closest neighbor of cluster 0 and so goes on.mak
-    /*for (int i=0; i<numberOfClusters; i++){
-        closestNeighbor[i] = -1;
-    }*/
+    int* closestNeighbor = (int*) malloc(numberOfClusters *sizeof(int)); // closestNeighbor[0] has the iterator of closest neighbor of cluster 0 and so goes on.
     
- 
-    
-    //closestNeighbor[clusters.size()] = {-1};
-    for(int cl1=0; cl1<clusters.size(); cl1++){
-        cout << "\n\nNext cluster is number: " << cl1 << endl;
+
+    for(int cl1=0; cl1<clusters.size(); cl1++){ // do the same calculations for each cluster
         
-        double minDistance = numeric_limits<double>::max();
-        void* currentCentroid;
+        cout << "Silhouette of cluster " << cl1 << ": "<< endl;
+        
+        double minDistance = numeric_limits<double>::max(); // holds the minimun distance of the next closest cluster to an item.
+        void* currentCentroid; // this keeps out current centroid of cluster.
         if(!curvesFlag)
             currentCentroid = ((Point*)clusters.at(cl1)->getCentroid());
         else
@@ -536,14 +525,13 @@ int Clustering::Silhouette(void){
         
         void* tempCentroid;
         int closestCluster;
-        for (int cl2=0; cl2<clusters.size(); cl2++){
+        for (int cl2=0; cl2<clusters.size(); cl2++){ // for each one of the clusters (except cl1 cluster)
            
-            if (cl1 == cl2)
+            if (cl1 == cl2) // we donts want to compare the same cluster
                 continue;
             
             double distance;
             if(!curvesFlag){                                 // if we have points
-                //distance = manhattanDistance(((Point*)dataset.at(i))->getCoordinates(), ((Point*)centroids.at(j))->getCoordinates());
                 tempCentroid = ((Point*)clusters.at(cl2)->getCentroid());
                 distance = manhattanDistance(((Point*)currentCentroid)->getCoordinates(), ((Point*)tempCentroid)->getCoordinates());
             }
@@ -558,16 +546,18 @@ int Clustering::Silhouette(void){
             
         }
         
-        closestNeighbor[cl1] = closestCluster;
-        cout << "Closest cluster: " << closestCluster << "miN DIST: " << minDistance << endl;
+        closestNeighbor[cl1] = closestCluster; // this is now the next closest cluster to this cluster
+        cout << "Closest cluster: " << closestCluster << " Minimum Distance: " << minDistance << endl;
         
+        ///--------------------------------------------------------------------
+        // for each item i of cluster we are calculating a(i) and b(i)
+        // a(i): average distance of item i from all items of its cluster
+        // b(i): average distance of item i from all items of nearest cluster
         //--------------------------------------------------------------------
         
         vector<void*> items = clusters.at(cl1)->getItems();
         int numberOfItems = items.size();
         
-        //double* alpha = (double*) malloc(numberOfItems*sizeof(double));
-        //double* beta = (double*) malloc(numberOfItems*sizeof(double));
         
         double alpha, beta;
         
@@ -579,63 +569,58 @@ int Clustering::Silhouette(void){
                 if (i==j)
                     continue;
                 
-                if(!curvesFlag){
+                if(!curvesFlag)
                     sumOfDistance += manhattanDistance(((Point*)items.at(i))->getCoordinates(),((Point*)items.at(j))->getCoordinates());
-                }
-                else{
+                else
                     sumOfDistance += getValueDTW(((Curve*)items.at(i)),((Curve*)items.at(j)));
-                }
             }
             if (numberOfItems <= 1)
-                //alpha[i] = 0;
                 alpha = 0;
             else
-                //alpha[i] = sumOfDistance/(numberOfItems-1);
                 alpha = sumOfDistance/(numberOfItems-1);
-            cout << "alpha[" << i << "] = " << alpha;
+            //cout << "alpha[" << i << "] = " << alpha;
             
             // calculating b(i)
             vector<void*> itemsClosestCluster = clusters.at(closestNeighbor[cl1])->getItems();
             sumOfDistance = 0;
             for (int j=0; j< itemsClosestCluster.size(); j++){
                 
-                if(!curvesFlag){
+                if(!curvesFlag)
                     sumOfDistance += manhattanDistance(((Point*)items.at(i))->getCoordinates(),((Point*)itemsClosestCluster.at(j))->getCoordinates());
-                }
-                else{
+                else
                     sumOfDistance += getValueDTW(((Curve*)items.at(i)),((Curve*)itemsClosestCluster.at(j)));
-                }
             }
-           // beta[i] = sumOfDistance / itemsClosestCluster.size();
             beta = sumOfDistance / itemsClosestCluster.size();
-            cout << " beta[" << i << "] = " << beta;
+           // cout << " beta[" << i << "] = " << beta;
             
-            // calculating s(i)
+            //--------------------------------------------------------------------
+            // For each item i of cluster calculating s(i).
+            // s(i): [b(i)-a(i)] / max{a(i), b(i)} in [-1, 1]
+            //--------------------------------------------------------------------
             double s;
             if (alpha < beta)
-                s = 1- (alpha/beta);
+                s = 1 - (alpha/beta);
             else if (alpha == beta)
-                s = 0;
+                s = 0.0;
             else
                 s = (beta/alpha)-1;
             
             sumS += s;
             
-            cout << " s[" << i << "] = " << s  << " ";
+            //cout << " s[" << i << "] = " << s  << " ";
             
             
         }
+        
+        ///--------------------------------------------------------------------
+        // Calculating average s(i) over all i in some cluster (for each cluster)
+        //--------------------------------------------------------------------
         double averageS = sumS / numberOfItems;
-        cout << "\n averageS[" << cl1 << "] = " << averageS  << endl;;
-        //cout << endl;
+        cout << "AverageS[" << cl1 << "] = " << averageS  << "\n" << endl;;
         
         
-        
-        //free(alpha);
-        //free(beta);
     }
     
-        //svector<void*> items = clusters.at(cl)->getItems();
     free(closestNeighbor);
 }
 
