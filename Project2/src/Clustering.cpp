@@ -343,7 +343,7 @@ int Clustering::KMeans(){
 
         //////////////
         //break;
-        sleep(1);
+        //sleep(1);
         //////////////
     }
 }
@@ -468,7 +468,7 @@ bool Cluster::assign(void *item){
     }
 
     // Remove it from the previous cluster
-    bool status;
+    bool status=true;
     if(!curvesFlag){
         if(((Point*)item)->getCluster() != nullptr)
             status = ((Point*)item)->getCluster()->removeItem(((Point*)item)->getId());
@@ -478,9 +478,9 @@ bool Cluster::assign(void *item){
 
     if(!status){
         if(!curvesFlag)
-            cout << "Failed to remove point" << ((Point*)item)->getId() << endl;
+            cout << "Failed to remove point with id " << ((Point*)item)->getId() << endl;
         else
-            cout << "Failed to remove curve" << ((Curve*)item)->getId() << endl;
+            cout << "Failed to remove curve with id " << ((Curve*)item)->getId() << endl;
     }
 
     // Add it to the new cluster
@@ -497,16 +497,18 @@ bool Cluster::assign(void *item){
 
 bool Cluster::removeItem(string id){
     for(int i=0; i<items.size(); i++){
-        if(!curvesFlag)
+        if(!curvesFlag){
             if(((Point*)items.at(i))->getId() == id){
                 items.erase(items.begin()+i);
                 return true;
             }
-        else     
+        }
+        else{
             if(((Curve*)items.at(i))->getId() == id){
                 items.erase(items.begin()+i);
                 return true;
             }
+        }
     }
     return false;
 }
