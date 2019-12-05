@@ -35,12 +35,17 @@ class Point{
         vector<double> getCoordinates();
         Curve *getOrigin();
         void setOrigin(Curve *ptr);
+        void setCoordinates(vector<double> Coordinates);
         void setX(double x);
         void setY(double y);
+        void changeX(double X);
+        void changeY(double Y);
         double getX();
         double getY();
         void addPadding(int new_d); // Add 0's to reach new_d dimensions
         void setCluster(Cluster *);
         Cluster *getCluster();
         Cluster *getPreviousCluster();
+        Point* copyPoint(void);
+        Point* dublicatePoint(void);
 };

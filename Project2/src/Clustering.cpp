@@ -11,6 +11,12 @@
 
 using namespace std;
 
+
+
+//=====================================================================================
+//          *** Class Clustering ***
+//=====================================================================================
+
 Clustering::Clustering(bool curvesFlag, vector<void*> dataset, int n_clusters, string i, string a, string u):curvesFlag(curvesFlag),dataset(dataset),n_clusters(n_clusters),initMethod(i),assignMethod(a),updateMethod(u){
     //cout << "New instance of Clustering(" << initMethod << "," << assignMethod << "," << updateMethod << ")\n";
 }
@@ -59,7 +65,7 @@ int Clustering::initKMeanspp(){
     // we add the first possible centroid to the vector list
     // we are doing this by randomly picking a point/curve of the dataset
     int numbData = dataset.size();
-    int randNumber = rand()%(numbData+1);                           // range is [0...maximun number of items-1]
+    int randNumber = rand()%(numbData);                           // range is [0...maximun number of items-1]
     if(!curvesFlag)                                                 // if we have points
         centroids.push_back((Point*)dataset.at(randNumber));
     else                                                            // if we have curves
@@ -154,6 +160,7 @@ int Clustering::assignLloyd(){
 
             //TODO if old cluster == new cluster, dont make assignment.. else do, and count them and return the count
         }
+        
     }
     cout << "Llyoid(): total: " << dataset.size() << ", changed: " << changed << ", skipped: " << skipped << endl;
     return changed;
@@ -247,7 +254,180 @@ int Clustering::updatePAM(){
 }
 
 int Clustering::updateMean(){
-    cout << "updateMean coming soon..." << endl;
+    cout << "updateMean is here bitcheeees" << endl;
+    
+  
+    int counter = 0; // this counts new centroids and we use it to make new ids of centroids
+    for (int cl=0; cl < clusters.size(); cl++){              // for each cluster
+        
+        
+        // -------------------------------------------------------------
+        // first of all we are calculating lamda
+        // -------------------------------------------------------------
+        
+        vector<void*> items = clusters.at(cl)->getItems();  // getting all items of cluster
+        int n = items.size();                               // n keeps the number of items of cluster
+        int sumOfLengths = 0;
+        
+        
+        for (int i=0; i<n; i++){
+            if(curvesFlag){ // if we have Curves
+                Curve* itemCurve;
+                itemCurve = (Curve*) items.at(i);
+                sumOfLengths += itemCurve->getNumberOfCoordinates(); // adds the number of coordinates of curve to the sum of coordinates of all curves of cluster
+            }
+            else{ // if we have Point
+                Point* itemPoint;
+                itemPoint = (Point*) items.at(i);
+                sumOfLengths += itemPoint->getD();
+            }
+        }
+      
+        int lamda = sumOfLengths/n;                         // calculating lamda
+        //cout << "Lamda = " << lamda << endl;
+
+        // -------------------------------------------------------------
+        // here we are going to find a random sequence with length >= lamda
+        // in order to initialize C
+        // -------------------------------------------------------------
+       
+       
+       // Point* oversizedP;
+        if(curvesFlag){ // if we have Curves
+            int randomI= rand()%n;
+            Curve* oversizedC; // holds a pointer to the random item with legth >= lamda
+            oversizedC = (Curve*) items.at(randomI);
+            while (1){
+                if ( oversizedC->getNumberOfCoordinates() >= lamda)
+                    break;
+                else{
+                    randomI = rand()%n;
+                    oversizedC =(Curve*) items.at(randomI);
+                }
+            }
+
+
+        // -------------------------------------------------------------
+        // going to shuffle C and take lamda random points
+        // -------------------------------------------------------------
+     
+            Curve* C;
+            //C = oversizedC->copyCurve();
+            C = oversizedC->dublicateCurve();
+            
+            vector<Point*> shuffledOversizedC = C->getListOfCoordinates();
+            random_device rd;
+            default_random_engine rng(rd());
+            shuffle(begin(shuffledOversizedC), end(shuffledOversizedC), rng);
+            
+            // Pick the first k elements from the shuffled vector
+            shuffledOversizedC.resize(lamda);
+            C->setListOfCoordinates(shuffledOversizedC);
+            C->setNumber(lamda);
+            
+            string newId = "NEWid";
+            newId += to_string(counter);
+            counter++;
+            C->setId(newId);
+   
+        
+        // -------------------------------------------------------------
+        // repeatedly calculate C since it does not change much
+        // -------------------------------------------------------------
+            double previousDistance =  std::numeric_limits<double>::max();
+            while(1){
+                //cout << "heloooooo\n\n\n\n";
+                // storing C Curve to tempC - this is a dublicate with new points
+                Curve* tempC = C->dublicateCurve();
+                
+
+                vector< vector<Point*> > arrayA(lamda); // Array of lamda pointsets
+                for (int i=0; i<n; i++){ // for each one of the Curves of this cluster
+                    vector<Point*> setIPairs; // this keeps index-pairs of best traversal(C,Si)
+                    
+                    Curve* itemCurve;
+                    itemCurve = (Curve*) items.at(i);
+                    setIPairs = getBestTraversalDTW(C,itemCurve); // gets the pointers to best traversal points
+            
+                    
+                    for (int j=0; j< setIPairs.size(); j++){
+                        int x = setIPairs.at(j)->getX();
+                        int y = setIPairs.at(j)->getY();
+                        Point* tempPoint = itemCurve->getSpecificPoint(y);
+                        arrayA[x].push_back(tempPoint);
+                    }
+                
+                }
+
+                
+                for (int j=0; j<lamda; j++){
+                    double sumX = 0.0;
+                    double sumY = 0.0;
+                    for (int i=0; i< arrayA[j].size(); i++){
+                        sumX += arrayA[j][i]->getX();
+                        sumY += arrayA[j][i]->getY();
+                    }
+                    double avX, avY;
+                    avX = sumX / (double)arrayA[j].size();
+                    avY = sumY / (double)arrayA[j].size();
+                    
+                    C->setSpecificXCoord(j, avX);
+                    C->setSpecificYCoord(j, avY);
+                }
+                
+                newId = "NEWid";
+                newId += to_string(counter);
+                counter++;
+                C->setId(newId);
+            
+               
+                
+                double currentDistance = getValueDTW(C, tempC);
+                if ((double)(abs(previousDistance-currentDistance))/100.0 < 0.1){
+                    tempC->~Curve();
+                    break;
+                }
+                previousDistance = currentDistance;
+                tempC->~Curve();
+                
+        
+                
+            
+            } // end of while loop
+            clusters.at(cl)->setCentroid(C);
+        } // end of curve section
+        else{ // if we  have vectors
+            Point *P = new Point("newCentroid");
+            P->setD(0);
+            P->setCluster(clusters.at(cl));
+            
+            for (int j=0; j< lamda; j++){
+                double sum = 0.0;
+                int counter = 0;
+                for (int i=0; i<n; i++){
+                    Point* itemPoint;
+                    itemPoint = (Point*) items.at(i);
+                    if ( itemPoint->getD() <= j)
+                        continue;
+                    else{
+                        sum += itemPoint->getCoordinate(j);
+                        counter++;
+                    }
+                }
+                sum = sum / (double)counter;
+                P->addCoordinate(sum);
+            }
+            cout << "new Point Centroid:" << endl;
+            P->printPoint();
+            clusters.at(cl)->setCentroid(P);
+        } // end of vectors
+      
+        // NOTE: AT THE END WE UPDATE THE NEW CENTROID TO ALL ITEMS OF CLUSTER
+
+    }
+    
+    assignLloyd();
+    
 }
 
 int Clustering::KMeans(){
@@ -346,6 +526,7 @@ int Clustering::KMeans(){
         //sleep(1);
         //////////////
     }
+    //Silhouette();
 }
 
 int Clustering::getD(){
@@ -378,6 +559,7 @@ void Clustering::printClusters(){
 }
 
 // TODO del
+
 double Clustering::manhattanDistance(vector<double> a, vector<double> b){
     double dist = 0;
     if (a.size() < b.size()){
@@ -395,61 +577,144 @@ double Clustering::manhattanDistance(vector<double> a, vector<double> b){
     return dist;
 }
 
-// TODO del
-#if 0
-double Clustering::getValueDTW(Curve* queryCurve,Curve* inputCurve){
-    int m1,m2;
-    m1 = queryCurve->getNumberOfCoordinates(); // m1 keeps the number of coordinates of query curve
-    m2 = inputCurve->getNumberOfCoordinates(); // m2 keeps the number of coordinates of input curve
+
+
+int Clustering::Silhouette(void){
     
-    double arrayDTW[m1][m2];
+    cout << "\nBegining Silhuette...\n\n" << endl;
     
+    int numberOfClusters = clusters.size(); // holds the number of clusters
     
-    // initialization  first line
-    double previousSum = 0.0; // keeps the sum of previous items
-    double x1,y1; // cordinates of first point of query curve
-    x1 = queryCurve->getSpecificXCoord(0);
-    y1 = queryCurve->getSpecificYCoord(0);
-    for (int i=0; i< m2; i++){
-        double x2,y2;
-        x2 = inputCurve->getSpecificXCoord(i);
-        y2 = inputCurve->getSpecificYCoord(i);
-        arrayDTW[0][i] = previousSum + distance(x1,x2,y1,y2);
-        
-        previousSum += arrayDTW[0][i];
+    // if we got only one cluster, there is no need for us to try to find
+    // closest cluster etc.
+    if (numberOfClusters == 1){
+        cout << "Your option is only one cluster." << endl;
+        return 0;
     }
     
-    //initializing first column
-    previousSum = arrayDTW[0][0];
-    double x2, y2;
-    x2 = inputCurve->getSpecificXCoord(0);
-    y2 = inputCurve->getSpecificYCoord(0);
-    for (int i=1; i<m1; i++){
-        x1 = queryCurve->getSpecificXCoord(i);
-        y1 = queryCurve->getSpecificYCoord(i);
-        arrayDTW[i][0] = previousSum + distance(x1,x2,y1,y2);
+    //--------------------------------------------------------------------
+    // for each itemi of cluster cl1, we are searching for next closest
+    // neighbor cluster.
+    // We are doing this by finding the second closest Centroid to each item.
+    //--------------------------------------------------------------------
+
+
+    for(int cl1=0; cl1<clusters.size(); cl1++){ // do the same calculations for each cluster
         
-        previousSum += arrayDTW[i][0];
-    }
-    
-    for (int i=1; i<m1; i++ ){
-        for (int j=1; j<m2; j++){
-            x1 = queryCurve->getSpecificXCoord(i);
-            x2 = inputCurve->getSpecificXCoord(j);
-            y1 = queryCurve->getSpecificYCoord(i);
-            y2 = inputCurve->getSpecificYCoord(j);
-            arrayDTW[i][j] = min(min(arrayDTW[i-1][j],arrayDTW[i-1][j-1]), arrayDTW[i][j-1]) + distance(x1,x2,y1,y2);
+        cout << "Silhouette of cluster " << cl1 << ": "<< endl;
+        
+        vector<void*> items = clusters.at(cl1)->getItems(); // itemps of cluster cl1
+        int numberOfItems =items.size();
+        
+        int* closestNeighbor = (int*) malloc(numberOfItems *sizeof(int)); // closestNeighbor[0] has the iterator of cluster with the second nearest centroid to item 0. etc.
+        double minDistance = numeric_limits<double>::max(); // holds the minimun distance of the next closest centroid to an item.
+       
+        void* tempCentroid;
+        int closestCluster;
+        for (int i=0; i<numberOfItems; i++){ // for each item of th cluster
+            for (int cl2=0; cl2<clusters.size(); cl2++){ // for each one of the clusters (except cl1 cluster)
+                
+                if (cl1 == cl2) // we donts want to compare the same cluster
+                    continue;
+                
+                double distance;
+                if(!curvesFlag){                                 // if we have points
+                    tempCentroid = ((Point*)clusters.at(cl2)->getCentroid());
+                    distance = manhattanDistance(((Point*)items.at(i))->getCoordinates(), ((Point*)tempCentroid)->getCoordinates());
+                }
+                else{                                                // if we have curves
+                    tempCentroid = ((Curve*)clusters.at(cl2)->getCentroid());
+                    distance = getValueDTW(((Curve*)items.at(i)), ((Curve*)tempCentroid));
+                }
+                if (distance < minDistance){
+                    minDistance = distance;
+                    closestCluster = cl2;
+                }
+                
+            }
+            closestNeighbor[i] = closestCluster;
         }
+        
+        ///--------------------------------------------------------------------
+        // for each item i of cluster we are calculating a(i) and b(i)
+        // a(i): average distance of item i from all items of its cluster
+        // b(i): average distance of item i from all items of nearest cluster
+        //--------------------------------------------------------------------
+        
+        ///vector<void*> items = clusters.at(cl1)->getItems();
+        ///int numberOfItems = items.size();
+        
+        
+        double alpha, beta;
+        
+        double sumS=0.0;
+        for (int i=0; i< numberOfItems; i++){
+            double sumOfDistance = 0;
+            // calculating a(i)
+            for (int j=0; j< numberOfItems; j++){
+                if (i==j)
+                    continue;
+                
+                if(!curvesFlag)
+                    sumOfDistance += manhattanDistance(((Point*)items.at(i))->getCoordinates(),((Point*)items.at(j))->getCoordinates());
+                else
+                    sumOfDistance += getValueDTW(((Curve*)items.at(i)),((Curve*)items.at(j)));
+            }
+            if (numberOfItems <= 1)
+                alpha = 0;
+            else
+                alpha = sumOfDistance/(numberOfItems-1);
+            //cout << "alpha[" << i << "] = " << alpha;
+            
+            // calculating b(i)
+            vector<void*> itemsClosestCluster = clusters.at(closestNeighbor[i])->getItems();
+            sumOfDistance = 0;
+            for (int j=0; j< itemsClosestCluster.size(); j++){
+                
+                if(!curvesFlag)
+                    sumOfDistance += manhattanDistance(((Point*)items.at(i))->getCoordinates(),((Point*)itemsClosestCluster.at(j))->getCoordinates());
+                else
+                    sumOfDistance += getValueDTW(((Curve*)items.at(i)),((Curve*)itemsClosestCluster.at(j)));
+            }
+            beta = sumOfDistance / itemsClosestCluster.size();
+           // cout << " beta[" << i << "] = " << beta;
+            
+            //--------------------------------------------------------------------
+            // For each item i of cluster calculating s(i).
+            // s(i): [b(i)-a(i)] / max{a(i), b(i)} in [-1, 1]
+            //--------------------------------------------------------------------
+            double s;
+            if (alpha < beta)
+                s = 1 - (alpha/beta);
+            else if (alpha == beta)
+                s = 0.0;
+            else
+                s = (beta/alpha)-1;
+            
+            sumS += s;
+            
+            //cout << " s[" << i << "] = " << s  << " ";
+            
+            
+        }
+        
+        ///--------------------------------------------------------------------
+        // Calculating average s(i) over all i in some cluster (for each cluster)
+        //--------------------------------------------------------------------
+        double averageS = sumS / numberOfItems;
+        cout << "AverageS[" << cl1 << "] = " << averageS  << "\n" << endl;;
+        
+        free(closestNeighbor);
     }
-    
-    //cout << "dtw of curve is: " << arrayDTW[m1-1][m2-1];
-    
-    return arrayDTW[m1-1][m2-1];
-    
+    return 0;
     
 }
-#endif
 
+
+
+//=====================================================================================
+//          *** Class Cluster ***
+//=====================================================================================
 Cluster::Cluster(int id, void *centroid, bool curvesFlag):id(id),centroid(centroid), curvesFlag(curvesFlag){
     //cout << "New Cluster with id " << id << endl;
     assign(centroid);
@@ -554,5 +819,7 @@ void Cluster::printItems(){
     }
     cout << endl;
 }
+
+
 
 

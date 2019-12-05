@@ -25,9 +25,9 @@ class Clustering{ // TODO name it KMeans? and the function: fit
         vector<Cluster*> clusters;
     
         double manhattanDistance(vector<double> a, vector<double> b); // to calculate distance between points
-        //double getValueDTW(Curve* queryCurve,Curve* inputCurve);
+
     public:
-        Clustering(bool curvesFlag, vector<void*>, int n_clusters, string initMethod="random", string assignMethod="lloyd", string updateMethod="pam");
+        Clustering(bool curvesFlag, vector<void*>, int n_clusters, string initMethod="random", string assignMethod="lloyd", string updateMethod="mean");
 
         // Basic functions for clustering
         int KMeans();
@@ -38,6 +38,7 @@ class Clustering{ // TODO name it KMeans? and the function: fit
         int assignReverseCurves(LSHC *);
         int updatePAM();
         int updateMean();
+        int Silhouette();
 
         // Assisting functions
         void printCentroids();

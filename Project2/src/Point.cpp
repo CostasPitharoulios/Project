@@ -45,6 +45,10 @@ vector<double> Point::getCoordinates(){
     return listOfCoordinates;
 }
 
+void Point::setCoordinates(vector<double> Coordinates){
+    listOfCoordinates = Coordinates;
+}
+
 void Point::setX(double X){
     listOfCoordinates.push_back(X);
     //x = X;
@@ -53,6 +57,17 @@ void Point::setX(double X){
 void Point::setY(double Y){
     listOfCoordinates.push_back(Y);
 }
+
+void Point::changeX(double X){
+    listOfCoordinates.at(0) = X;
+}
+
+void Point::changeY(double Y){
+    //listOfCoordinates.push_back(Y);
+    listOfCoordinates.at(1) = Y;
+    
+}
+
 
 
 double Point::getX(void){
@@ -116,3 +131,25 @@ void Point::prepareAssignment(){
     this->previousCluster=this->cluster;
     dist=-1;
 }
+
+Point* Point::copyPoint(void){
+    Point* P = new Point();
+    P->setD(this->getD());
+    for (int i=0; i<this->getD(); i++){
+        P->listOfCoordinates.push_back(this->getCoordinates().at(i));
+    }
+    P->setId(this->getId());
+    P->setCluster(this->getCluster());
+    return P;
+    
+}
+
+Point* Point::dublicatePoint(void){
+    Point* tempP = new Point();
+    tempP->setD(this->getD());
+    for (int i=0; i<this->getD(); i++){
+        tempP->listOfCoordinates.push_back(this->getCoordinates().at(i));
+    }
+    return tempP;
+}
+
