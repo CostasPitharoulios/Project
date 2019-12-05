@@ -13,6 +13,7 @@ class Point{
         vector<double> listOfCoordinates;
         Cluster *cluster;
         Curve *origin; // Curve from which this point is originated(in case of LSHC)
+
         // For the reverse assignment
         bool clusterChanged;
         Cluster *previousCluster;

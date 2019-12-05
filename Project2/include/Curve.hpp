@@ -13,6 +13,10 @@ class Curve{
         vector<Point*> listOfCoordinates;
         Cluster *cluster;
 
+        // Fore the reverse assignment
+        bool clusterChanged;
+        Cluster *previousCluster;
+        double dist;
     public:
         Curve();
         ~Curve();
@@ -28,4 +32,10 @@ class Curve{
         double getSpecificYCoord(int position);
         void setCluster(Cluster *);
         Cluster *getCluster();
+        void setDist(double dist);
+        double getDist();
+        void setChanged();
+        bool getChanged();
+        void prepareAssignment();
+        Cluster *getPreviousCluster();
 };

@@ -26,6 +26,7 @@ class LSH{
         void printG(int i);
         
         void assignBucket(Point *p);
+        void assignBucketCurves(Point *p);
         Point *nearestNeighbour(Point p /* in */, string distFunc /* in */, double& min_dist /* out */); // A-NN
         vector<Point *>nearestNeighbours(Point p /* in */, string distFunc /* in */, vector<double>& min_dist /* out */);
         Point *nearestNeighbourBruteForce(Point p /* in */, string distFunc /* in */, double& min_dist /* out */); // NN

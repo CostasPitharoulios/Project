@@ -101,7 +101,9 @@ void readDataset(string inputFile, vector<void*> &dataset, bool &curvesFlag){
             // Save curve to the dataset list
             dataset.push_back((void*)c);
         }
+        cout << "Dataset size: " << dataset.size() << endl;
     }
+
     in.close();
 }
 

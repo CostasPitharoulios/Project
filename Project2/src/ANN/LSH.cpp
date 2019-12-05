@@ -101,17 +101,18 @@ void LSH::assignBucket(Point *p){
 
             // If its not a centroid
             if(!isCentroid((void*) it1->second, false)){
+
+                // Compute the distance between the two points
+                double dist = manhattanDistance(p->getCoordinates(), it1->second->getCoordinates());
+
                 // If it is the first assignment, do it
                 if(!it1->second->getChanged()){
                     //cout << "Point " << it1->second->getId() << " will be assigned to " << p->getCluster()->getId() << endl;
                     p->getCluster()->assign(it1->second);
                     it1->second->setChanged();
-                    it1->second->setDist(manhattanDistance(p->getCoordinates(), it1->second->getCoordinates()));
+                    it1->second->setDist(dist);
                 }else{
                     //cout << "Point " << it1->second->getId() << " was already done" << endl;
-
-                    // Compute the distance between the two points
-                    double dist = manhattanDistance(p->getCoordinates(), it1->second->getCoordinates());
                    
                     // If its closer, assign it to this new cluster 
                     //cout << dist << " vs " << it1->second->getDist() << endl;
@@ -126,6 +127,50 @@ void LSH::assignBucket(Point *p){
         //cout << "Points in the same bucket on g(" << i << "): " << count << endl; 
     }
 }
+
+// Assign every Curve that is on the same bucket with centroid p to it
+void LSH::assignBucketCurves(Point *p){
+    for (int i=0; i<L; i++){
+        //cout << "g(" << i << ") = " << (bitset<32>(g.at(i).hash(*p))) << endl;
+        uint32_t hashkey = g.at(i).hash(*p);
+
+        pair<mapIt, mapIt> it = hashTables.at(i).equal_range(hashkey);
+        mapIt it1 = it.first;
+
+        int count = 0;
+        while (it1 != it.second){
+            //cout << "Point " << it1->second->getId() << " is in the same bucket(" << i << ")" << endl;
+            count++;
+
+            // If its not a centroid
+            if(!isCentroid((void*) it1->second->getOrigin(), true)){
+
+                // Compute the distance between the two points
+                double dist = getDTWfromPoints(p, it1->second);
+
+                // If it is the first assignment, do it
+                if(!it1->second->getOrigin()->getChanged()){
+                    //cout << "Point " << it1->second->getId() << " will be assigned to " << p->getCluster()->getId() << endl;
+                    p->getOrigin()->getCluster()->assign(it1->second->getOrigin());
+                    it1->second->getOrigin()->setChanged();
+                    it1->second->getOrigin()->setDist(dist);
+                }else{
+                   
+                    // If its closer, assign it to this new cluster 
+                    //cout << dist << " vs " << it1->second->getOrigin()->getDist() << endl;
+                    if (dist < it1->second->getOrigin()->getDist()){
+                        //cout << "Curve " << it1->second->getOrigin()->getId() << " will change cluster" << endl;
+                        p->getOrigin()->getCluster()->assign(it1->second->getOrigin());
+                        it1->second->getOrigin()->setDist(dist);
+                    }
+                }
+            }
+            it1++;
+        }
+        //cout << "Points in the same bucket on g(" << i << "): " << count << endl; 
+    }
+}
+
 
 Point *LSH::nearestNeighbour(Point p, string distFunc, double &min_dist){
     //cout << "Finding Nearest Neighbour...\n";

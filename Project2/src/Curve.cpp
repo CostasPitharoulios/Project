@@ -75,3 +75,29 @@ void Curve::setCluster(Cluster *cluster){
 Cluster *Curve::getCluster(){
     return this->cluster;
 }
+
+void Curve::setDist(double dist){
+    this->dist=dist;
+}
+
+double Curve::getDist(){
+    return this->dist;
+}
+
+void Curve::setChanged(){
+    clusterChanged=true;
+}
+
+bool Curve::getChanged(){
+    return this->clusterChanged;
+}
+
+void Curve::prepareAssignment(){
+    this->clusterChanged=false;
+    this->previousCluster=this->cluster;
+    dist=-1;
+}
+
+Cluster *Curve::getPreviousCluster(){
+    return this->previousCluster;
+}

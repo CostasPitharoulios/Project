@@ -129,6 +129,10 @@ void CurveHashing::readData(string path){
     dataSet.close(); //closing opened file
 }
 
+void CurveHashing::insert(Curve *c){
+    allCurves.push_back(c);
+}
+
 void CurveHashing::readQueries(string path,string outputFile, string hf){
     //=======================================================================================================
     //      *** CREATING A VECTOR OF CLASS CURVES ***
@@ -349,6 +353,87 @@ Curve *LSHC::nearestNeighbourCurve(Curve *query, double& min_dist){
     //cout << " with distance : " << min << endl;
     min_dist = min;
     return nn->getOrigin();
+}
+
+
+// Assign every curve that is on the same bucket with centroid p to it
+void LSHC::assignBucket(Curve *c){
+    int maxD = maxCurveLength(); 
+    //set<Curve*> nearestCurves; // Set of the nearest curves found in each grid
+
+    //cout << "Initial curve:";
+    //c->printCoordinates();
+
+    //double dist,min = numeric_limits<double>::max();   // stores minY of the precious point of curve
+    //Point *nn;
+    for(int i=0; i<L; i++){
+        // Convert the curve into grid Curve
+        Curve *gridCurve = grids.at(i).curveHashing(c);
+        //cout << "Grid curve:";
+        //gridCurve->printCoordinates();
+
+        // Convert the curve into a point
+        Point *p = vectorCurveToPoint(gridCurve,c);
+        //cout << "Point of curve: ";
+        //ptr->printPoint();
+        //cout << endl;
+
+        // Add padding so that all points have the same ammout of dimensions
+        p->addPadding(d*maxD);
+        //cout << "Point after padding: ";
+        //ptr->printPoint();
+        //cout << endl;
+
+        // Assign
+        lsh.at(i)->assignBucketCurves(p);
+
+#if 0
+        // Find curves that fall in the same bucket
+        for (int i=0; i<L; i++){ // TODO TODO
+            //cout << "g(" << i << ") = " << (bitset<32>(g.at(i).hash(*p))) << endl;
+            uint32_t hashkey = g.at(i).hash(*p);
+
+            pair<mapIt, mapIt> it = hashTables.at(i).equal_range(hashkey);
+            mapIt it1 = it.first;
+
+            int count = 0;
+            while (it1 != it.second){
+                //cout << "Point " << it1->second->getId() << " is in the same bucket(" << i << ")" << endl;
+                count++;
+
+                // If its not a centroid
+                if(!isCentroid((void*) it1->second, false)){
+
+                    // Compute the distance between the two points
+                    double dist = manhattanDistance(p->getCoordinates(), it1->second->getCoordinates());
+
+                    // If it is the first assignment, do it
+                    if(!it1->second->getChanged()){
+                        //cout << "Point " << it1->second->getId() << " will be assigned to " << p->getCluster()->getId() << endl;
+                        p->getCluster()->assign(it1->second);
+                        it1->second->setChanged();
+                        it1->second->setDist(dist);
+                    }else{
+                        //cout << "Point " << it1->second->getId() << " was already done" << endl;
+                       
+                        // If its closer, assign it to this new cluster 
+                        //cout << dist << " vs " << it1->second->getDist() << endl;
+                        if (dist < it1->second->getDist()){
+                            p->getCluster()->assign(it1->second);
+                            it1->second->setDist(dist);
+                        }
+                    }
+                }
+                it1++;
+            }
+            //cout << "Points in the same bucket on g(" << i << "): " << count << endl; 
+        }
+#endif 
+
+
+        delete p;
+        delete gridCurve;
+    }
 }
 
 #if 0

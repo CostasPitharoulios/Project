@@ -23,6 +23,7 @@ class CurveHashing{
         virtual ~CurveHashing();
 
         void readData(string path); // Read curves from file path
+        void insert(Curve *); // Read curves from file path
         void printAllCurves();
         int maxCurveLength();
         Point* vectorCurveToPoint(Curve* hashedCurve, Curve *origin); // Convert vector of curve to a single point
@@ -32,7 +33,6 @@ class CurveHashing{
         Curve *nearestNeighbourCurveBruteForce(Curve *, double &min_dist);
         virtual void hashAll() = 0; //pure virtual functions
         virtual Curve *nearestNeighbourCurve(Curve *, double &min_dist) = 0;
-
 };
 
 // LSH for Curves
@@ -45,6 +45,7 @@ class LSHC: public CurveHashing{
         ~LSHC();
         
         void hashAll() override; // Insert all curves to the LSH hash tables
+        void assignBucket(Curve *p);
         Curve *nearestNeighbourCurve(Curve *, double &min_dist) override; 
 };
 

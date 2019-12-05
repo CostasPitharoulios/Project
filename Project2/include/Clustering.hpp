@@ -5,6 +5,7 @@
 #include "Curve.hpp"
 #include "dist.hpp"
 #include "LSH.hpp"
+#include "CurveHashing.hpp"
 
 using namespace std;
 
@@ -34,7 +35,7 @@ class Clustering{ // TODO name it KMeans? and the function: fit
         int initKMeanspp();
         int assignLloyd();
         int assignReversePoints(LSH *);
-        int assignReverseCurves();
+        int assignReverseCurves(LSHC *);
         int updatePAM();
         int updateMean();
 

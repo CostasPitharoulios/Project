@@ -108,17 +108,20 @@ int Clustering::initKMeanspp(){
 }
 
 int Clustering::assignLloyd(){
-    int changed = 0; // Counts how many items changed cluster
+    int changed = 0,skipped=0; // Counts how many items changed cluster
+
     // For every item
     for(int j=0; j<dataset.size(); j++){
 
         // Ignore points that were already assigned by assignReversed()
-        if(curvesFlag){
+        if(!curvesFlag){
             if(((Point*)dataset.at(j))->getChanged())
                 continue;
         }else{
-            //if(((Curve*)dataset.at(j))->getChanged())
-            //    continue;
+            if(((Curve*)dataset.at(j))->getChanged()){
+                skipped++;
+                continue;
+            }
         }
 
         // If its not centroid
@@ -150,19 +153,14 @@ int Clustering::assignLloyd(){
                 changed++;
 
             //TODO if old cluster == new cluster, dont make assignment.. else do, and count them and return the count
-            //if(curvesFlag) cout << "Closest: " <<((Curve*)dataset.at(j))->getCentroid()->getId() << " with distance " << min   <<  endl;
         }
     }
+    cout << "Llyoid(): total: " << dataset.size() << ", changed: " << changed << ", skipped: " << skipped << endl;
     return changed;
 }
 
 int Clustering::assignReversePoints(LSH *lsh){
     int changed=0;
-    cout << "Assign Reverse coming soon..." << endl;
-
-    // Set clusterChanged=0 on every point
-    for(int i=0; i<dataset.size(); i++)
-        ((Point*)dataset.at(i))->prepareAssignment();
 
     // Use LSH to assign points that fell into the same bucket as a centroid,
     // to itself
@@ -179,9 +177,34 @@ int Clustering::assignReversePoints(LSH *lsh){
     return changed;
 }
 
-int Clustering::assignReverseCurves(){
-    cout << "Assign Reverse for curves coming soon... For now, using Lloyd" << endl; //TODO
-    return assignLloyd();
+int Clustering::assignReverseCurves(LSHC *lshc){
+    int changed=0;
+
+    // Use LSH to assign points that fell into the same bucket as a centroid,
+    // to itself
+    for(int i=0; i<clusters.size(); i++)
+        lshc->assignBucket((Curve*)(clusters.at(i)->getCentroid()));
+
+    // Count changes
+    for(int i=0; i<dataset.size(); i++)
+        if(((Curve*)dataset.at(i))->getCluster()!=((Curve*)dataset.at(i))->getPreviousCluster())
+            changed++;
+
+    // === Gia debugging ====
+    cout << "Changed from Reverse: " << changed << endl;
+    int x = changed, count=0;
+
+    for(int i=0; i<dataset.size(); i++)
+        if(((Curve*)dataset.at(i))->getChanged())
+            count++;
+    cout << "Should skip: " << count << endl;
+    // =======================
+    
+    // For the points that didnt fall in the same bucket as a centroid, use Lloyd's
+    changed += assignLloyd();
+
+    cout << "Changed from Lloyd: " << changed - x << endl;
+    return changed;
 }
 
 double Clustering::pamCost(vector<void*> items,int centroidIndex){
@@ -250,6 +273,7 @@ int Clustering::KMeans(){
 
     // In case of reverse assignment, initialize LSH
     LSH *lsh;
+    LSHC *lshc;
     if (!assignMethod.compare("reverse")){
         if(!curvesFlag){
             int k=4, L=5, w=40; // TODO cmd arguments (default w 4000?)
@@ -258,9 +282,12 @@ int Clustering::KMeans(){
                 lsh->insert(((Point*)dataset.at(i)));
         }
         else{
-            double delta=0.0005;
-            int k=4, L=2, w=40, M=100, d=2;
-            LSHC *lshc = new LSHC(w,delta,d,k,L);
+            double delta=0.0005;// TODO cmd arguments (default w 4000?)
+            int k=4, L=2, w=4000, M=100, d=2;
+            lshc = new LSHC(w,delta,d,k,L);
+            for(int i=0; i<dataset.size(); i++)
+                lshc->insert(((Curve*)dataset.at(i)));
+            lshc->hashAll();
         }
     }
     
@@ -270,13 +297,21 @@ int Clustering::KMeans(){
         
         // Assignment
         cout << "Assigning items..." << endl;
+
+        // Set clusterChanged=0 on every point
+        for(int i=0; i<dataset.size(); i++)
+            if(!curvesFlag)
+                ((Point*)dataset.at(i))->prepareAssignment();
+            else
+                ((Curve*)dataset.at(i))->prepareAssignment();
+
         if (!assignMethod.compare("lloyd")){
             changed = assignLloyd();
         }else if (!assignMethod.compare("reverse")){
             if(!curvesFlag)
                 changed = assignReversePoints(lsh);
             else
-                changed = assignReverseCurves();
+                changed = assignReverseCurves(lshc);
         }else{
             cout << "Unknown assignMethod" << endl;
             return -1;
@@ -307,8 +342,8 @@ int Clustering::KMeans(){
         it++;
 
         //////////////
-        break;
-        //sleep(1);
+        //break;
+        sleep(1);
         //////////////
     }
 }
@@ -433,12 +468,20 @@ bool Cluster::assign(void *item){
     }
 
     // Remove it from the previous cluster
+    bool status;
     if(!curvesFlag){
         if(((Point*)item)->getCluster() != nullptr)
-            ((Point*)item)->getCluster()->removeItem(((Point*)item)->getId());
+            status = ((Point*)item)->getCluster()->removeItem(((Point*)item)->getId());
     }else
         if(((Curve*)item)->getCluster() != nullptr)
-            ((Curve*)item)->getCluster()->removeItem(((Curve*)item)->getId());
+            status = ((Curve*)item)->getCluster()->removeItem(((Curve*)item)->getId());
+
+    if(!status){
+        if(!curvesFlag)
+            cout << "Failed to remove point" << ((Point*)item)->getId() << endl;
+        else
+            cout << "Failed to remove curve" << ((Curve*)item)->getId() << endl;
+    }
 
     // Add it to the new cluster
     items.push_back(item); 
