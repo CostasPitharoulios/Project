@@ -3,7 +3,6 @@
 
 using namespace std;
 
-double pamCost(vector<void*> items,int centroidIndex, bool);
 void readDataset(string inputFile, vector<void*> &dataset, bool &curvesFlag);
 bool isCentroid(void* item, bool curvesFlag);
 int mod(int a, int b);

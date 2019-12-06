@@ -3,6 +3,7 @@
 
 using namespace std;
 
+
 // Manhattan distance
 double manhattanDistance(vector<double>, vector<double>);
 
@@ -10,5 +11,7 @@ double manhattanDistance(vector<double>, vector<double>);
 double getValueDTW(Curve *queryCurve,Curve *inputCurve);
 double getDTWfromPoints(Point* pointA, Point* pointB);
 vector<Point*> getBestTraversalDTW(Curve *queryCurve,Curve *inputCurve);
-//double getDTWfromPoints(Point* pointA, Point* pointB);
+
+double pamCost(vector<void*> items,int centroidIndex, bool);
+
 double distance(double x1, double x2, double y1, double y2);

@@ -23,10 +23,10 @@ cluster: $(OBJ)
 .PHONY: clean runv runc
 
 runv:
-	./cluster -i my_vectors_test.csv -o output.txt -c cluster.conf
+	./cluster -i ../test/my_vectors_test.csv -o output.txt -c cluster.conf
 
 runc:
-	./cluster -i my_curves_test.csv -o output.txt -c cluster.conf
+	./cluster -i ../test/my_curves_test.csv -o output.txt -c cluster.conf
 
 debug:
 	valgrind ./cluster -i trajectories_dataset_small.csv -o output.txt -c cluster.conf

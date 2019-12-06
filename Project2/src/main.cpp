@@ -69,7 +69,7 @@ int main(int argc,char *argv[]){
     }
 
     // Make a Clustering instance
-    Clustering clustering(curvesFlag,dataset,n_clusters,"k-means++","lloyd","mean");
+    Clustering clustering(curvesFlag,dataset,n_clusters,"k-means++","reverse","mean");
 
     // KMeans
     clustering.KMeans();
@@ -77,5 +77,9 @@ int main(int argc,char *argv[]){
     clustering.printOutput(outputFile);
 
     cout << "Process complete. The output is written on file " << outputFile << endl;
+
+    ///////////////////////////////////////////////
+
+
     return 0;
 }
