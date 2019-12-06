@@ -1,0 +1,13 @@
+Algorithm:  Init:random Assignment:reverse Update:pam
+CLUSTER-0 {size: 2, centroid: 24}
+CLUSTER-1 {size: 3, centroid: 52}
+CLUSTER-2 {size: 18, centroid: 44}
+CLUSTER-3 {size: 9, centroid: 84}
+CLUSTER-4 {size: 12, centroid: 68}
+CLUSTER-5 {size: 3, centroid: 34}
+CLUSTER-6 {size: 14, centroid: 15}
+CLUSTER-7 {size: 17, centroid: 57}
+CLUSTER-8 {size: 4, centroid: 92}
+CLUSTER-9 {size: 18, centroid: 0}
+clustering_time: 0.977371 seconds
+Silhouette: si:[0.380596, -0.22833, 0.151395, -0.0520956, -0.289425, 0.00551972, 0.375931, 0.54266, 0.850461, -0.170684] stotal: 0.156603

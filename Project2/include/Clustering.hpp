@@ -11,7 +11,7 @@ using namespace std;
 
 class Cluster;
 
-class Clustering{ // TODO name it KMeans? and the function: fit
+class Clustering{
     private:
         bool curvesFlag; // Define Clustering item type. False: Points, True: Curves
         vector<void*> dataset;
@@ -24,7 +24,11 @@ class Clustering{ // TODO name it KMeans? and the function: fit
         vector<void*> centroids; // TODO delete
         vector<Cluster*> clusters;
     
-        double manhattanDistance(vector<double> a, vector<double> b); // to calculate distance between points
+        double manhattanDistance(vector<double> a, vector<double> b); // to calculate distance between points // TODO delete
+        // To save stats
+        double time_ms;
+        vector<double> si;
+        double stotal;
 
     public:
         Clustering(bool curvesFlag, vector<void*>, int n_clusters, string initMethod="random", string assignMethod="lloyd", string updateMethod="mean");
@@ -38,7 +42,8 @@ class Clustering{ // TODO name it KMeans? and the function: fit
         int assignReverseCurves(LSHC *);
         int updatePAM();
         int updateMean();
-        int Silhouette();
+        int Silhouette(vector<double> &si, double &stotal);
+        void printOutput(string );
 
         // Assisting functions
         void printCentroids();
@@ -64,4 +69,5 @@ class Cluster{
         vector<void*> getItems();
         void printItems();
         void printStats();
+        void printOutput(ofstream & );
 };

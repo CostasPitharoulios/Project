@@ -11,13 +11,11 @@
 
 using namespace std;
 
-
-
 //=====================================================================================
 //          *** Class Clustering ***
 //=====================================================================================
 
-Clustering::Clustering(bool curvesFlag, vector<void*> dataset, int n_clusters, string i, string a, string u):curvesFlag(curvesFlag),dataset(dataset),n_clusters(n_clusters),initMethod(i),assignMethod(a),updateMethod(u){
+Clustering::Clustering(bool curvesFlag, vector<void*> dataset, int n_clusters, string i, string a, string u):curvesFlag(curvesFlag),dataset(dataset),n_clusters(n_clusters),initMethod(i),assignMethod(a),updateMethod(u), time_ms(0){
     //cout << "New instance of Clustering(" << initMethod << "," << assignMethod << "," << updateMethod << ")\n";
 }
 
@@ -197,20 +195,20 @@ int Clustering::assignReverseCurves(LSHC *lshc){
         if(((Curve*)dataset.at(i))->getCluster()!=((Curve*)dataset.at(i))->getPreviousCluster())
             changed++;
 
-    // === Gia debugging ====
-    cout << "Changed from Reverse: " << changed << endl;
-    int x = changed, count=0;
+    // === debugging ====
+    //cout << "Changed from Reverse: " << changed << endl;
+    //int x = changed, count=0;
 
-    for(int i=0; i<dataset.size(); i++)
-        if(((Curve*)dataset.at(i))->getChanged())
-            count++;
-    cout << "Should skip: " << count << endl;
-    // =======================
+    //for(int i=0; i<dataset.size(); i++)
+    //    if(((Curve*)dataset.at(i))->getChanged())
+    //        count++;
+    //cout << "Should skip: " << count << endl;
+    // ==================
     
     // For the points that didnt fall in the same bucket as a centroid, use Lloyd's
     changed += assignLloyd();
 
-    cout << "Changed from Lloyd: " << changed - x << endl;
+    //cout << "Changed from Lloyd: " << changed - x << endl;
     return changed;
 }
 
@@ -254,8 +252,6 @@ int Clustering::updatePAM(){
 }
 
 int Clustering::updateMean(){
-    cout << "updateMean is here bitcheeees" << endl;
-    
   
     int counter = 0; // this counts new centroids and we use it to make new ids of centroids
     for (int cl=0; cl < clusters.size(); cl++){              // for each cluster
@@ -417,8 +413,8 @@ int Clustering::updateMean(){
                 sum = sum / (double)counter;
                 P->addCoordinate(sum);
             }
-            cout << "new Point Centroid:" << endl;
-            P->printPoint();
+            //cout << "new Point Centroid:" << endl;
+            //P->printPoint();
             clusters.at(cl)->setCentroid(P);
         } // end of vectors
       
@@ -426,7 +422,7 @@ int Clustering::updateMean(){
 
     }
     
-    assignLloyd();
+    //assignLloyd();
     
 }
 
@@ -436,6 +432,9 @@ int Clustering::KMeans(){
     else
         cout << "Starting KMeans for Curves ";
     cout << "with initMethod=" << initMethod << ", assignMethod=" << assignMethod << ", updateMethod=" << updateMethod << "\n";
+
+
+    clock_t start = clock();
 
     // Initialization
     if (!initMethod.compare("random")){
@@ -473,8 +472,8 @@ int Clustering::KMeans(){
     
     int changed=-1, it=1;
     while(changed){
+       
 
-        
         // Assignment
         cout << "Assigning items..." << endl;
 
@@ -509,7 +508,6 @@ int Clustering::KMeans(){
             return -1;
         }
 
-
         cout << "Iteration " << it << " complete." << endl;
         for(int i=0; i<clusters.size(); i++)
             clusters.at(i)->printStats();
@@ -526,7 +524,11 @@ int Clustering::KMeans(){
         //sleep(1);
         //////////////
     }
-    //Silhouette();
+
+    clock_t end = clock();
+    time_ms = 1000.0 * (end-start) / CLOCKS_PER_SEC;
+
+    Silhouette(si, stotal);
 }
 
 int Clustering::getD(){
@@ -579,9 +581,11 @@ double Clustering::manhattanDistance(vector<double> a, vector<double> b){
 
 
 
-int Clustering::Silhouette(void){
+// Returns vector si that contains the average s(p) of each cluster,
+// and stotal, which is the average s(p) of all items of the dataset
+int Clustering::Silhouette(vector<double> &si, double &stotal){
     
-    cout << "\nBegining Silhuette...\n\n" << endl;
+    //cout << "\nBegining Silhuette...\n\n" << endl;
     
     int numberOfClusters = clusters.size(); // holds the number of clusters
     
@@ -601,7 +605,7 @@ int Clustering::Silhouette(void){
 
     for(int cl1=0; cl1<clusters.size(); cl1++){ // do the same calculations for each cluster
         
-        cout << "Silhouette of cluster " << cl1 << ": "<< endl;
+        //cout << "Silhouette of cluster " << cl1 << ": "<< endl;
         
         vector<void*> items = clusters.at(cl1)->getItems(); // itemps of cluster cl1
         int numberOfItems =items.size();
@@ -611,6 +615,8 @@ int Clustering::Silhouette(void){
        
         void* tempCentroid;
         int closestCluster;
+
+        // Find the closest neighbor of each clsuter
         for (int i=0; i<numberOfItems; i++){ // for each item of th cluster
             for (int cl2=0; cl2<clusters.size(); cl2++){ // for each one of the clusters (except cl1 cluster)
                 
@@ -702,12 +708,33 @@ int Clustering::Silhouette(void){
         // Calculating average s(i) over all i in some cluster (for each cluster)
         //--------------------------------------------------------------------
         double averageS = sumS / numberOfItems;
-        cout << "AverageS[" << cl1 << "] = " << averageS  << "\n" << endl;;
-        
+        si.push_back(averageS);
         free(closestNeighbor);
     }
-    return 0;
+    stotal = accumulate( si.begin(), si.end(), 0.0)/si.size();
+    return 0; 
+}
+
+void Clustering::printOutput(string outputFile){
+    ofstream out;
+    out.open(outputFile);
+    if(!out){
+        cerr << "ERROR: Unable to open file with path:" << outputFile << endl;
+        return;
+    }
     
+    out << "Algorithm:  Init:" << initMethod << " Assignment:" << assignMethod << " Update:" << updateMethod << endl;
+
+    for(int i=0; i<clusters.size(); i++){
+        clusters.at(i)->printOutput(out);
+    }
+    out << "clustering_time: " << time_ms/1000 << " seconds" << endl;
+    out << "Silhouette: si:[" << si.at(0);
+    for (int i=1; i<si.size(); i++)
+        out << ", " << si.at(i);
+    out << "] stotal: " << stotal << endl;
+
+    out.close();
 }
 
 
@@ -786,10 +813,10 @@ void Cluster::setCentroid(void *item){
     centroid=item;
 
     // If its not in the items, add it
-    if(find(items.begin(), items.end(), item) == items.end()){
-        cout << "Setting a centroid that is not part of the cluster." << endl;
-        assign(item);
-    }
+    //if(find(items.begin(), items.end(), item) == items.end()){
+    //      cout << "Setting a centroid that is not part of the cluster." << endl;
+    //    assign(item);
+    //}
 }
 
 vector<void*> Cluster::getItems(){
@@ -820,6 +847,20 @@ void Cluster::printItems(){
     cout << endl;
 }
 
-
-
-
+void Cluster::printOutput(ofstream &out){
+    out << "CLUSTER-" << id << " {size: " << items.size() << ", centroid: ";
+#if 0
+    if (!updateMethod.compare("mean")){
+        if(!curvesFlag)
+            out  << ((Point*)centroid)->printPoint() << endl;
+        else
+            out <<  ((Curve*)centroid)->printCurve() << endl;
+    }else{
+#endif
+        if(!curvesFlag)
+            out  << ((Point*)centroid)->getId();
+        else
+            out <<  ((Curve*)centroid)->getId();
+    //}
+    out << "}" << endl;
+}
