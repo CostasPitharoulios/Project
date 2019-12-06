@@ -69,7 +69,7 @@ int main(int argc,char *argv[]){
     }
 
     // Make a Clustering instance
-    Clustering clustering(curvesFlag,dataset,n_clusters,"k-means++","lloyd","mean");
+    Clustering clustering(curvesFlag,dataset,n_clusters,"random","reverse","mean");
 
     // KMeans
     clustering.KMeans();
