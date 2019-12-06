@@ -1,0 +1,6 @@
+Algorithm:  Init:random Assignment:lloyd Update:pam
+CLUSTER-0 {size: 21, centroid: 70}
+CLUSTER-1 {size: 47, centroid: 28}
+CLUSTER-2 {size: 32, centroid: 45}
+clustering_time: 1.8467 seconds
+Silhouette: si:[0.918264, 0.771088, 0.810116] stotal: 0.833156

@@ -1,0 +1,6 @@
+Algorithm:  Init:k-means++ Assignment:reverse Update:mean
+CLUSTER-0 {size: 1984, centroid: newCentroid}
+CLUSTER-1 {size: 3974, centroid: newCentroid}
+CLUSTER-2 {size: 3975, centroid: newCentroid}
+clustering_time: 0.887571 seconds
+Silhouette: si:[0.912918, 0.396323, 0.456672] stotal: 0.588638
