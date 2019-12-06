@@ -160,7 +160,7 @@ int Clustering::assignLloyd(){
         }
         
     }
-    cout << "Llyoid(): total: " << dataset.size() << ", changed: " << changed << ", skipped: " << skipped << endl;
+    //cout << "Llyoid(): total: " << dataset.size() << ", changed: " << changed << ", skipped: " << skipped << endl;
     return changed;
 }
 
@@ -212,19 +212,6 @@ int Clustering::assignReverseCurves(LSHC *lshc){
     return changed;
 }
 
-double Clustering::pamCost(vector<void*> items,int centroidIndex){
-    double sum = 0;
-    for(int i=0; i<items.size(); i++){
-        if(i!=centroidIndex){
-            if(!curvesFlag)
-                sum += manhattanDistance(((Point*)items.at(i))->getCoordinates(),(((Point*)(items.at(centroidIndex)))->getCoordinates()));
-            else
-                sum += getValueDTW((Curve*)items.at(i),(Curve*)items.at(centroidIndex));
-        }
-    }
-    return sum;
-}
-
 int Clustering::updatePAM(){
     // For every cluster
     for(int i=0; i<clusters.size(); i++){
@@ -235,7 +222,7 @@ int Clustering::updatePAM(){
         double minCost = numeric_limits<double>::max();
         int minIndex=-1;
         for(int centroidIndex=0; centroidIndex<items.size(); centroidIndex++){
-            double cost = pamCost(items,centroidIndex);
+            double cost = pamCost(items,centroidIndex,curvesFlag);
             //cout << "Cost of " << centroidIndex << ": " << cost << endl;
             if(cost < minCost){
                 minCost = cost;
@@ -709,7 +696,7 @@ int Clustering::Silhouette(vector<double> &si, double &stotal){
         //--------------------------------------------------------------------
         double averageS = sumS / numberOfItems;
         si.push_back(averageS);
-        free(closestNeighbor);
+        //delete closestNeighbor;
     }
     stotal = accumulate( si.begin(), si.end(), 0.0)/si.size();
     return 0; 

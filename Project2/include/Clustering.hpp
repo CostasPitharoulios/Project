@@ -49,7 +49,6 @@ class Clustering{
         void printCentroids();
         void printClusters();
         int getD();
-        double pamCost(vector<void*> items,int centroidIndex);
 };
 
 class Cluster{

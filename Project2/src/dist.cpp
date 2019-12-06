@@ -6,6 +6,19 @@
 
 using namespace std;
 
+double pamCost(vector<void*> items,int centroidIndex, bool curvesFlag){
+    double sum = 0;
+    for(int i=0; i<items.size(); i++){
+        if(i!=centroidIndex){
+            if(!curvesFlag)
+                sum += manhattanDistance(((Point*)items.at(i))->getCoordinates(),(((Point*)(items.at(centroidIndex)))->getCoordinates()));
+            else
+                sum += getValueDTW((Curve*)items.at(i),(Curve*)items.at(centroidIndex));
+        }
+    }
+    return sum;
+}
+
 double manhattanDistance(vector<double> a, vector<double> b){
     double dist = 0;
     if (a.size() != b.size())
