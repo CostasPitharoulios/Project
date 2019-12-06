@@ -186,7 +186,7 @@ int Clustering::assignReverseCurves(LSHC *lshc){
     int changed=0;
 
     // Use LSH to assign points that fell into the same bucket as a centroid,
-    // to itself
+    // to itself.
     for(int i=0; i<clusters.size(); i++)
         lshc->assignBucket((Curve*)(clusters.at(i)->getCentroid()));
 
@@ -239,6 +239,8 @@ int Clustering::updatePAM(){
 }
 
 int Clustering::updateMean(){
+    
+    cout << "\n\nHello from update\n\n" << endl;
   
     int counter = 0; // this counts new centroids and we use it to make new ids of centroids
     for (int cl=0; cl < clusters.size(); cl++){              // for each cluster
@@ -410,6 +412,8 @@ int Clustering::updateMean(){
     }
     
     //assignLloyd();
+    
+    cout << "\n\nEnd of update\n\n" << endl;
     
 }
 
