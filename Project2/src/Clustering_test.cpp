@@ -29,7 +29,7 @@ TEST(PAM, PAMCostPoints){
     ASSERT_EQ(18, pamCost(items,2,0));
 }
 
-TEST(PAM, PAMCostCurves){
+TEST(PAM, PAMCostCurves){ // expected DTW: 11.3138
     vector<void*> items;
 
     //Curve 0
