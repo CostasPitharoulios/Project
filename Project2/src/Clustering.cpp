@@ -240,7 +240,7 @@ int Clustering::updatePAM(){
 
 int Clustering::updateMean(){
     
-    cout << "\n\nHello from update\n\n" << endl;
+    //cout << "\n\nHello from update\n\n" << endl;
   
     int counter = 0; // this counts new centroids and we use it to make new ids of centroids
     for (int cl=0; cl < clusters.size(); cl++){              // for each cluster
@@ -375,9 +375,6 @@ int Clustering::updateMean(){
                 previousDistance = currentDistance;
                 tempC->~Curve();
                 
-        
-                
-            
             } // end of while loop
             clusters.at(cl)->setCentroid(C);
         } // end of curve section
@@ -413,7 +410,7 @@ int Clustering::updateMean(){
     
     //assignLloyd();
     
-    cout << "\n\nEnd of update\n\n" << endl;
+    //cout << "\n\nEnd of update\n\n" << endl;
     
 }
 

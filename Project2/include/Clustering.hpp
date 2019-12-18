@@ -31,7 +31,7 @@ class Clustering{
         double stotal;
 
     public:
-        Clustering(bool curvesFlag, vector<void*>, int n_clusters, string initMethod="random", string assignMethod="reverse", string updateMethod="mean");
+        Clustering(bool curvesFlag, vector<void*>, int n_clusters, string initMethod="random", string assignMethod="lloyd", string updateMethod="pam");
 
         // Basic functions for clustering
         int KMeans();
