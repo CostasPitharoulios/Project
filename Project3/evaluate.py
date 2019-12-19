@@ -1,0 +1,61 @@
+import numpy as np
+from keras.models import load_model
+from sklearn.metrics import mean_squared_error, mean_absolute_error 
+from numpy import genfromtxt
+
+# mean_squared_error(y_true,y_pred)
+# mean_absolute_error(y_true,y_pred)
+
+# Mean Absolute Percentage Error
+def mape(y_true, y_pred):
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+    return np.mean(np.abs((y_true - y_pred)/y_true)) * 100
+
+if __name__ == "__main__":
+
+    # Load Pretrained model
+    model = load_model('WindDenseNN.h5')
+    model.summary()
+
+    model.compile(optimizer='rmsprop', loss='mse')
+
+    # TODO read file names from cmd
+    # Read x_test and delete id column
+    x_test = genfromtxt('nn_representations.csv', delimiter=',')
+    x_test = np.delete(x_test,0,1)
+
+    # Make prediction
+    y_pred = model.predict(x_test)
+    print(y_pred.shape)
+
+    # Read actual y_test and delete id column
+    y_test = np.genfromtxt('actual.csv', delimiter=',')
+    y_test = np.delete(y_test,0,1)
+
+    mse = mean_squared_error(y_test,y_pred)
+    mae = mean_absolute_error(y_test,y_pred)
+    mape = -1# mape(y_test,y_pred) # TODO fight division by 0
+
+    # Write in output file
+    outputFile = "output.txt"
+    f = open(outputFile, "w")
+    f.write("MAE:"+ str(mae) +"  MAPE:"+ str(mape)+"  MSE:"+ str(mse) + "\n")
+    f.close()
+
+    # Read timestamps
+    fp = open('actual.csv', 'r')
+    line = fp.readline()
+    timestamps = list()
+    while line:
+        timestamps.append(line.split(',')[0])
+        line = fp.readline()
+    fp.close()
+
+    # Concatinate timestamps with predictions
+    results = np.concatenate((np.array(timestamps).reshape(len(timestamps),1),y_pred),axis=1)
+
+    # Write predicitons to file
+    f = open(outputFile, "ab")
+    np.savetxt(f,results,delimiter=',',fmt='%s')
+    f.close()
