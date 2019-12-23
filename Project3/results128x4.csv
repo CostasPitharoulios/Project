@@ -1,0 +1,7 @@
+Algorithm:  Init:k-means++ Assignment:lloyd Update:mean
+CLUSTER-0 {size: 7415, centroid: newCentroid}
+CLUSTER-1 {size: 3096, centroid: newCentroid}
+CLUSTER-2 {size: 5712, centroid: newCentroid}
+CLUSTER-3 {size: 7765, centroid: newCentroid}
+clustering_time: 11.7174 seconds
+Silhouette: si:[0.279487, 0.226372, 0.278954, 0.329632] stotal: 0.278611

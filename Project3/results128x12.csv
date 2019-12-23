@@ -1,0 +1,15 @@
+Algorithm:  Init:k-means++ Assignment:lloyd Update:mean
+CLUSTER-0 {size: 2242, centroid: newCentroid}
+CLUSTER-1 {size: 1197, centroid: newCentroid}
+CLUSTER-2 {size: 702, centroid: newCentroid}
+CLUSTER-3 {size: 2346, centroid: newCentroid}
+CLUSTER-4 {size: 1564, centroid: newCentroid}
+CLUSTER-5 {size: 1608, centroid: newCentroid}
+CLUSTER-6 {size: 3798, centroid: newCentroid}
+CLUSTER-7 {size: 880, centroid: newCentroid}
+CLUSTER-8 {size: 319, centroid: newCentroid}
+CLUSTER-9 {size: 1007, centroid: newCentroid}
+CLUSTER-10 {size: 4707, centroid: newCentroid}
+CLUSTER-11 {size: 3618, centroid: newCentroid}
+clustering_time: 16.8542 seconds
+Silhouette: si:[0.172206, 0.368743, 0.319568, 0.319034, 0.298597, 0.291796, 0.354568, 0.209583, 0.291191, 0.279379, 0.315956, 0.265978] stotal: 0.29055

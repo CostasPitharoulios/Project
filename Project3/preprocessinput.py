@@ -30,28 +30,12 @@ if __name__ == "__main__":
             inputFile = currentValue
 
 
-    # Load Pretrained model
-    model = load_model('WindDenseNN.h5')
-    model.compile(optimizer='rmsprop', loss='mse')
-
-    # Read x_test
+    # Read data
     x_test = genfromtxt(inputFile, delimiter=',')
 
-    # Delete id column
+    # Delete timestamps
     x_test = np.delete(x_test,0,1)
 
-
-    # Create new model that consists of only the dense_1 layer
-    model_new = Model(input=model.layers[0].input, 
-                      output=model.layers[0].output)
-    model_new.compile(optimizer='rmsprop', loss='mse')
-    # model_new.summary()
-
-
-    # Predict 64 diemsional output
-    y_pred = model_new.predict(x_test)
-    #print(y_pred.shape)
-    
     # Read timestamps in string format
     fp = open(inputFile, 'r')
     line = fp.readline()
@@ -61,8 +45,8 @@ if __name__ == "__main__":
         line = fp.readline()
     fp.close()
     
-    # Concatinate timestamps with predictions
-    results = np.concatenate((np.array(timestamps).reshape(len(timestamps),1),y_pred),axis=1)
+    # Concatinate timestamps with dataset
+    results = np.concatenate((np.array(timestamps).reshape(len(timestamps),1),x_test),axis=1)
     
 
     f = open(outputFile, "w")
@@ -74,4 +58,4 @@ if __name__ == "__main__":
     np.savetxt(f,results,delimiter='\t',fmt='%s')
     f.close()
 
-    print("Process complete successfuly. Output written in file " + outputFile)
+    print("New dataset written in file " + outputFile)
