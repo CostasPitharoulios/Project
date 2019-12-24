@@ -9,6 +9,8 @@ from numpy import genfromtxt
 def mape(y_true, y_pred):
     y_true = np.array(y_true)
     y_pred = np.array(y_pred)
+
+    # Avoid division with 0
     a = []
     for i in range(len(y_true)):
         if(0 not in y_true[i]):
