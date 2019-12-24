@@ -9,7 +9,13 @@ from numpy import genfromtxt
 def mape(y_true, y_pred):
     y_true = np.array(y_true)
     y_pred = np.array(y_pred)
-    return np.mean(np.abs((y_true - y_pred)/y_true)) * 100
+    a = []
+    for i in range(len(y_true)):
+        if(0 not in y_true[i]):
+            a.append((y_true[i]-y_pred[i])/y_true[i])
+    a = np.array(a)
+    
+    return np.mean(np.abs(a)) * 100
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
@@ -54,7 +60,7 @@ if __name__ == "__main__":
 
     mse = mean_squared_error(y_test,y_pred)
     mae = mean_absolute_error(y_test,y_pred)
-    mape = -1# mape(y_test,y_pred) # TODO fight division by 0
+    mape = mape(y_test,y_pred)
 
     # Write in output file
     f = open(outputFile, "w")
